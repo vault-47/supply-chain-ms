@@ -1,0 +1,1 @@
+ALTER TABLE "invites" ADD CONSTRAINT "invites_email_unique" UNIQUE("email");
