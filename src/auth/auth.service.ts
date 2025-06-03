@@ -69,28 +69,21 @@ export class AuthService {
         );
       }
     } else {
-      // TODO: Add condition for expired otp
-
       // validate otp for admins, vendors and shippers
       const [invite] = await db
         .select()
         .from(invites)
         .where(
-          and(eq(invites.code, payload.code), eq(invites.email, payload.email)),
+          and(
+            eq(invites.code, payload.code),
+            eq(invites.email, payload.email),
+            eq(invites.role, payload.role),
+          ),
         );
       if (!invite) {
         throw new UnauthorizedException(
-          'Incorrect OTP or OTP has expired. Contact administrator.',
+          'Incorrect invitation request. Contact administrator for assistance.',
         );
-      } else {
-        await db
-          .delete(invites)
-          .where(
-            and(
-              eq(invites.email, payload.email),
-              eq(invites.code, payload.code),
-            ),
-          );
       }
     }
 
@@ -108,8 +101,9 @@ export class AuthService {
         last_name: payload.last_name,
         role: payload.role,
       });
+      await db.delete(invites).where(eq(invites.email, payload.email));
       return {
-        message: 'User has been created',
+        message: 'User account has been created',
         statusCode: HttpStatus.CREATED,
       };
     } else {

@@ -1,4 +1,9 @@
-import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { db } from 'src/database/connect';
 import { invites, profile_info, users } from 'src/database/schema';
@@ -38,6 +43,16 @@ export class UsersService {
   }
 
   async inviteCustomer(inviteUserRequestDto: InviteUserRequestDto) {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, inviteUserRequestDto.email));
+    if (user) {
+      throw new ConflictException(
+        `User with email ${inviteUserRequestDto.email} already exists`,
+      );
+    }
+
     if (
       [Role.SUPER_ADMIN, Role.DISPATCHER].includes(inviteUserRequestDto.role)
     ) {
@@ -61,6 +76,7 @@ export class UsersService {
       await db.insert(invites).values({
         email: inviteUserRequestDto.email,
         code: otp_code,
+        role: inviteUserRequestDto.role,
       });
       if ([Role.VENDOR, Role.SHIPPER].includes(inviteUserRequestDto.role)) {
         await this.mailService.sendConfirmationEmail({
