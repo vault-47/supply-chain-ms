@@ -45,11 +45,7 @@ export class RegistrationRequestDto {
   @ApiProperty({
     type: String,
     description: 'role',
-    default: Role.SHIPPER,
+    default: Role.SUPER_ADMIN,
   })
   role: Role;
-
-  @IsString()
-  @ApiProperty({ type: String, description: 'code', default: '1234' })
-  code: string;
 }

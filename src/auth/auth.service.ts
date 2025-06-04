@@ -12,7 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { db } from 'src/database/connect';
 import { RegistrationRequestDto } from './dto/registration-request.dto';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 
@@ -56,7 +56,7 @@ export class AuthService {
     });
   }
 
-  async createUserAccount(payload: RegistrationRequestDto) {
+  async createSuperAdminAccount(payload: RegistrationRequestDto) {
     if (payload.role === Role.SUPER_ADMIN) {
       const [super_admin] = await db
         .select()
@@ -68,48 +68,24 @@ export class AuthService {
           'Cannot register another super admin. Super admin already exists',
         );
       }
-    } else {
-      // validate otp for admins, vendors and shippers
-      const [invite] = await db
-        .select()
-        .from(invites)
-        .where(
-          and(
-            eq(invites.code, payload.code),
-            eq(invites.email, payload.email),
-            eq(invites.role, payload.role),
-          ),
-        );
-      if (!invite) {
-        throw new UnauthorizedException(
-          'Incorrect invitation request. Contact administrator for assistance.',
-        );
-      }
     }
 
-    const user = await this.usersService.findUserByEmail(payload.email);
-    if (!user) {
-      const salt = await genSalt(10);
-      const result = await hash(payload.password, salt);
-      const [new_user] = await db
-        .insert(users)
-        .values({ email: payload.email, password: result })
-        .returning();
-      await db.insert(profile_info).values({
-        user_id: new_user.uid,
-        first_name: payload.first_name,
-        last_name: payload.last_name,
-        role: payload.role,
-      });
-      await db.delete(invites).where(eq(invites.email, payload.email));
-      return {
-        message: 'User account has been created',
-        statusCode: HttpStatus.CREATED,
-      };
-    } else {
-      throw new ConflictException(
-        'User account with email already exists. Use another email',
-      );
-    }
+    const salt = await genSalt(10);
+    const result = await hash(payload.password, salt);
+    const [new_user] = await db
+      .insert(users)
+      .values({ email: payload.email, password: result })
+      .returning();
+    await db.insert(profile_info).values({
+      user_id: new_user.uid,
+      first_name: payload.first_name,
+      last_name: payload.last_name,
+      role: payload.role,
+    });
+    await db.delete(invites).where(eq(invites.email, payload.email));
+    return {
+      message: 'Admin account has been created',
+      statusCode: HttpStatus.CREATED,
+    };
   }
 }

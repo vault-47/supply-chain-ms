@@ -38,12 +38,12 @@ export class AuthController {
   }
 
   @Post('register')
-  @ApiOperation({ summary: 'User registration' })
+  @ApiOperation({ summary: 'Super Admin registration' })
   @ApiOkResponse({ description: 'Registration successfull' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: RegistrationRequestDto })
   register(@Body() registrationRequestDto: RegistrationRequestDto) {
-    return this.authService.createUserAccount(registrationRequestDto);
+    return this.authService.createSuperAdminAccount(registrationRequestDto);
   }
 
   @UseGuards(AuthGuard)
