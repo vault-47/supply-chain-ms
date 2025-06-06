@@ -26,6 +26,7 @@ export class AuthService {
   ) {}
   async authenticateUser(payload: LoginRequestDto) {
     const user = await this.usersService.findUserByEmail(payload.email);
+    const profile = await this.usersService.findProfileById(user.uid);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -33,6 +34,10 @@ export class AuthService {
     const isMatch = await compare(payload.password, hash);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
+    } else if (profile.account_status === AccountStatus.SUSPENDED) {
+      throw new UnauthorizedException(
+        'Account has been suspended. Contact administrator for assistance',
+      );
     } else {
       return this.signIn(user);
     }

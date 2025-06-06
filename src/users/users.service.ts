@@ -22,12 +22,17 @@ export class UsersService {
     page = 1,
     pageSize = 10,
     role = undefined,
+    status = undefined,
   }: {
     page?: number;
     pageSize?: number;
     role?: Role | undefined;
+    status?: AccountStatus | undefined;
   }): Promise<PaginatedResponseDto<UserResponseDto>> {
-    const where = role != undefined ? eq(profile_info.role, role) : undefined;
+    const whereRole =
+      role != undefined ? eq(profile_info.role, role) : undefined;
+    const whereStatus =
+      status != undefined ? eq(profile_info.account_status, status) : undefined;
 
     const data = await db
       .select({
@@ -40,7 +45,7 @@ export class UsersService {
         created_at: users.created_at,
       })
       .from(profile_info)
-      .where(where)
+      .where(and(whereRole, whereStatus))
       .leftJoin(users, eq(users.uid, profile_info.user_id))
       .orderBy(desc(users.created_at))
       .limit(pageSize)
@@ -134,5 +139,25 @@ export class UsersService {
         'User account with email already exists. Use another email',
       );
     }
+  }
+
+  async suspendUserAccount(id: string) {
+    await db
+      .update(profile_info)
+      .set({ account_status: AccountStatus.SUSPENDED })
+      .where(eq(profile_info.user_id, id));
+    return {
+      message: 'User account has been suspended',
+    };
+  }
+
+  async activateUserAccount(id: string) {
+    await db
+      .update(profile_info)
+      .set({ account_status: AccountStatus.ACTIVE })
+      .where(eq(profile_info.user_id, id));
+    return {
+      message: 'User account has been activated',
+    };
   }
 }
