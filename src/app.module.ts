@@ -9,11 +9,18 @@ import { UsersService } from './users/users.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailModule } from './mail/mail.module';
 import { MailService } from './mail/mail.service';
+import { PaginationService } from './pagination/pagination.service';
+import { InvitesModule } from './invites/invites.module';
+import { InvitesService } from './invites/invites.service';
+import { ProfileModule } from './profile/profile.module';
+import { ProfileService } from './profile/profile.service';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    InvitesModule,
+    ProfileModule,
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
@@ -31,6 +38,15 @@ import { MailService } from './mail/mail.service';
     MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService, JwtService, UsersService, MailService],
+  providers: [
+    AppService,
+    AuthService,
+    JwtService,
+    UsersService,
+    MailService,
+    PaginationService,
+    InvitesService,
+    ProfileService,
+  ],
 })
 export class AppModule {}

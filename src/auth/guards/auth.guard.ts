@@ -21,7 +21,9 @@ export class AuthGuard implements CanActivate {
     const token = authorization?.split(' ')[1];
 
     if (!token) {
-      throw new UnauthorizedException('Please provide token');
+      throw new UnauthorizedException(
+        'Unauthorized request. Please provide access token',
+      );
     }
 
     try {

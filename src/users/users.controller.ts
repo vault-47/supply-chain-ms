@@ -1,77 +1,60 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiBody,
+  ApiExtraModels,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
-  ApiResponse,
+  ApiQuery,
   ApiUnauthorizedResponse,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { InviteUserRequestDto } from './dto/invite-user-request.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/shared/enums/role.enum';
-import { UserAcceptInviteRequestDto } from './dto/accept-invite-request.dto';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
+import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
+import { UserResponseDto } from './dto/response/user-response.dto';
 
 @Controller('users')
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(Role.ADMIN, Role.SUPER_ADMIN)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
-  @Post('invitations')
+  @ApiExtraModels(PaginatedResponseDto, UserResponseDto)
+  @Get()
   @ApiOperation({
-    summary: 'Super admin send invite to admins, shippers and vendors',
+    summary: `Returns list of users. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
-  @ApiOkResponse({ description: 'Successfully sent invitation' })
+  @ApiOkResponse({
+    description: 'Paginated users',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(UserResponseDto) },
+            },
+          },
+        },
+      ],
+    },
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
+  @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
+  @ApiQuery({ name: 'role', required: false, type: String, enum: Role })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  @ApiBody({ type: InviteUserRequestDto })
-  async invite(@Body() inviteUserRequestDto: InviteUserRequestDto) {
-    return this.usersService.inviteCustomer(inviteUserRequestDto);
-  }
-
-  @Post('invitations/:invite_code/accept')
-  @ApiParam({
-    name: 'invite_code',
-    required: true,
-    description: 'invite code',
-    schema: { type: 'string' },
-  })
-  @ApiOperation({
-    summary: 'User i.e admins, shippers and vendors complete onboarding',
-  })
-  @ApiOkResponse({ description: 'Successfully accepted invitation' })
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ApiBody({ type: UserAcceptInviteRequestDto })
-  async accept_invite(
-    @Param('invite_code') invite_code: string,
-    @Body()
-    userAcceptInviteRequestDto: UserAcceptInviteRequestDto,
+  async invites(
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+    @Query('role') role: Role,
   ) {
-    return this.usersService.createUserAccount(
-      invite_code,
-      userAcceptInviteRequestDto,
-    );
-  }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
-  @Get('invitations')
-  @ApiOperation({
-    summary: `Returns list of invites. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
-  })
-  @ApiResponse({})
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ApiBearerAuth('bearer')
-  async invites() {
-    return this.usersService.invites();
+    return this.usersService.getAllUsers({ page, pageSize, role });
   }
 }

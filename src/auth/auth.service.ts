@@ -6,15 +6,16 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginRequestDto } from './dto/login-request.dto';
+import { LoginRequestDto } from './dto/requests/login-request.dto';
 import { invites, profile_info, users } from 'src/database/schema';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { db } from 'src/database/connect';
-import { RegistrationRequestDto } from './dto/registration-request.dto';
+import { RegistrationRequestDto } from './dto/requests/registration-request.dto';
 import { eq } from 'drizzle-orm';
 import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
+import { LoginResponseDto } from './dto/responses/login-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,10 @@ export class AuthService {
     }
   }
 
-  async signIn(user: { uid: string; email: string }) {
+  async signIn(user: {
+    uid: string;
+    email: string;
+  }): Promise<LoginResponseDto> {
     const token_payload = {
       sub: user.uid,
       email: user.email,
