@@ -16,6 +16,7 @@ import { eq } from 'drizzle-orm';
 import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/responses/login-response.dto';
+import { AccountStatus } from 'src/shared/enums/account-status.enum';
 
 @Injectable()
 export class AuthService {
@@ -84,6 +85,7 @@ export class AuthService {
       user_id: new_user.uid,
       first_name: payload.first_name,
       last_name: payload.last_name,
+      account_status: AccountStatus.ACTIVE,
       role: payload.role,
     });
     await db.delete(invites).where(eq(invites.email, payload.email));

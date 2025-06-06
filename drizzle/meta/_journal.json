@@ -50,6 +50,13 @@
       "when": 1748981033302,
       "tag": "0006_blushing_hobgoblin",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749214196429,
+      "tag": "0007_acoustic_stardust",
+      "breakpoints": true
     }
   ]
 }

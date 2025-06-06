@@ -12,6 +12,7 @@ import { PaginationService } from 'src/pagination/pagination.service';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { UserResponseDto } from './dto/response/user-response.dto';
 import { Role } from 'src/shared/enums/role.enum';
+import { AccountStatus } from 'src/shared/enums/account-status.enum';
 
 @Injectable()
 export class UsersService {
@@ -34,6 +35,7 @@ export class UsersService {
         first_name: profile_info.first_name,
         last_name: profile_info.last_name,
         role: profile_info.role,
+        account_status: profile_info.account_status,
         email: users.email,
         created_at: users.created_at,
       })
@@ -76,6 +78,7 @@ export class UsersService {
         first_name: profile_info.first_name,
         last_name: profile_info.last_name,
         role: profile_info.role,
+        account_status: profile_info.account_status,
         email: users.email,
         created_at: users.created_at,
       })
@@ -120,6 +123,7 @@ export class UsersService {
         first_name: payload.first_name,
         last_name: payload.last_name,
         role: payload.role,
+        account_status: AccountStatus.ACTIVE,
       });
       await db.delete(invites).where(eq(invites.email, payload.email));
       return {

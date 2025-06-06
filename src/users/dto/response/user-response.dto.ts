@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsString, IsUUID } from 'class-validator';
+import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { Role } from 'src/shared/enums/role.enum';
 
 export class UserResponseDto {
@@ -36,6 +37,13 @@ export class UserResponseDto {
     example: Role.SHIPPER,
   })
   role: Role;
+
+  @IsEnum(AccountStatus)
+  @ApiProperty({
+    required: false,
+    example: AccountStatus.ACTIVE,
+  })
+  account_status: AccountStatus;
 
   @IsString()
   @ApiProperty({

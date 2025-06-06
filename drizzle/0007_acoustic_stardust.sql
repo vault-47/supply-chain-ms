@@ -1,0 +1,1 @@
+ALTER TABLE "profile_info" ADD COLUMN "account_status" text NOT NULL;
