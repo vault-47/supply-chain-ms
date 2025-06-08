@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { and, count, desc, eq } from 'drizzle-orm';
@@ -69,11 +70,8 @@ export class UsersService {
     };
   }
   async findUserByEmail(email: string) {
-    const [result] = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
-    return result;
+    const result = await db.select().from(users).where(eq(users.email, email));
+    return result[0];
   }
 
   async findProfileById(id: string): Promise<UserResponseDto> {
@@ -93,10 +91,15 @@ export class UsersService {
     return result;
   }
 
+  async findUserById(id: string) {
+    const result = await db.select().from(users).where(eq(users.uid, id));
+    return result[0];
+  }
+
   async createUserAccount(
     invite_code: string,
     payload: UserAcceptInviteRequestDto,
-  ) {
+  ): Promise<UserResponseDto> {
     // validate otp for admins, vendors and shippers
     const [invite] = await db
       .select()
@@ -131,9 +134,8 @@ export class UsersService {
         account_status: AccountStatus.ACTIVE,
       });
       await db.delete(invites).where(eq(invites.email, payload.email));
-      return {
-        message: 'User account has been created',
-      };
+      const profile = await this.findProfileById(new_user.uid);
+      return profile;
     } else {
       throw new ConflictException(
         'User account with email already exists. Use another email',
@@ -141,23 +143,23 @@ export class UsersService {
     }
   }
 
-  async suspendUserAccount(id: string) {
+  async suspendUserAccount(id: string): Promise<UserResponseDto> {
     await db
       .update(profile_info)
       .set({ account_status: AccountStatus.SUSPENDED })
       .where(eq(profile_info.user_id, id));
-    return {
-      message: 'User account has been suspended',
-    };
+
+    const profile = await this.findProfileById(id);
+    return profile;
   }
 
-  async activateUserAccount(id: string) {
+  async activateUserAccount(id: string): Promise<UserResponseDto> {
     await db
       .update(profile_info)
       .set({ account_status: AccountStatus.ACTIVE })
       .where(eq(profile_info.user_id, id));
-    return {
-      message: 'User account has been activated',
-    };
+
+    const profile = await this.findProfileById(id);
+    return profile;
   }
 }

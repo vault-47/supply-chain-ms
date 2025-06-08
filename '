@@ -2,7 +2,6 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  NotFoundException,
   Param,
   Post,
   Query,
@@ -53,7 +52,7 @@ export class UsersController {
             status: {
               type: 'boolean',
             },
-            message: {
+            messge: {
               type: 'string',
             },
             data: {
@@ -65,7 +64,6 @@ export class UsersController {
       ],
     },
   })
-  @ResponseMessage('Users list')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
   @ApiQuery({ name: 'role', required: false, type: String, enum: Role })
@@ -97,11 +95,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
   async getUser(@Param('id') id: string) {
-    const user = await this.usersService.findUserById(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return await this.usersService.findProfileById(id);
+    return this.usersService.findProfileById2(id);
   }
 
   @ApiExtraModels(BaseResponseDto, UserResponseDto)
@@ -122,7 +116,6 @@ export class UsersController {
       ],
     },
   })
-  @ResponseMessage('User has been suspended')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
@@ -152,7 +145,6 @@ export class UsersController {
       ],
     },
   })
-  @ResponseMessage('User has been activated')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')

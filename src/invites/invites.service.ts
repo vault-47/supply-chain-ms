@@ -1,9 +1,9 @@
 import {
   ConflictException,
   ForbiddenException,
-  HttpStatus,
   Injectable,
   InternalServerErrorException,
+  NotImplementedException,
 } from '@nestjs/common';
 import { count, desc, eq } from 'drizzle-orm';
 import { db } from 'src/database/connect';
@@ -15,19 +15,20 @@ import generateRandomToken from 'src/shared/utils/generate-code';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { InvitationResponseDto } from './dto/response/invitation-response.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class InvitesService {
   constructor(
     private readonly mailService: MailService,
     private readonly paginationService: PaginationService,
+    private readonly usersService: UsersService,
   ) {}
 
   async inviteUser(inviteUserRequest: InviteUserRequestDto) {
-    const [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, inviteUserRequest.email));
+    const user = await this.usersService.findUserByEmail(
+      inviteUserRequest.email,
+    );
     if (user) {
       throw new ConflictException(
         `User with email ${inviteUserRequest.email} already exists`,
@@ -38,43 +39,41 @@ export class InvitesService {
       throw new ForbiddenException(
         `Invitation cannot be sent to user with ${inviteUserRequest.role} role`,
       );
-    } else {
-      const otp_code = generateRandomToken();
-      const [existing_invite] = await db
-        .select()
-        .from(invites)
-        .where(eq(invites.email, inviteUserRequest.email));
-      if (existing_invite) {
-        await db
-          .update(invites)
-          .set({ code: otp_code })
-          .where(eq(invites.email, inviteUserRequest.email));
-      }
-      try {
-        if ([Role.VENDOR, Role.SHIPPER].includes(inviteUserRequest.role)) {
-          await this.mailService.sendConfirmationEmail({
-            to: inviteUserRequest.email,
-            subject: 'Customer invitation',
-            html: `<p>Hello there, you have been invited to join Supplychain MS. Click the link below to proceed with onboarding your business<a href='http://localhost:3000/onbaording/customer?code=${otp_code}'>Click me</a></p>`,
-          });
-          return {
-            message: 'Invitation has been sent to customer',
-            statusCode: HttpStatus.OK,
-          };
-        } else if (inviteUserRequest.role === Role.ADMIN) {
-          await this.mailService.sendConfirmationEmail({
-            to: inviteUserRequest.email,
-            subject: 'Admin invitation',
-            html: `<p>Hello there, you have been invited to join Supplychain MS. Click the link below to proceed with onboarding <a href='http://localhost:3000/onboarding/admin?code=${otp_code}&role=${inviteUserRequest.role}&email=${inviteUserRequest.email}'>Click me</a></p>`,
-          });
-          return {
-            message: 'Invitation has been sent to admin',
-          };
-        }
-      } catch (e) {
-        throw new InternalServerErrorException(e);
-      }
     }
+
+    const otp_code = generateRandomToken();
+
+    const [existing_invite] = await db
+      .select()
+      .from(invites)
+      .where(eq(invites.email, inviteUserRequest.email));
+    if (!existing_invite) {
+      await db.insert(invites).values({
+        code: otp_code,
+        role: inviteUserRequest.role,
+        email: inviteUserRequest.email,
+      });
+    } else {
+      await db
+        .update(invites)
+        .set({ code: otp_code })
+        .where(eq(invites.email, inviteUserRequest.email));
+    }
+
+    if ([Role.VENDOR, Role.SHIPPER].includes(inviteUserRequest.role)) {
+      await this.mailService.sendConfirmationEmail({
+        to: inviteUserRequest.email,
+        subject: 'Customer invitation',
+        html: `<p>Hello there, you have been invited to join Supplychain MS. Click the link below to proceed with onboarding your business<a href='http://localhost:3000/onbaording/customer?code=${otp_code}'>Click me</a></p>`,
+      });
+    } else if (inviteUserRequest.role === Role.ADMIN) {
+      await this.mailService.sendConfirmationEmail({
+        to: inviteUserRequest.email,
+        subject: 'Admin invitation',
+        html: `<p>Hello there, you have been invited to join Supplychain MS. Click the link below to proceed with onboarding <a href='http://localhost:3000/onboarding/admin?code=${otp_code}&role=${inviteUserRequest.role}&email=${inviteUserRequest.email}'>Click me</a></p>`,
+      });
+    }
+    return inviteUserRequest;
   }
 
   async invites({

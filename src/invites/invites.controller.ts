@@ -29,6 +29,10 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { InvitationResponseDto } from './dto/response/invitation-response.dto';
 import { UsersService } from 'src/users/users.service';
+import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
+import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
+import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
+import { SendInvitationResponseWrapperDto } from './dto/response/send-invite-response.dto';
 
 @Controller('invites')
 export class InvitesController {
@@ -43,7 +47,11 @@ export class InvitesController {
   @ApiOperation({
     summary: `Admins send invite to ${Role.ADMIN}, ${Role.SHIPPER} and ${Role.VENDOR}`,
   })
-  @ApiOkResponse({ description: 'Successfully sent invitation' })
+  @ApiOkResponse({
+    description: 'Successfully sent invitation',
+    type: SendInvitationResponseWrapperDto,
+  })
+  @ResponseMessage('Invitation has been sent to admin')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
@@ -52,6 +60,7 @@ export class InvitesController {
     return this.invitesService.inviteUser(inviteUserRequest);
   }
 
+  @ApiExtraModels(BaseResponseDto, UserResponseDto)
   @Post('/:invite_code/accept')
   @ApiParam({
     name: 'invite_code',
@@ -62,7 +71,20 @@ export class InvitesController {
   @ApiOperation({
     summary: 'User i.e admins, shippers and vendors complete onboarding',
   })
-  @ApiOkResponse({ description: 'Successfully accepted invitation' })
+  @ApiOkResponse({
+    description: 'Successfully accepted invitation',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(BaseResponseDto) },
+        {
+          properties: {
+            data: { $ref: getSchemaPath(UserResponseDto) },
+          },
+        },
+      ],
+    },
+  })
+  @ResponseMessage('Invitation accepted')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBody({ type: UserAcceptInviteRequestDto })
@@ -84,13 +106,22 @@ export class InvitesController {
   @ApiOperation({
     summary: `Returns list of invites. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
+  @ResponseMessage('List of invites')
   @ApiOkResponse({
     description: 'Paginated invites',
     schema: {
       allOf: [
-        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          $ref: getSchemaPath(PaginatedResponseDto),
+        },
         {
           properties: {
+            status: {
+              type: 'boolean',
+            },
+            message: {
+              type: 'string',
+            },
             data: {
               type: 'array',
               items: { $ref: getSchemaPath(InvitationResponseDto) },
@@ -102,7 +133,12 @@ export class InvitesController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
-  @ApiQuery({ name: 'role', required: false, type: String, enum: Role })
+  @ApiQuery({
+    name: 'role',
+    required: false,
+    type: String,
+    enum: [Role.ADMIN, Role.VENDOR, Role.SHIPPER, Role.DISPATCHER],
+  })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')

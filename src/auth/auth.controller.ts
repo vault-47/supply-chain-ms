@@ -9,7 +9,10 @@ import {
 import { LoginRequestDto } from './dto/requests/login-request.dto';
 import { RegistrationRequestDto } from './dto/requests/registration-request.dto';
 import { Role } from 'src/shared/enums/role.enum';
-import { LoginResponseDto } from './dto/responses/login-response.dto';
+import { LoginResponseWrapperDto } from './dto/responses/login-response.dto';
+import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
+import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
+import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -17,22 +20,24 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ summary: 'Grant access to all users' })
+  @ResponseMessage('Login successfull')
   @ApiOkResponse({
-    description: 'Login successfull',
-    type: LoginResponseDto,
+    description: 'Login successful',
+    type: LoginResponseWrapperDto,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: LoginRequestDto })
-  login(@Body() loginRequestDto: LoginRequestDto): object {
-    return this.authService.authenticateUser(loginRequestDto);
+  login(@Body() loginRequest: LoginRequestDto) {
+    return this.authService.authenticateUser(loginRequest);
   }
 
   @Post('register')
   @ApiOperation({ summary: `${Role.SUPER_ADMIN} registration` })
-  @ApiOkResponse({ description: 'Registration successfull' })
+  @ResponseMessage('Registration successful')
+  @ApiOkWrappedResponse(UserResponseDto)
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: RegistrationRequestDto })
-  register(@Body() registrationRequestDto: RegistrationRequestDto) {
-    return this.authService.createSuperAdminAccount(registrationRequestDto);
+  register(@Body() registrationRequest: RegistrationRequestDto) {
+    return this.authService.createSuperAdminAccount(registrationRequest);
   }
 }

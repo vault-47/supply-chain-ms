@@ -2,7 +2,6 @@ import 'dotenv/config';
 
 import {
   ConflictException,
-  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -17,6 +16,9 @@ import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/responses/login-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
+import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
+import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
+import { retry } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +26,7 @@ export class AuthService {
     private jwtService: JwtService,
     private usersService: UsersService,
   ) {}
-  async authenticateUser(payload: LoginRequestDto) {
+  async authenticateUser(payload: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.usersService.findUserByEmail(payload.email);
     const profile = await this.usersService.findProfileById(user.uid);
     if (!user) {
@@ -66,7 +68,9 @@ export class AuthService {
     });
   }
 
-  async createSuperAdminAccount(payload: RegistrationRequestDto) {
+  async createSuperAdminAccount(
+    payload: RegistrationRequestDto,
+  ): Promise<UserResponseDto> {
     if (payload.role === Role.SUPER_ADMIN) {
       const [super_admin] = await db
         .select()
@@ -94,9 +98,7 @@ export class AuthService {
       role: payload.role,
     });
     await db.delete(invites).where(eq(invites.email, payload.email));
-    return {
-      message: 'Admin account has been created',
-      statusCode: HttpStatus.CREATED,
-    };
+    const profile = await this.usersService.findProfileById(new_user.uid);
+    return profile;
   }
 }

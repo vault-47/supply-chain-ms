@@ -15,12 +15,6 @@ export class InvitationResponseDto {
   @ApiProperty({ example: 'user@mail.com' })
   email: string;
 
-  @IsString()
-  @ApiProperty({
-    example: '53G8F2',
-  })
-  code: string;
-
   @IsEnum(Role)
   @ApiProperty({
     example: Role.ADMIN,
