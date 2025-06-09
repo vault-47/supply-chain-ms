@@ -14,6 +14,8 @@ import { InvitesModule } from './invites/invites.module';
 import { InvitesService } from './invites/invites.service';
 import { ProfileModule } from './profile/profile.module';
 import { ProfileService } from './profile/profile.service';
+import { QuotesModule } from './quotes/quotes.module';
+import { QuotesService } from './quotes/quotes.service';
 
 @Module({
   imports: [
@@ -36,6 +38,7 @@ import { ProfileService } from './profile/profile.service';
       },
     }),
     MailModule,
+    QuotesModule,
   ],
   controllers: [AppController],
   providers: [
@@ -47,6 +50,7 @@ import { ProfileService } from './profile/profile.service';
     PaginationService,
     InvitesService,
     ProfileService,
+    QuotesService,
   ],
 })
 export class AppModule {}
