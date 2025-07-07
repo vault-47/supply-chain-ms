@@ -11,23 +11,50 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/role.guard';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
+import { Roles } from 'src/shared/decorator/role.decorator';
+import { Role } from 'src/shared/enums/role.enum';
 
 @Controller('quotes')
 export class QuotesController {
   constructor() {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.VENDOR)
   @Post()
-  @ApiOperation({ summary: 'Request quote 🚧' })
+  @ApiOperation({ summary: 'Create quote 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ResponseMessage('Quotes request created successfully')
+  @ResponseMessage('Quote  created successfully')
   @ApiBearerAuth('bearer')
-  requestQuote() {
+  createQuote() {
     throw new NotImplementedException();
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.SHIPPER)
+  @Post('/:id/accept')
+  @ApiOperation({ summary: 'Accept quote 🚧' })
+  @ApiUnauthorizedResponse({ description: 'Unathorized' })
+  @ResponseMessage('Quote accepted successfully')
+  @ApiBearerAuth('bearer')
+  acceptQuote() {
+    throw new NotImplementedException();
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.SHIPPER)
+  @Post('/:id/reject')
+  @ApiOperation({ summary: 'Reject quote 🚧' })
+  @ApiUnauthorizedResponse({ description: 'Unathorized' })
+  @ResponseMessage('Quote rejected successfully')
+  @ApiBearerAuth('bearer')
+  rejectQuote() {
+    throw new NotImplementedException();
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.SHIPPER, Role.VENDOR)
   @Get()
   @ApiOperation({ summary: 'Fetch quotes 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })

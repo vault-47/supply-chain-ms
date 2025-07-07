@@ -1,21 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from './users/users.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailModule } from './mail/mail.module';
-import { MailService } from './mail/mail.service';
-import { PaginationService } from './pagination/pagination.service';
 import { InvitesModule } from './invites/invites.module';
-import { InvitesService } from './invites/invites.service';
 import { ProfileModule } from './profile/profile.module';
-import { ProfileService } from './profile/profile.service';
 import { QuotesModule } from './quotes/quotes.module';
-import { QuotesService } from './quotes/quotes.service';
+import { RequestQuotesModule } from './request-quotes/request-quotes.module';
 
 @Module({
   imports: [
@@ -39,18 +32,9 @@ import { QuotesService } from './quotes/quotes.service';
     }),
     MailModule,
     QuotesModule,
+    RequestQuotesModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    AuthService,
-    JwtService,
-    UsersService,
-    MailService,
-    PaginationService,
-    InvitesService,
-    ProfileService,
-    QuotesService,
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

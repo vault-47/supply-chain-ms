@@ -2,12 +2,10 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
-  InternalServerErrorException,
-  NotImplementedException,
 } from '@nestjs/common';
 import { count, desc, eq } from 'drizzle-orm';
 import { db } from 'src/database/connect';
-import { invites, users } from 'src/database/schema';
+import { invites } from 'src/database/schema';
 import { Role } from 'src/shared/enums/role.enum';
 import { InviteUserRequestDto } from './dto/requests/invite-user-request.dto';
 import { MailService } from 'src/mail/mail.service';
@@ -61,13 +59,13 @@ export class InvitesService {
     }
 
     if ([Role.VENDOR, Role.SHIPPER].includes(inviteUserRequest.role)) {
-      await this.mailService.sendConfirmationEmail({
+      await this.mailService.sendEmail({
         to: inviteUserRequest.email,
         subject: 'Customer invitation',
         html: `<p>Hello there, you have been invited to join Supplychain MS. Click the link below to proceed with onboarding your business<a href='http://localhost:3000/onbaording/customer?code=${otp_code}'>Click me</a></p>`,
       });
     } else if (inviteUserRequest.role === Role.ADMIN) {
-      await this.mailService.sendConfirmationEmail({
+      await this.mailService.sendEmail({
         to: inviteUserRequest.email,
         subject: 'Admin invitation',
         html: `<p>Hello there, you have been invited to join Supplychain MS. Click the link below to proceed with onboarding <a href='http://localhost:3000/onboarding/admin?code=${otp_code}&role=${inviteUserRequest.role}&email=${inviteUserRequest.email}'>Click me</a></p>`,

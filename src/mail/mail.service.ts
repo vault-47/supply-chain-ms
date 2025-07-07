@@ -5,7 +5,7 @@ import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  sendConfirmationEmail({ to, subject, text, html }: ISendMailOptions) {
+  sendEmail({ to, subject, text, html }: ISendMailOptions) {
     return this.mailerService.sendMail({
       to,
       subject,

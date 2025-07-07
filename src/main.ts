@@ -39,8 +39,11 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-
-  await app.listen(process.env.PORT ?? 8080);
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  console.log(
+    `Launching NestJS app on port ${port}, URL: http://0.0.0.0:${port}`,
+  );
 }
 bootstrap()
   .then((r) => r)

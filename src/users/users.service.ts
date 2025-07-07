@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { and, count, desc, eq } from 'drizzle-orm';
@@ -37,7 +36,7 @@ export class UsersService {
 
     const data = await db
       .select({
-        uid: profile_info.user_id,
+        uid: profile_info.user_uid,
         first_name: profile_info.first_name,
         last_name: profile_info.last_name,
         role: profile_info.role,
@@ -47,7 +46,7 @@ export class UsersService {
       })
       .from(profile_info)
       .where(and(whereRole, whereStatus))
-      .leftJoin(users, eq(users.uid, profile_info.user_id))
+      .leftJoin(users, eq(users.uid, profile_info.user_uid))
       .orderBy(desc(users.created_at))
       .limit(pageSize)
       .offset(
@@ -77,7 +76,7 @@ export class UsersService {
   async findProfileById(id: string): Promise<UserResponseDto> {
     const [result] = await db
       .select({
-        uid: profile_info.user_id,
+        uid: profile_info.user_uid,
         first_name: profile_info.first_name,
         last_name: profile_info.last_name,
         role: profile_info.role,
@@ -86,8 +85,8 @@ export class UsersService {
         created_at: users.created_at,
       })
       .from(profile_info)
-      .leftJoin(users, eq(users.uid, profile_info.user_id))
-      .where(eq(profile_info.user_id, id));
+      .leftJoin(users, eq(users.uid, profile_info.user_uid))
+      .where(eq(profile_info.user_uid, id));
     return result;
   }
 
@@ -127,7 +126,7 @@ export class UsersService {
         .values({ email: payload.email, password: result })
         .returning();
       await db.insert(profile_info).values({
-        user_id: new_user.uid,
+        user_uid: new_user.uid,
         first_name: payload.first_name,
         last_name: payload.last_name,
         role: payload.role,
@@ -147,7 +146,7 @@ export class UsersService {
     await db
       .update(profile_info)
       .set({ account_status: AccountStatus.SUSPENDED })
-      .where(eq(profile_info.user_id, id));
+      .where(eq(profile_info.user_uid, id));
 
     const profile = await this.findProfileById(id);
     return profile;
@@ -157,7 +156,7 @@ export class UsersService {
     await db
       .update(profile_info)
       .set({ account_status: AccountStatus.ACTIVE })
-      .where(eq(profile_info.user_id, id));
+      .where(eq(profile_info.user_uid, id));
 
     const profile = await this.findProfileById(id);
     return profile;

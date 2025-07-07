@@ -16,9 +16,7 @@ import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/responses/login-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
-import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
 import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
-import { retry } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -68,6 +66,12 @@ export class AuthService {
     });
   }
 
+  async generateHashedPassword(password: string) {
+    const salt = await genSalt(10);
+    const result = await hash(password, salt);
+    return result;
+  }
+
   async createSuperAdminAccount(
     payload: RegistrationRequestDto,
   ): Promise<UserResponseDto> {
@@ -83,15 +87,14 @@ export class AuthService {
         );
       }
     }
+    const hashedPassword = await this.generateHashedPassword(payload.password);
 
-    const salt = await genSalt(10);
-    const result = await hash(payload.password, salt);
     const [new_user] = await db
       .insert(users)
-      .values({ email: payload.email, password: result })
+      .values({ email: payload.email, password: hashedPassword })
       .returning();
     await db.insert(profile_info).values({
-      user_id: new_user.uid,
+      user_uid: new_user.uid,
       first_name: payload.first_name,
       last_name: payload.last_name,
       account_status: AccountStatus.ACTIVE,
