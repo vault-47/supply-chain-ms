@@ -6,7 +6,11 @@ import { AllExceptionsFilter } from './shared/filters/http-exception-filter';
 import { TransformInterceptor } from './shared/interceptors/transform.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { abortOnError: false });
+  const app = await NestFactory.create(AppModule, {
+    abortOnError: false,
+    cors: true,
+  });
+  app.enableCors({ origin: ['http://localhost:4444'] });
   app.useGlobalFilters(new AllExceptionsFilter());
   const reflector = app.get(Reflector);
   app.useGlobalInterceptors(new TransformInterceptor(reflector));
