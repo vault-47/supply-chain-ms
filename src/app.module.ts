@@ -8,7 +8,7 @@ import { MailModule } from './mail/mail.module';
 import { InvitesModule } from './invites/invites.module';
 import { ProfileModule } from './profile/profile.module';
 import { QuotesModule } from './quotes/quotes.module';
-import { RequestQuotesModule } from './request-quotes/request-quotes.module';
+import { QuoteRequestsModule } from './request-quotes/quote-requests.module';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { RequestQuotesModule } from './request-quotes/request-quotes.module';
     }),
     MailModule,
     QuotesModule,
-    RequestQuotesModule,
+    QuoteRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
