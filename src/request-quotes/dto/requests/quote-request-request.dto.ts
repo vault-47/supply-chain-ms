@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsUUID, Min } from 'class-validator';
 import { QuoteRequestUrgencyType } from 'src/shared/enums/quote-request-urgency-type.enum';
 
-export class RequestQuoteRequestDto {
+export class QuoteRequestRequestDto {
   @IsString()
   @IsUUID()
   @ApiProperty({ type: String, description: 'vendor_uid' })

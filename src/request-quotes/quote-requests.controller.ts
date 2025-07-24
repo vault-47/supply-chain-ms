@@ -20,13 +20,13 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { Role } from 'src/shared/enums/role.enum';
-import { RequestQuotesService } from './request-quotes.service';
-import { RequestQuoteRequestDto } from './dto/requests/request-quote-request.dto';
+import { QuoteRequestsService } from './quote-requests.service';
+import { QuoteRequestRequestDto } from './dto/requests/quote-request-request.dto';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
 
 @Controller('request-quotes')
-export class RequestQuotesController {
-  constructor(private readonly requestQuoteService: RequestQuotesService) {}
+export class QuoteRequestsController {
+  constructor(private readonly requestQuoteService: QuoteRequestsService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.SHIPPER)
@@ -37,13 +37,13 @@ export class RequestQuotesController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiOkResponse({
     description: 'Quote request sent successfully',
-    type: RequestQuoteRequestDto,
+    type: QuoteRequestRequestDto,
   })
-  @ApiBody({ type: RequestQuoteRequestDto })
+  @ApiBody({ type: QuoteRequestRequestDto })
   @ApiBearerAuth('bearer')
   requestQuote(
     @Request() request: AuthenticatedRequest,
-    @Body() requestQuote: RequestQuoteRequestDto,
+    @Body() requestQuote: QuoteRequestRequestDto,
   ) {
     const data = request?.user;
     return this.requestQuoteService.create(data.uid, requestQuote);

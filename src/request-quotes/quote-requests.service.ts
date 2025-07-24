@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { db } from 'src/database/connect';
 import { quote_requests } from 'src/database/schema';
-import { RequestQuoteRequestDto } from './dto/requests/request-quote-request.dto';
+import { QuoteRequestRequestDto } from './dto/requests/quote-request-request.dto';
 
 @Injectable()
-export class RequestQuotesService {
-  async create(user_uid: string, payload: RequestQuoteRequestDto) {
+export class QuoteRequestsService {
+  async create(user_uid: string, payload: QuoteRequestRequestDto) {
     console.log(payload);
     await db
       .insert(quote_requests)
