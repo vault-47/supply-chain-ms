@@ -13,18 +13,14 @@ import {
 import { desc, eq, getTableColumns, count, and } from 'drizzle-orm';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { PaginationService } from 'src/pagination/pagination.service';
-import { CreateWorkspaceBodyDto } from './dto/requests/create-workspace-body.dto';
-import { WorkSpaceMemberResponseDto } from './dto/response/workspace-member-response.dto';
-import { WorkspaceResponseDto } from './dto/response/workspace-response-dto';
-import { InviteWorkspaceMemberBodyDto } from './dto/requests/invite-workspace-member-body.dto';
-import { UsersService } from 'src/users/users.service';
+import { CreateWorkspaceBodyDto } from './dto/create-workspace-body.dto';
+import { WorkSpaceMemberResponseDto } from './dto/workspace-member-response.dto';
+import { WorkspaceResponseDto } from './dto/workspace-response-dto';
+import { InviteWorkspaceMemberBodyDto } from './dto/invite-workspace-member-body.dto';
 
 @Injectable()
 export class WorkspacesService {
-  constructor(
-    private readonly paginationService: PaginationService,
-    private readonly userService: UsersService,
-  ) {}
+  constructor(private readonly paginationService: PaginationService) {}
 
   async createWorkspace(payload: {
     owner_user_uid: string;

@@ -7,13 +7,13 @@ import {
 import { and, count, desc, eq, getTableColumns } from 'drizzle-orm';
 import { db } from 'src/database/connect';
 import { invites, profile_info, users } from 'src/database/schema';
-import { UserAcceptInviteRequestDto } from './dto/requests/accept-invite-request.dto';
 import { genSalt, hash } from 'bcrypt-ts';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
-import { UserResponseDto } from './dto/response/user-response.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
+import { AcceptInviteRequestDto } from 'src/invites/dto/accept-invite-request.dto';
 
 const { user_uid, ...profile_data_rest } = getTableColumns(profile_info); // exclude user_uid
 const { password, ...user_data_rest } = getTableColumns(users); // exclude password
@@ -100,7 +100,7 @@ export class UsersService {
 
   async createUserAccount(
     invite_code: string,
-    payload: UserAcceptInviteRequestDto,
+    payload: AcceptInviteRequestDto,
   ): Promise<UserResponseDto> {
     // validate otp for admins, vendors and shippers
     const [invite] = await db

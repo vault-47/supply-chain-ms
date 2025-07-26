@@ -23,7 +23,7 @@ import { Role } from 'src/shared/enums/role.enum';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
-import { UserResponseDto } from './dto/response/user-response.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';

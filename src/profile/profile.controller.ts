@@ -7,7 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from 'src/users/users.service';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
-import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
+import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';

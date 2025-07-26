@@ -6,11 +6,11 @@ import {
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { LoginRequestDto } from './dto/requests/login-request.dto';
-import { RegistrationRequestDto } from './dto/requests/registration-request.dto';
+import { LoginRequestDto } from './dto/login-request.dto';
+import { RegistrationRequestDto } from './dto/registration-request.dto';
 import { Role } from 'src/shared/enums/role.enum';
-import { LoginResponseWrapperDto } from './dto/responses/login-response.dto';
-import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
+import { LoginResponseWrapperDto } from './dto/login-response.dto';
+import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
 

@@ -21,7 +21,7 @@ import { ResponseMessage } from 'src/shared/decorator/response-message.decorator
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { QuoteRequestsService } from './quote-requests.service';
-import { QuoteRequestRequestDto } from './dto/requests/quote-request-request.dto';
+import { QuoteRequestRequestDto } from './dto/quote-request-request.dto';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
 
 @Controller('quotes-requests')

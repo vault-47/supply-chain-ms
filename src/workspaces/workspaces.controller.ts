@@ -30,15 +30,15 @@ import { ResponseMessage } from 'src/shared/decorator/response-message.decorator
 import { WorkspacesService } from './workspaces.service';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
-import { GetWorkspaceMembersParamDto } from './dto/requests/get-workspace-members-param-dto';
-import { CreateWorkspaceBodyDto } from './dto/requests/create-workspace-body.dto';
-import { GetWorkspaceParamDto } from './dto/requests/get-workspace-param-dto';
-import { WorkSpaceMemberResponseDto } from './dto/response/workspace-member-response.dto';
+import { GetWorkspaceMembersParamDto } from './dto/get-workspace-members-param-dto';
+import { CreateWorkspaceBodyDto } from './dto/create-workspace-body.dto';
+import { GetWorkspaceParamDto } from './dto/get-workspace-param-dto';
+import { WorkSpaceMemberResponseDto } from './dto/workspace-member-response.dto';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
 import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
-import { WorkspaceResponseDto } from './dto/response/workspace-response-dto';
-import { DeleteWorkspaceMemberParamDto } from './dto/requests/delete-workspace-member-paraam-dto';
-import { InviteWorkspaceMemberBodyDto } from './dto/requests/invite-workspace-member-body.dto';
+import { WorkspaceResponseDto } from './dto/workspace-response-dto';
+import { DeleteWorkspaceMemberParamDto } from './dto/delete-workspace-member-paraam-dto';
+import { InviteWorkspaceMemberBodyDto } from './dto/invite-workspace-member-body.dto';
 
 @Controller('workspaces')
 @ApiTags('Workspaces ⏸️(ON HOLD)')

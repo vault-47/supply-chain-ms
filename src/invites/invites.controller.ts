@@ -20,19 +20,19 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { InvitesService } from './invites.service';
-import { InviteUserRequestDto } from './dto/requests/invite-user-request.dto';
+import { InviteUserRequestDto } from './dto/invite-user-request.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/shared/enums/role.enum';
-import { UserAcceptInviteRequestDto } from './dto/requests/accept-invite-request.dto';
+import { AcceptInviteRequestDto } from './dto/accept-invite-request.dto';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
-import { InvitationResponseDto } from './dto/response/invitation-response.dto';
+import { InvitationResponseDto } from './dto/invitation-response.dto';
 import { UsersService } from 'src/users/users.service';
-import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
+import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
-import { SendInvitationResponseWrapperDto } from './dto/response/send-invite-response.dto';
+import { InviteUserResponseDto } from './dto/invite-user-response.dto';
 
 @Controller('invites')
 export class InvitesController {
@@ -49,7 +49,7 @@ export class InvitesController {
   })
   @ApiOkResponse({
     description: 'Successfully sent invitation',
-    type: SendInvitationResponseWrapperDto,
+    type: InviteUserResponseDto,
   })
   @ResponseMessage('Invitation has been sent to admin')
   @ApiBadRequestResponse({ description: 'Bad request' })
@@ -87,11 +87,11 @@ export class InvitesController {
   @ResponseMessage('Invitation accepted')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ApiBody({ type: UserAcceptInviteRequestDto })
+  @ApiBody({ type: AcceptInviteRequestDto })
   async accept_invite(
     @Param('invite_code') invite_code: string,
     @Body()
-    userAcceptInviteRequest: UserAcceptInviteRequestDto,
+    userAcceptInviteRequest: AcceptInviteRequestDto,
   ) {
     return this.usersService.createUserAccount(
       invite_code,
