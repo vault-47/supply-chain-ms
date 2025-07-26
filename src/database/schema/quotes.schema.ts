@@ -1,8 +1,8 @@
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { enumToPgEnum } from './utils';
 import { quote_requests } from './quote_request.schema';
-import { QuoteStatus } from 'src/shared/enums/quote-status.enum';
 import { users } from './user.schema';
+import { QuoteStatus } from 'src/quotes/enums/quote-status.enum';
 
 export const quotes = pgTable('quotes', {
   uid: uuid().defaultRandom().primaryKey(),

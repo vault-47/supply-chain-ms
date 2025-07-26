@@ -1,9 +1,10 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { and, count, desc, eq } from 'drizzle-orm';
+import { and, count, desc, eq, getTableColumns } from 'drizzle-orm';
 import { db } from 'src/database/connect';
 import { invites, profile_info, users } from 'src/database/schema';
 import { UserAcceptInviteRequestDto } from './dto/requests/accept-invite-request.dto';
@@ -14,9 +15,26 @@ import { UserResponseDto } from './dto/response/user-response.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 
+const { user_uid, ...profile_data_rest } = getTableColumns(profile_info); // exclude user_uid
+const { password, ...user_data_rest } = getTableColumns(users); // exclude password
+
 @Injectable()
 export class UsersService {
   constructor(private readonly paginationService: PaginationService) {}
+
+  async getUser(user_uid: string): Promise<UserResponseDto> {
+    const result = await db
+      .select({
+        ...user_data_rest,
+        profile: profile_data_rest,
+      })
+      .from(users)
+      .leftJoin(profile_info, eq(users.uid, profile_info.user_uid))
+      .where(eq(users.uid, user_uid))
+      .then((rows) => rows[0]);
+    if (result) return result;
+    throw new NotFoundException();
+  }
 
   async getAllUsers({
     page = 1,
@@ -29,25 +47,19 @@ export class UsersService {
     role?: Role | undefined;
     status?: AccountStatus | undefined;
   }): Promise<PaginatedResponseDto<UserResponseDto>> {
-    const whereRole =
-      role != undefined ? eq(profile_info.role, role) : undefined;
+    const whereRole = role != undefined ? eq(users.role, role) : undefined;
     const whereStatus =
       status != undefined ? eq(profile_info.account_status, status) : undefined;
 
     const data = await db
       .select({
-        uid: profile_info.user_uid,
-        first_name: profile_info.first_name,
-        last_name: profile_info.last_name,
-        role: profile_info.role,
-        account_status: profile_info.account_status,
-        email: users.email,
-        created_at: users.created_at,
+        ...user_data_rest,
+        profile: profile_data_rest,
       })
-      .from(profile_info)
+      .from(users)
       .where(and(whereRole, whereStatus))
-      .leftJoin(users, eq(users.uid, profile_info.user_uid))
-      .orderBy(desc(users.created_at))
+      .leftJoin(profile_info, eq(users.uid, profile_info.user_uid))
+      .orderBy(desc(profile_info.created_at))
       .limit(pageSize)
       .offset(
         this.paginationService.getOffsetValue({
@@ -73,20 +85,11 @@ export class UsersService {
     return result[0];
   }
 
-  async findProfileById(id: string): Promise<UserResponseDto> {
+  async findProfileById(profile_uid: string) {
     const [result] = await db
-      .select({
-        uid: profile_info.user_uid,
-        first_name: profile_info.first_name,
-        last_name: profile_info.last_name,
-        role: profile_info.role,
-        account_status: profile_info.account_status,
-        email: users.email,
-        created_at: users.created_at,
-      })
+      .select()
       .from(profile_info)
-      .leftJoin(users, eq(users.uid, profile_info.user_uid))
-      .where(eq(profile_info.user_uid, id));
+      .where(eq(profile_info.uid, profile_uid));
     return result;
   }
 
@@ -123,17 +126,16 @@ export class UsersService {
       const result = await hash(payload.password, salt);
       const [new_user] = await db
         .insert(users)
-        .values({ email: payload.email, password: result })
+        .values({ email: payload.email, password: result, role: payload.role })
         .returning();
       await db.insert(profile_info).values({
         user_uid: new_user.uid,
         first_name: payload.first_name,
         last_name: payload.last_name,
-        role: payload.role,
         account_status: AccountStatus.ACTIVE,
       });
+      const profile = await this.getUser(new_user.uid);
       await db.delete(invites).where(eq(invites.email, payload.email));
-      const profile = await this.findProfileById(new_user.uid);
       return profile;
     } else {
       throw new ConflictException(
@@ -148,17 +150,16 @@ export class UsersService {
       .set({ account_status: AccountStatus.SUSPENDED })
       .where(eq(profile_info.user_uid, id));
 
-    const profile = await this.findProfileById(id);
-    return profile;
+    const user = await this.getUser(id);
+    return user;
   }
 
-  async activateUserAccount(id: string): Promise<UserResponseDto> {
+  async activateUserAccount(id: string): Promise<any> {
     await db
       .update(profile_info)
       .set({ account_status: AccountStatus.ACTIVE })
       .where(eq(profile_info.user_uid, id));
-
-    const profile = await this.findProfileById(id);
-    return profile;
+    const user = await this.getUser(id);
+    return user;
   }
 }

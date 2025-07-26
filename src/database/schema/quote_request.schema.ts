@@ -1,8 +1,8 @@
 import { pgTable, text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './user.schema';
 import { enumToPgEnum } from './utils';
-import { QuoteRequestUrgencyType } from 'src/shared/enums/quote-request-urgency-type.enum';
-import { QuoteRequestStatus } from 'src/shared/enums/quote-request-status.enum';
+import { QuoteRequestUrgencyType } from 'src/request-quotes/enums/quote-request-urgency-type.enum';
+import { QuoteRequestStatus } from 'src/request-quotes/enums/quote-request-status.enum';
 
 export const quote_requests = pgTable('quote_requests', {
   uid: uuid().defaultRandom().primaryKey(),

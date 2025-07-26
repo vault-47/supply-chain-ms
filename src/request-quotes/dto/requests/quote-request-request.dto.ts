@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsUUID, Min } from 'class-validator';
-import { QuoteRequestUrgencyType } from 'src/shared/enums/quote-request-urgency-type.enum';
+import { QuoteRequestUrgencyType } from 'src/request-quotes/enums/quote-request-urgency-type.enum';
 
 export class QuoteRequestRequestDto {
   @IsString()

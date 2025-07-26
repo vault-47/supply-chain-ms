@@ -24,7 +24,7 @@ import { QuoteRequestsService } from './quote-requests.service';
 import { QuoteRequestRequestDto } from './dto/requests/quote-request-request.dto';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
 
-@Controller('request-quotes')
+@Controller('quotes-requests')
 export class QuoteRequestsController {
   constructor(private readonly requestQuoteService: QuoteRequestsService) {}
 

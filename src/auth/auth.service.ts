@@ -26,7 +26,6 @@ export class AuthService {
   ) {}
   async authenticateUser(payload: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.usersService.findUserByEmail(payload.email);
-    const profile = await this.usersService.findProfileById(user.uid);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -34,12 +33,21 @@ export class AuthService {
     const isMatch = await compare(payload.password, hash);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
-    } else if (profile.account_status === AccountStatus.SUSPENDED) {
-      throw new UnauthorizedException(
-        'Account has been suspended. Contact administrator for assistance',
-      );
     } else {
-      return this.signIn(user);
+      const user_data = await this.usersService.getUser(user.uid);
+      if (user_data === undefined) {
+        throw new UnauthorizedException(
+          'Profile not found please contact admin for assistance',
+        );
+      }
+
+      if (user_data?.profile?.account_status === AccountStatus.SUSPENDED) {
+        throw new UnauthorizedException(
+          'Account has been suspended. Contact administrator for assistance',
+        );
+      } else {
+        return this.signIn(user);
+      }
     }
   }
 
@@ -78,8 +86,8 @@ export class AuthService {
     if (payload.role === Role.SUPER_ADMIN) {
       const [super_admin] = await db
         .select()
-        .from(profile_info)
-        .where(eq(profile_info.role, Role.SUPER_ADMIN));
+        .from(users)
+        .where(eq(users.role, Role.SUPER_ADMIN));
 
       if (super_admin) {
         throw new ConflictException(
@@ -91,17 +99,21 @@ export class AuthService {
 
     const [new_user] = await db
       .insert(users)
-      .values({ email: payload.email, password: hashedPassword })
+      .values({
+        email: payload.email,
+        password: hashedPassword,
+        role: payload.role,
+      })
       .returning();
+
     await db.insert(profile_info).values({
       user_uid: new_user.uid,
       first_name: payload.first_name,
       last_name: payload.last_name,
       account_status: AccountStatus.ACTIVE,
-      role: payload.role,
     });
     await db.delete(invites).where(eq(invites.email, payload.email));
-    const profile = await this.usersService.findProfileById(new_user.uid);
-    return profile;
+    const user = await this.usersService.getUser(new_user.uid);
+    return user;
   }
 }

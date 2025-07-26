@@ -28,13 +28,11 @@ export class AuthGuard implements CanActivate {
 
     try {
       const token_payload = await this.authService.validateToken(token);
-      const profile_data = await this.userService.findProfileById(
-        token_payload.sub,
-      );
+      const user_data = await this.userService.findUserById(token_payload.sub);
       const user = {
         uid: token_payload.sub,
         email: token_payload.email,
-        role: profile_data.role,
+        role: user_data.role,
       };
       request.user = user;
       return true;
