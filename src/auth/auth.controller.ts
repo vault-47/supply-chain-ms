@@ -27,7 +27,7 @@ export class AuthController {
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: LoginRequestDto })
-  login(@Body() loginRequest: LoginRequestDto) {
+  async login(@Body() loginRequest: LoginRequestDto) {
     return this.authService.authenticateUser(loginRequest);
   }
 
@@ -37,7 +37,7 @@ export class AuthController {
   @ApiOkWrappedResponse(UserResponseDto)
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: RegistrationRequestDto })
-  register(@Body() registrationRequest: RegistrationRequestDto) {
+  async register(@Body() registrationRequest: RegistrationRequestDto) {
     return this.authService.createSuperAdminAccount(registrationRequest);
   }
 }

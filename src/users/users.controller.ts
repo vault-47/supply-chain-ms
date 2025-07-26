@@ -2,7 +2,6 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  NotFoundException,
   Param,
   Post,
   Query,
@@ -31,12 +30,12 @@ import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.deco
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 
 @Controller('users')
-@UseGuards(AuthGuard, RolesGuard)
-@Roles(Role.ADMIN, Role.SUPER_ADMIN)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiExtraModels(PaginatedResponseDto, UserResponseDto)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @Get()
   @ApiOperation({
     summary: `Returns list of users. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
@@ -88,8 +87,9 @@ export class UsersController {
   }
 
   @Get('/:id')
+  @UseGuards(AuthGuard)
   @ApiOperation({
-    summary: `Returns specific user. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
+    summary: `Returns specific user. Accessible by any logged in user`,
   })
   @ResponseMessage('User information fetched')
   @ApiOkWrappedResponse(UserResponseDto)
@@ -97,15 +97,13 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
   async getUser(@Param('id') id: string) {
-    const user = await this.usersService.findUserById(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return await this.usersService.findProfileById(id);
+    return await this.usersService.getUser(id);
   }
 
   @ApiExtraModels(BaseResponseDto, UserResponseDto)
   @Post('/:id/suspend')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @ApiOperation({
     summary: `Suspend user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
@@ -127,14 +125,16 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
   async suspendUser(@Param('id') id: string) {
-    const profile = await this.usersService.findProfileById(id);
-    if (profile.role === Role.SUPER_ADMIN) {
+    const user_data = await this.usersService.getUser(id);
+    if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
     return this.usersService.suspendUserAccount(id);
   }
 
   @ApiExtraModels(BaseResponseDto, UserResponseDto)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @Post('/:id/activate')
   @ApiOperation({
     summary: `Activate user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
@@ -157,8 +157,8 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
   async activateUser(@Param('id') id: string) {
-    const profile = await this.usersService.findProfileById(id);
-    if (profile.role === Role.SUPER_ADMIN) {
+    const user_data = await this.usersService.getUser(id);
+    if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
     return this.usersService.activateUserAccount(id);

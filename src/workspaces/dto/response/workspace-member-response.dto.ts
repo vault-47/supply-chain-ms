@@ -1,0 +1,31 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { UserResponseDto } from 'src/users/dto/response/user-response.dto';
+
+export class WorkSpaceMemberResponseDto {
+  @ApiProperty({
+    required: false,
+    example: 'uuid-here',
+  })
+  workspace_uid: string | null;
+
+  @ApiProperty({
+    required: false,
+    example: 'uuid-here',
+  })
+  user_uid: string | null;
+
+  @ApiProperty({
+    required: false,
+    example: 'uuid-here',
+  })
+  invited_by: string | null;
+
+  @ApiProperty({
+    required: false,
+    example: '2025-06-05 06:55:28.677072+01',
+  })
+  joined_at: Date | null;
+
+  @ApiProperty({ type: UserResponseDto })
+  user: UserResponseDto | null;
+}
