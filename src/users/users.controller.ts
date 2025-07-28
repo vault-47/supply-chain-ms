@@ -26,6 +26,8 @@ import {
   ApiOkWrappedResponse,
 } from 'src/shared/decorator/swagger-response.decorator';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
+import { UserParamDto } from './dto/user-param-dto';
+import { UserQueryDto } from './dto/user-query-dto';
 
 @Controller('users')
 export class UsersController {
@@ -41,26 +43,26 @@ export class UsersController {
   @ResponseMessage('Users list')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
-  @ApiQuery({ name: 'role', required: false, type: String, enum: Role })
+  @ApiQuery({ name: 'role', required: false, type: typeof Role, enum: Role })
   @ApiQuery({
-    name: 'status',
+    name: 'accountStatus',
     required: false,
-    type: String,
+    type: typeof AccountStatus,
     enum: AccountStatus,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async getUsers(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-    @Query('role') role: Role,
-    @Query('status') status: AccountStatus,
-  ) {
-    return this.usersService.getAllUsers({ page, pageSize, role, status });
+  async getUsers(@Query() queries: UserQueryDto) {
+    return this.usersService.getAllUsers({
+      page: queries.page,
+      pageSize: queries.pageSize,
+      role: queries.role,
+      status: queries.accountStatus,
+    });
   }
 
-  @Get('/:id')
+  @Get('/:uid')
   @UseGuards(AuthGuard)
   @ApiOperation({
     summary: `Returns specific user. Accessible by any logged in user`,
@@ -70,11 +72,11 @@ export class UsersController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async getUser(@Param('id') id: string) {
-    return await this.usersService.getUser(id);
+  async getUser(@Param() params: UserParamDto) {
+    return await this.usersService.getUser(params.uid);
   }
 
-  @Post('/:id/suspend')
+  @Post('/:uid/suspend')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @ApiOperation({
@@ -85,17 +87,17 @@ export class UsersController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async suspendUser(@Param('id') id: string) {
-    const user_data = await this.usersService.getUser(id);
+  async suspendUser(@Param() params: UserParamDto) {
+    const user_data = await this.usersService.getUser(params.uid);
     if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
-    return this.usersService.suspendUserAccount(id);
+    return this.usersService.suspendUserAccount(params.uid);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
-  @Post('/:id/activate')
+  @Post('/:uid/activate')
   @ApiOperation({
     summary: `Activate user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
@@ -104,11 +106,11 @@ export class UsersController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async activateUser(@Param('id') id: string) {
-    const user_data = await this.usersService.getUser(id);
+  async activateUser(@Param() params: UserParamDto) {
+    const user_data = await this.usersService.getUser(params.uid);
     if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
-    return this.usersService.activateUserAccount(id);
+    return this.usersService.activateUserAccount(params.uid);
   }
 }
