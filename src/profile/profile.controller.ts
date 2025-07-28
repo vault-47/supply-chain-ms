@@ -1,7 +1,6 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiExtraModels,
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -11,7 +10,6 @@ import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
-import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -19,11 +17,10 @@ export class ProfileController {
 
   @UseGuards(AuthGuard)
   @Get()
-  @ApiExtraModels(BaseResponseDto, UserResponseDto)
   @ApiOperation({ summary: 'Current user profile' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ResponseMessage('Profile fetched successfully')
-  @ApiOkWrappedResponse(UserResponseDto)
+  @ApiOkWrappedResponse(UserResponseDto, 'Current user profile')
   @ApiBearerAuth('bearer')
   async profile(@Request() request: AuthenticatedRequest) {
     const data = request?.user;

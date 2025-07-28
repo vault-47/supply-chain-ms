@@ -9,18 +9,18 @@ import {
   Query,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiExtraModels,
-  ApiOkResponse,
+  ApiNoContentResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
-  getSchemaPath,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
@@ -29,13 +29,14 @@ import { Roles } from 'src/shared/decorator/role.decorator';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { WorkspacesService } from './workspaces.service';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
-import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { GetWorkspaceMembersParamDto } from './dto/get-workspace-members-param-dto';
 import { CreateWorkspaceBodyDto } from './dto/create-workspace-body.dto';
 import { GetWorkspaceParamDto } from './dto/get-workspace-param-dto';
 import { WorkSpaceMemberResponseDto } from './dto/workspace-member-response.dto';
-import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
-import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
+import {
+  ApiOkWrappedPaginatedResponse,
+  ApiOkWrappedResponse,
+} from 'src/shared/decorator/swagger-response.decorator';
 import { WorkspaceResponseDto } from './dto/workspace-response-dto';
 import { DeleteWorkspaceMemberParamDto } from './dto/delete-workspace-member-paraam-dto';
 import { InviteWorkspaceMemberBodyDto } from './dto/invite-workspace-member-body.dto';
@@ -52,9 +53,8 @@ export class WorkspacesController {
   @ResponseMessage('Workspace created successfully')
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiExtraModels(BaseResponseDto, WorkspaceResponseDto)
   @ResponseMessage('Workspace created successfully')
-  @ApiOkWrappedResponse(WorkspaceResponseDto)
+  @ApiOkWrappedResponse(WorkspaceResponseDto, 'Workspace creation successful')
   @ApiBody({ type: CreateWorkspaceBodyDto })
   @ApiBearerAuth('bearer')
   async createWorkspace(
@@ -76,9 +76,11 @@ export class WorkspacesController {
   @ResponseMessage('Workspace member invited successfully')
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiExtraModels(BaseResponseDto, WorkspaceResponseDto)
   @ResponseMessage('Workspace created successfully')
-  @ApiOkWrappedResponse(WorkspaceResponseDto)
+  @ApiOkWrappedResponse(
+    WorkspaceResponseDto,
+    'Workspace member invite successful',
+  )
   @ApiBody({ type: InviteWorkspaceMemberBodyDto })
   @ApiBearerAuth('bearer')
   async inviteWorkspaceMember(
@@ -96,30 +98,9 @@ export class WorkspacesController {
   @ApiOperation({
     summary: "List current user's workspaces. Accessible only by customers",
   })
-  @ApiExtraModels(BaseResponseDto, WorkspaceResponseDto)
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ResponseMessage('Workspaces fetched successfully')
-  @ApiOkResponse({
-    description: "Current user's workspaces",
-    schema: {
-      allOf: [
-        {
-          properties: {
-            status: {
-              type: 'boolean',
-            },
-            message: {
-              type: 'string',
-            },
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(WorkspaceResponseDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedResponse(WorkspaceResponseDto, "Current user's workspaces")
   @ApiBearerAuth('bearer')
   async fetchWorkspaces(@Request() request: AuthenticatedRequest) {
     const data = request?.user;
@@ -132,8 +113,7 @@ export class WorkspacesController {
   })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ResponseMessage('Fetched workspace')
-  @ApiExtraModels(BaseResponseDto, WorkspaceResponseDto)
-  @ApiOkWrappedResponse(WorkspaceResponseDto)
+  @ApiOkWrappedResponse(WorkspaceResponseDto, 'Workspace detail')
   @ApiBearerAuth('bearer')
   async getWorkspaceDetail(
     @Param() params: GetWorkspaceParamDto,
@@ -153,8 +133,7 @@ export class WorkspacesController {
   })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ResponseMessage('Workspace name updated')
-  @ApiExtraModels(BaseResponseDto, WorkspaceResponseDto)
-  @ApiOkWrappedResponse(WorkspaceResponseDto)
+  @ApiOkWrappedResponse(WorkspaceResponseDto, 'Workspace updated successfully')
   @ApiBody({ type: CreateWorkspaceBodyDto })
   @ApiBearerAuth('bearer')
   async updateWorkspaceName(
@@ -170,35 +149,14 @@ export class WorkspacesController {
     });
   }
 
-  @ApiExtraModels(PaginatedResponseDto, WorkSpaceMemberResponseDto)
   @Get('/:id/members')
   @ApiOperation({
     summary: `Returns list of current user's workspace members`,
   })
-  @ApiOkResponse({
-    description: 'Paginated workspace members',
-    schema: {
-      allOf: [
-        {
-          $ref: getSchemaPath(PaginatedResponseDto),
-        },
-        {
-          properties: {
-            status: {
-              type: 'boolean',
-            },
-            message: {
-              type: 'string',
-            },
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(WorkSpaceMemberResponseDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedPaginatedResponse(
+    WorkSpaceMemberResponseDto,
+    'Paginated workspace members',
+  )
   @ResponseMessage('Members list')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
@@ -221,13 +179,23 @@ export class WorkspacesController {
   @ApiOperation({
     summary: `Remove workspace member`,
   })
-  @ApiOkResponse({
-    description: 'Member removed',
+  @HttpCode(204)
+  @ApiNoContentResponse({
+    description: 'Workspace member removed successfully',
   })
-  @ResponseMessage('Member removed')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
+  @ApiParam({
+    name: 'workspace_id',
+    required: true,
+    description: 'Workspace ID',
+  })
+  @ApiParam({
+    name: 'user_id',
+    required: true,
+    description: 'User ID to remove',
+  })
   async removeWorkspaceMember(@Param() params: DeleteWorkspaceMemberParamDto) {
     return this.workspaceService.removeWorkspaceMember({
       workspace_uid: params.workspace_uid,

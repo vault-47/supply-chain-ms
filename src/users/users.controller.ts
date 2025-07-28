@@ -10,60 +10,34 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiExtraModels,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiUnauthorizedResponse,
-  getSchemaPath,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/shared/enums/role.enum';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
-import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
-import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
-import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
+import {
+  ApiOkWrappedPaginatedResponse,
+  ApiOkWrappedResponse,
+} from 'src/shared/decorator/swagger-response.decorator';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiExtraModels(PaginatedResponseDto, UserResponseDto)
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @Get()
   @ApiOperation({
     summary: `Returns list of users. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
-  @ApiOkResponse({
-    description: 'Paginated users',
-    schema: {
-      allOf: [
-        {
-          $ref: getSchemaPath(PaginatedResponseDto),
-        },
-        {
-          properties: {
-            status: {
-              type: 'boolean',
-            },
-            message: {
-              type: 'string',
-            },
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(UserResponseDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedPaginatedResponse(UserResponseDto, 'Paginated users')
   @ResponseMessage('Users list')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
@@ -92,7 +66,7 @@ export class UsersController {
     summary: `Returns specific user. Accessible by any logged in user`,
   })
   @ResponseMessage('User information fetched')
-  @ApiOkWrappedResponse(UserResponseDto)
+  @ApiOkWrappedResponse(UserResponseDto, 'Get user account')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
@@ -100,26 +74,13 @@ export class UsersController {
     return await this.usersService.getUser(id);
   }
 
-  @ApiExtraModels(BaseResponseDto, UserResponseDto)
   @Post('/:id/suspend')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @ApiOperation({
     summary: `Suspend user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
-  @ApiOkResponse({
-    description: 'Suspend user account',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(BaseResponseDto) },
-        {
-          properties: {
-            data: { $ref: getSchemaPath(UserResponseDto) },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedResponse(UserResponseDto, 'Suspend user account')
   @ResponseMessage('User has been suspended')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -132,26 +93,13 @@ export class UsersController {
     return this.usersService.suspendUserAccount(id);
   }
 
-  @ApiExtraModels(BaseResponseDto, UserResponseDto)
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @Post('/:id/activate')
   @ApiOperation({
     summary: `Activate user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
-  @ApiOkResponse({
-    description: 'Activate user account',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(BaseResponseDto) },
-        {
-          properties: {
-            data: { $ref: getSchemaPath(UserResponseDto) },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedResponse(UserResponseDto, 'Activate user account')
   @ResponseMessage('User has been activated')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })

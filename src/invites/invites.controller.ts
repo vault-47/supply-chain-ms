@@ -11,13 +11,10 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiExtraModels,
-  ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiQuery,
   ApiUnauthorizedResponse,
-  getSchemaPath,
 } from '@nestjs/swagger';
 import { InvitesService } from './invites.service';
 import { InviteUserRequestDto } from './dto/invite-user-request.dto';
@@ -26,13 +23,16 @@ import { Role } from 'src/shared/enums/role.enum';
 import { AcceptInviteRequestDto } from './dto/accept-invite-request.dto';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
-import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { InvitationResponseDto } from './dto/invitation-response.dto';
 import { UsersService } from 'src/users/users.service';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
-import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { InviteUserResponseDto } from './dto/invite-user-response.dto';
+import {
+  ApiOkWrappedPaginatedResponse,
+  ApiOkWrappedResponse,
+} from 'src/shared/decorator/swagger-response.decorator';
+import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 
 @Controller('invites')
 export class InvitesController {
@@ -47,10 +47,7 @@ export class InvitesController {
   @ApiOperation({
     summary: `Admins send invite to ${Role.ADMIN}, ${Role.SHIPPER} and ${Role.VENDOR}`,
   })
-  @ApiOkResponse({
-    description: 'Successfully sent invitation',
-    type: InviteUserResponseDto,
-  })
+  @ApiOkWrappedResponse(InviteUserResponseDto, 'User invite sent successfully')
   @ResponseMessage('Invitation has been sent to admin')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -60,7 +57,6 @@ export class InvitesController {
     return this.invitesService.inviteUser(inviteUserRequest);
   }
 
-  @ApiExtraModels(BaseResponseDto, UserResponseDto)
   @Post('/:invite_code/accept')
   @ApiParam({
     name: 'invite_code',
@@ -71,19 +67,7 @@ export class InvitesController {
   @ApiOperation({
     summary: 'User i.e admins, shippers and vendors complete onboarding',
   })
-  @ApiOkResponse({
-    description: 'Successfully accepted invitation',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(BaseResponseDto) },
-        {
-          properties: {
-            data: { $ref: getSchemaPath(UserResponseDto) },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedResponse(UserResponseDto, 'Successfully accepted invitation')
   @ResponseMessage('Invitation accepted')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -101,36 +85,12 @@ export class InvitesController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
-  @ApiExtraModels(PaginatedResponseDto, InvitationResponseDto)
   @Get()
   @ApiOperation({
     summary: `Returns list of invites. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
   @ResponseMessage('List of invites')
-  @ApiOkResponse({
-    description: 'Paginated invites',
-    schema: {
-      allOf: [
-        {
-          $ref: getSchemaPath(PaginatedResponseDto),
-        },
-        {
-          properties: {
-            status: {
-              type: 'boolean',
-            },
-            message: {
-              type: 'string',
-            },
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(InvitationResponseDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedPaginatedResponse(InvitationResponseDto, 'Invitation list')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
   @ApiQuery({
