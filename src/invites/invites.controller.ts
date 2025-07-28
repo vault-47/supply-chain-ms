@@ -32,7 +32,6 @@ import {
   ApiOkWrappedPaginatedResponse,
   ApiOkWrappedResponse,
 } from 'src/shared/decorator/swagger-response.decorator';
-import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 
 @Controller('invites')
 export class InvitesController {
