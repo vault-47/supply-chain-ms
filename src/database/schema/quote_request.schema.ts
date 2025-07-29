@@ -5,11 +5,11 @@ import { QuoteRequestUrgencyType } from 'src/request-quotes/enums/quote-request-
 import { QuoteRequestStatus } from 'src/request-quotes/enums/quote-request-status.enum';
 
 export const quote_requests = pgTable('quote_requests', {
-  uid: uuid().defaultRandom().primaryKey(),
-  user_uid: uuid('user_uid').references(() => users.uid, {
+  id: uuid().defaultRandom().primaryKey(),
+  user_id: uuid('user_id').references(() => users.id, {
     onDelete: 'cascade',
   }),
-  vendor_uid: uuid('vendor_uid').references(() => users.uid, {
+  vendor_id: uuid('vendor_id').references(() => users.id, {
     onDelete: 'cascade',
   }),
   origin_address: text('origin_address').notNull(),

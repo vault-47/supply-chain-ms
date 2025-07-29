@@ -24,6 +24,6 @@ export class ProfileController {
   @ApiBearerAuth('bearer')
   async profile(@Request() request: AuthenticatedRequest) {
     const data = request?.user;
-    return this.usersService.getUser(data.uid);
+    return this.usersService.getUser(data.id);
   }
 }

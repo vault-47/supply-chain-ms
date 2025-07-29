@@ -7,6 +7,6 @@ export class InviteWorkspaceMemberBodyDto {
   user_id: string;
 
   @IsUUID()
-  @ApiProperty({ type: String, description: 'workspace_uid' })
-  workspace_uid: string;
+  @ApiProperty({ type: String, description: 'workspace_id' })
+  workspace_id: string;
 }

@@ -17,6 +17,7 @@ import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
+import { AccountType } from 'src/shared/enums/account-type.enum';
 
 @Injectable()
 export class AuthService {
@@ -34,14 +35,14 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     } else {
-      const user_data = await this.usersService.getUser(user.uid);
+      const user_data = await this.usersService.getUser(user.id);
       if (user_data === undefined) {
         throw new UnauthorizedException(
           'Profile not found please contact admin for assistance',
         );
       }
 
-      if (user_data?.profile?.account_status === AccountStatus.SUSPENDED) {
+      if (user_data?.account_status === AccountStatus.SUSPENDED) {
         throw new UnauthorizedException(
           'Account has been suspended. Contact administrator for assistance',
         );
@@ -51,12 +52,9 @@ export class AuthService {
     }
   }
 
-  async signIn(user: {
-    uid: string;
-    email: string;
-  }): Promise<LoginResponseDto> {
+  async signIn(user: { id: string; email: string }): Promise<LoginResponseDto> {
     const token_payload = {
-      sub: user.uid,
+      sub: user.id,
       email: user.email,
     };
     const access_token = await this.jwtService.signAsync(token_payload);
@@ -83,18 +81,17 @@ export class AuthService {
   async createSuperAdminAccount(
     payload: RegistrationRequestDto,
   ): Promise<UserResponseDto> {
-    if (payload.role === Role.SUPER_ADMIN) {
-      const [super_admin] = await db
-        .select()
-        .from(users)
-        .where(eq(users.role, Role.SUPER_ADMIN));
+    const [super_admin] = await db
+      .select()
+      .from(users)
+      .where(eq(users.role, Role.SUPER_ADMIN));
 
-      if (super_admin) {
-        throw new ConflictException(
-          'Cannot register another super admin. Super admin already exists',
-        );
-      }
+    if (super_admin) {
+      throw new ConflictException(
+        'Cannot register another super admin. Super admin already exists',
+      );
     }
+
     const hashedPassword = await this.generateHashedPassword(payload.password);
 
     const [new_user] = await db
@@ -102,18 +99,19 @@ export class AuthService {
       .values({
         email: payload.email,
         password: hashedPassword,
-        role: payload.role,
+        role: Role.SUPER_ADMIN,
+        account_type: AccountType.ADMIN,
+        account_status: AccountStatus.ACTIVE,
       })
       .returning();
 
     await db.insert(profile_info).values({
-      user_uid: new_user.uid,
+      user_id: new_user.id,
       first_name: payload.first_name,
       last_name: payload.last_name,
-      account_status: AccountStatus.ACTIVE,
     });
     await db.delete(invites).where(eq(invites.email, payload.email));
-    const user = await this.usersService.getUser(new_user.uid);
+    const user = await this.usersService.getUser(new_user.id);
     return user;
   }
 }

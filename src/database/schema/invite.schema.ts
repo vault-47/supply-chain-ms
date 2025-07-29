@@ -3,7 +3,7 @@ import { enumToPgEnum } from './utils';
 import { Role } from 'src/shared/enums/role.enum';
 
 export const invites = pgTable('invites', {
-  uid: uuid().defaultRandom().primaryKey(),
+  id: uuid().defaultRandom().primaryKey(),
   email: varchar('email', { length: 255 }).unique().notNull(),
   code: text('code').notNull(),
   role: text({ enum: enumToPgEnum(Role) }).notNull(),

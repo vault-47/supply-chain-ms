@@ -5,11 +5,11 @@ import { users } from './user.schema';
 import { QuoteStatus } from 'src/quotes/enums/quote-status.enum';
 
 export const quotes = pgTable('quotes', {
-  uid: uuid().defaultRandom().primaryKey(),
-  quote_request_uid: uuid('quote_request_uid').references(
-    () => quote_requests.uid,
+  id: uuid().defaultRandom().primaryKey(),
+  quote_request_id: uuid('quote_request_id').references(
+    () => quote_requests.id,
   ),
-  vendor_uid: uuid('vendor_uid').references(() => users.uid, {
+  vendor_id: uuid('vendor_id').references(() => users.id, {
     onDelete: 'cascade',
   }),
   price: text('price').notNull(),

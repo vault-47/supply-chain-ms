@@ -4,19 +4,19 @@ import { UserResponseDto } from 'src/users/dto/user-response.dto';
 export class WorkSpaceMemberResponseDto {
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
-  workspace_uid: string | null;
+  workspace_id: string | null;
 
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
-  user_uid: string | null;
+  user_id: string | null;
 
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
   invited_by: string | null;
 

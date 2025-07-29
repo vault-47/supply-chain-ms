@@ -1,12 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AccountStatus } from 'src/shared/enums/account-status.enum';
 
 export class ProfileResponseDto {
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
-  uid: string | null;
+  id: string | null;
 
   @ApiProperty({
     required: false,
@@ -19,12 +18,6 @@ export class ProfileResponseDto {
     example: 'last_name',
   })
   last_name: string;
-
-  @ApiProperty({
-    required: false,
-    example: AccountStatus.ACTIVE,
-  })
-  account_status: AccountStatus;
 
   @ApiProperty({
     required: false,
