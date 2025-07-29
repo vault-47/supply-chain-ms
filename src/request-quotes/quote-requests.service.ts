@@ -5,10 +5,10 @@ import { QuoteRequestRequestDto } from './dto/quote-request-request.dto';
 
 @Injectable()
 export class QuoteRequestsService {
-  async create(user_uid: string, payload: QuoteRequestRequestDto) {
+  async create(user_id: string, payload: QuoteRequestRequestDto) {
     await db
       .insert(quote_requests)
-      .values({ user_uid, ...payload })
+      .values({ user_id, ...payload })
       .returning();
   }
 }

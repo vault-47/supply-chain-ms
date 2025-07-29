@@ -3,15 +3,15 @@ import { ApiProperty } from '@nestjs/swagger';
 export class WorkspaceResponseDto {
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
-  uid: string | null;
+  id: string | null;
 
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
-  owner_user_uid: string | null;
+  owner_user_id: string | null;
 
   @ApiProperty({
     required: false,

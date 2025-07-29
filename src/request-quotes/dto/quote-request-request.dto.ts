@@ -5,8 +5,8 @@ import { QuoteRequestUrgencyType } from 'src/request-quotes/enums/quote-request-
 export class QuoteRequestRequestDto {
   @IsString()
   @IsUUID()
-  @ApiProperty({ type: String, description: 'vendor_uid' })
-  vendor_uid: string;
+  @ApiProperty({ type: String, description: 'vendor_id' })
+  vendor_id: string;
 
   @IsString()
   @ApiProperty({ type: String, description: 'origin_address' })

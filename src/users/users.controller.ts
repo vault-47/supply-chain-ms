@@ -62,7 +62,7 @@ export class UsersController {
     });
   }
 
-  @Get('/:uid')
+  @Get('/:id')
   @UseGuards(AuthGuard)
   @ApiOperation({
     summary: `Returns specific user. Accessible by any logged in user`,
@@ -73,10 +73,10 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
   async getUser(@Param() params: UserParamDto) {
-    return await this.usersService.getUser(params.uid);
+    return await this.usersService.getUser(params.id);
   }
 
-  @Post('/:uid/suspend')
+  @Post('/:id/suspend')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @ApiOperation({
@@ -88,16 +88,16 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
   async suspendUser(@Param() params: UserParamDto) {
-    const user_data = await this.usersService.getUser(params.uid);
+    const user_data = await this.usersService.getUser(params.id);
     if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
-    return this.usersService.suspendUserAccount(params.uid);
+    return this.usersService.suspendUserAccount(params.id);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
-  @Post('/:uid/activate')
+  @Post('/:id/activate')
   @ApiOperation({
     summary: `Activate user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
@@ -107,10 +107,10 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
   async activateUser(@Param() params: UserParamDto) {
-    const user_data = await this.usersService.getUser(params.uid);
+    const user_data = await this.usersService.getUser(params.id);
     if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
-    return this.usersService.activateUserAccount(params.uid);
+    return this.usersService.activateUserAccount(params.id);
   }
 }

@@ -46,7 +46,7 @@ export class QuoteRequestsController {
     @Body() requestQuote: QuoteRequestRequestDto,
   ) {
     const data = request?.user;
-    return this.requestQuoteService.create(data.uid, requestQuote);
+    return this.requestQuoteService.create(data.id, requestQuote);
   }
 
   @UseGuards(AuthGuard, RolesGuard)

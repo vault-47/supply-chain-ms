@@ -3,6 +3,6 @@ import { IsUUID } from 'class-validator';
 
 export class UserParamDto {
   @IsUUID()
-  @ApiProperty({ type: String, description: 'uid' })
-  uid: string;
+  @ApiProperty({ type: String, description: 'id' })
+  id: string;
 }

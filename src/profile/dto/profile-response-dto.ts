@@ -4,9 +4,9 @@ import { AccountStatus } from 'src/shared/enums/account-status.enum';
 export class ProfileResponseDto {
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
-  uid: string | null;
+  id: string | null;
 
   @ApiProperty({
     required: false,

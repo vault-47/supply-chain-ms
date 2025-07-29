@@ -23,46 +23,46 @@ export class WorkspacesService {
   constructor(private readonly paginationService: PaginationService) {}
 
   async createWorkspace(payload: {
-    owner_user_uid: string;
+    owner_user_id: string;
     body: CreateWorkspaceBodyDto;
   }): Promise<WorkspaceResponseDto> {
     const [new_workspace] = await db
       .insert(workspaces)
-      .values({ owner_user_uid: payload.owner_user_uid, ...payload.body })
+      .values({ owner_user_id: payload.owner_user_id, ...payload.body })
       .returning();
 
     await db
       .insert(workspace_members)
       .values({
-        workspace_uid: new_workspace.uid,
-        user_uid: payload.owner_user_uid,
-        invited_by: payload.owner_user_uid,
+        workspace_id: new_workspace.id,
+        user_id: payload.owner_user_id,
+        invited_by: payload.owner_user_id,
       })
       .returning();
 
     return new_workspace;
   }
 
-  async fetchCurrentUserWorkspaces(profile_uid: string) {
+  async fetchCurrentUserWorkspaces(profile_id: string) {
     const workspace_list = await db
       .select()
       .from(workspaces)
-      .where(eq(workspaces.owner_user_uid, profile_uid));
+      .where(eq(workspaces.owner_user_id, profile_id));
     if (workspace_list.length > 0) return workspace_list;
     return [];
   }
 
   async getWorkspaceDetail(payload: {
-    workspace_uid: string;
-    user_uid: string;
+    workspace_id: string;
+    user_id: string;
   }): Promise<WorkspaceResponseDto> {
     const [workspace] = await db
       .select()
       .from(workspaces)
       .where(
         and(
-          eq(workspaces.owner_user_uid, payload.user_uid),
-          eq(workspaces.uid, payload.workspace_uid),
+          eq(workspaces.owner_user_id, payload.user_id),
+          eq(workspaces.id, payload.workspace_id),
         ),
       );
     if (workspace) return workspace;
@@ -70,8 +70,8 @@ export class WorkspacesService {
   }
 
   async updateWorkspace(payload: {
-    workspace_uid: string;
-    profile_uid: string;
+    workspace_id: string;
+    profile_id: string;
     body: CreateWorkspaceBodyDto;
   }): Promise<WorkspaceResponseDto> {
     const [user_own_workspace] = await db
@@ -79,8 +79,8 @@ export class WorkspacesService {
       .from(workspaces)
       .where(
         and(
-          eq(workspaces.owner_user_uid, payload.profile_uid),
-          eq(workspaces.uid, payload.workspace_uid),
+          eq(workspaces.owner_user_id, payload.profile_id),
+          eq(workspaces.id, payload.workspace_id),
         ),
       );
 
@@ -91,27 +91,27 @@ export class WorkspacesService {
     const [result] = await db
       .update(workspaces)
       .set({ ...payload.body })
-      .where(eq(workspaces.owner_user_uid, payload.profile_uid))
+      .where(eq(workspaces.owner_user_id, payload.profile_id))
       .returning();
 
     return result;
   }
 
   async getWorkspaceMembers({
-    workspace_uid = '',
+    workspace_id = '',
     page = 1,
     pageSize = 10,
   }: {
-    workspace_uid: string | undefined;
+    workspace_id: string | undefined;
     page?: number;
     pageSize?: number;
   }): Promise<PaginatedResponseDto<WorkSpaceMemberResponseDto>> {
-    const { user_uid, created_at, ...rest } = getTableColumns(profile_info); // exclude user_uid
+    const { user_id, created_at, ...rest } = getTableColumns(profile_info); // exclude user_id
 
     const [workspace] = await db
       .select()
       .from(workspaces)
-      .where(eq(workspaces.uid, workspace_uid));
+      .where(eq(workspaces.id, workspace_id));
 
     if (!workspace) {
       throw new NotFoundException('Workspace not found or doesnt exist');
@@ -123,10 +123,10 @@ export class WorkspacesService {
         email: users.email,
       })
       .from(workspace_members)
-      .where(eq(workspace_members.workspace_uid, workspace_uid))
+      .where(eq(workspace_members.workspace_id, workspace_id))
       .leftJoin(
         workspace_members,
-        eq(workspace_members.user_uid, profile_info.uid),
+        eq(workspace_members.user_id, profile_info.id),
       )
       .orderBy(desc(profile_info.created_at))
       .limit(pageSize)
@@ -150,15 +150,15 @@ export class WorkspacesService {
   }
 
   async removeWorkspaceMember(payload: {
-    workspace_uid: string;
-    user_uid: string;
+    workspace_id: string;
+    user_id: string;
   }) {
     await db
       .delete(workspace_members)
       .where(
         and(
-          eq(workspace_members.user_uid, payload.user_uid),
-          eq(workspace_members.uid, payload.workspace_uid),
+          eq(workspace_members.user_id, payload.user_id),
+          eq(workspace_members.id, payload.workspace_id),
         ),
       );
   }
@@ -170,8 +170,8 @@ export class WorkspacesService {
     const [inserted_workspace_member] = await db
       .insert(workspace_members)
       .values({
-        workspace_uid: payload.body.workspace_uid,
-        user_uid: payload.body.user_id,
+        workspace_id: payload.body.workspace_id,
+        user_id: payload.body.user_id,
         invited_by: payload.invited_by,
       })
       .returning();
@@ -180,17 +180,17 @@ export class WorkspacesService {
       throw new InternalServerErrorException('Failed to invite member');
     }
 
-    const { user_uid, created_at, ...rest } = getTableColumns(profile_info); // exclude user_uid
+    const { user_id, created_at, ...rest } = getTableColumns(profile_info); // exclude user_id
     const [workspace_member] = await db
       .select({
         ...rest,
         email: users.email,
       })
       .from(workspace_members)
-      .where(eq(workspace_members.workspace_uid, payload.body.workspace_uid))
+      .where(eq(workspace_members.workspace_id, payload.body.workspace_id))
       .leftJoin(
         workspace_members,
-        eq(workspace_members.user_uid, profile_info.uid),
+        eq(workspace_members.user_id, profile_info.id),
       );
 
     return workspace_member;

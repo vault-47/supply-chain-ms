@@ -4,8 +4,8 @@ import { users } from './user.schema';
 import { enumToPgEnum } from './utils';
 
 export const profile_info = pgTable('profile_info', {
-  uid: uuid().defaultRandom().primaryKey(),
-  user_uid: uuid('user_uid').references(() => users.uid, {
+  id: uuid().defaultRandom().primaryKey(),
+  user_id: uuid('user_id').references(() => users.id, {
     onDelete: 'cascade',
   }),
   first_name: varchar('first_name', { length: 255 }).notNull(),

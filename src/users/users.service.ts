@@ -15,22 +15,22 @@ import { Role } from 'src/shared/enums/role.enum';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { AcceptInviteRequestDto } from 'src/invites/dto/accept-invite-request.dto';
 
-const { user_uid, ...profile_data_rest } = getTableColumns(profile_info); // exclude user_uid
+const { user_id, ...profile_data_rest } = getTableColumns(profile_info); // exclude user_id
 const { password, ...user_data_rest } = getTableColumns(users); // exclude password
 
 @Injectable()
 export class UsersService {
   constructor(private readonly paginationService: PaginationService) {}
 
-  async getUser(user_uid: string): Promise<UserResponseDto> {
+  async getUser(user_id: string): Promise<UserResponseDto> {
     const result = await db
       .select({
         ...user_data_rest,
         profile: profile_data_rest,
       })
       .from(users)
-      .leftJoin(profile_info, eq(users.uid, profile_info.user_uid))
-      .where(eq(users.uid, user_uid))
+      .leftJoin(profile_info, eq(users.id, profile_info.user_id))
+      .where(eq(users.id, user_id))
       .then((rows) => rows[0]);
     if (result) return result;
     throw new NotFoundException();
@@ -58,7 +58,7 @@ export class UsersService {
       })
       .from(users)
       .where(and(whereRole, whereStatus))
-      .leftJoin(profile_info, eq(users.uid, profile_info.user_uid))
+      .leftJoin(profile_info, eq(users.id, profile_info.user_id))
       .orderBy(desc(profile_info.created_at))
       .limit(pageSize)
       .offset(
@@ -85,16 +85,16 @@ export class UsersService {
     return result[0];
   }
 
-  async findProfileById(profile_uid: string) {
+  async findProfileById(profile_id: string) {
     const [result] = await db
       .select()
       .from(profile_info)
-      .where(eq(profile_info.uid, profile_uid));
+      .where(eq(profile_info.id, profile_id));
     return result;
   }
 
   async findUserById(id: string) {
-    const result = await db.select().from(users).where(eq(users.uid, id));
+    const result = await db.select().from(users).where(eq(users.id, id));
     return result[0];
   }
 
@@ -129,12 +129,12 @@ export class UsersService {
         .values({ email: payload.email, password: result, role: payload.role })
         .returning();
       await db.insert(profile_info).values({
-        user_uid: new_user.uid,
+        user_id: new_user.id,
         first_name: payload.first_name,
         last_name: payload.last_name,
         account_status: AccountStatus.ACTIVE,
       });
-      const profile = await this.getUser(new_user.uid);
+      const profile = await this.getUser(new_user.id);
       await db.delete(invites).where(eq(invites.email, payload.email));
       return profile;
     } else {
@@ -148,7 +148,7 @@ export class UsersService {
     await db
       .update(profile_info)
       .set({ account_status: AccountStatus.SUSPENDED })
-      .where(eq(profile_info.user_uid, id));
+      .where(eq(profile_info.user_id, id));
 
     const user = await this.getUser(id);
     return user;
@@ -158,7 +158,7 @@ export class UsersService {
     await db
       .update(profile_info)
       .set({ account_status: AccountStatus.ACTIVE })
-      .where(eq(profile_info.user_uid, id));
+      .where(eq(profile_info.user_id, id));
     const user = await this.getUser(id);
     return user;
   }

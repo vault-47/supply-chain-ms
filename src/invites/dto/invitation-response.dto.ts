@@ -8,7 +8,7 @@ export class InvitationResponseDto {
   @ApiProperty({
     example: '6547b7cd-0832-43ef-ab69-edb20b931b18',
   })
-  uid: string;
+  id: string;
 
   @IsEmail()
   @IsString()

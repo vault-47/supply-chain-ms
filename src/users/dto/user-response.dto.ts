@@ -5,9 +5,9 @@ import { Role } from 'src/shared/enums/role.enum';
 export class UserResponseDto {
   @ApiProperty({
     required: false,
-    example: 'uuid-here',
+    example: 'id-here',
   })
-  uid: string | null;
+  id: string | null;
 
   @ApiProperty({ required: false, example: 'user@mail.com' })
   email: string | null;

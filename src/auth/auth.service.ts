@@ -34,7 +34,7 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     } else {
-      const user_data = await this.usersService.getUser(user.uid);
+      const user_data = await this.usersService.getUser(user.id);
       if (user_data === undefined) {
         throw new UnauthorizedException(
           'Profile not found please contact admin for assistance',
@@ -51,12 +51,9 @@ export class AuthService {
     }
   }
 
-  async signIn(user: {
-    uid: string;
-    email: string;
-  }): Promise<LoginResponseDto> {
+  async signIn(user: { id: string; email: string }): Promise<LoginResponseDto> {
     const token_payload = {
-      sub: user.uid,
+      sub: user.id,
       email: user.email,
     };
     const access_token = await this.jwtService.signAsync(token_payload);
@@ -107,13 +104,13 @@ export class AuthService {
       .returning();
 
     await db.insert(profile_info).values({
-      user_uid: new_user.uid,
+      user_id: new_user.id,
       first_name: payload.first_name,
       last_name: payload.last_name,
       account_status: AccountStatus.ACTIVE,
     });
     await db.delete(invites).where(eq(invites.email, payload.email));
-    const user = await this.usersService.getUser(new_user.uid);
+    const user = await this.usersService.getUser(new_user.id);
     return user;
   }
 }

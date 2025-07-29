@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
       const token_payload = await this.authService.validateToken(token);
       const user_data = await this.userService.findUserById(token_payload.sub);
       const user = {
-        uid: token_payload.sub,
+        id: token_payload.sub,
         email: token_payload.email,
         role: user_data.role,
       };

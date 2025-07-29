@@ -63,7 +63,7 @@ export class WorkspacesController {
   ) {
     const data = request?.user;
     return this.workspaceService.createWorkspace({
-      owner_user_uid: data.uid,
+      owner_user_id: data.id,
       body,
     });
   }
@@ -89,7 +89,7 @@ export class WorkspacesController {
   ) {
     const current_user = request?.user;
     return this.workspaceService.inviteWorkspaceMember({
-      invited_by: current_user.uid,
+      invited_by: current_user.id,
       body,
     });
   }
@@ -104,7 +104,7 @@ export class WorkspacesController {
   @ApiBearerAuth('bearer')
   async fetchWorkspaces(@Request() request: AuthenticatedRequest) {
     const data = request?.user;
-    return this.workspaceService.fetchCurrentUserWorkspaces(data.uid);
+    return this.workspaceService.fetchCurrentUserWorkspaces(data.id);
   }
 
   @Get('/:id')
@@ -121,8 +121,8 @@ export class WorkspacesController {
   ) {
     const data = request?.user;
     return this.workspaceService.getWorkspaceDetail({
-      workspace_uid: params.id,
-      user_uid: data.uid,
+      workspace_id: params.id,
+      user_id: data.id,
     });
   }
 
@@ -143,8 +143,8 @@ export class WorkspacesController {
   ) {
     const data = request?.user;
     return this.workspaceService.updateWorkspace({
-      workspace_uid: params.id,
-      profile_uid: data.uid,
+      workspace_id: params.id,
+      profile_id: data.id,
       body,
     });
   }
@@ -169,7 +169,7 @@ export class WorkspacesController {
     @Query('pageSize') pageSize: number,
   ) {
     return this.workspaceService.getWorkspaceMembers({
-      workspace_uid: params.id,
+      workspace_id: params.id,
       page,
       pageSize,
     });
@@ -198,8 +198,8 @@ export class WorkspacesController {
   })
   async removeWorkspaceMember(@Param() params: DeleteWorkspaceMemberParamDto) {
     return this.workspaceService.removeWorkspaceMember({
-      workspace_uid: params.workspace_uid,
-      user_uid: params.user_uid,
+      workspace_id: params.workspace_id,
+      user_id: params.user_id,
     });
   }
 }
