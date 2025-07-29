@@ -11,7 +11,6 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
-  ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -21,8 +20,9 @@ import { ResponseMessage } from 'src/shared/decorator/response-message.decorator
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { QuoteRequestsService } from './quote-requests.service';
-import { QuoteRequestRequestDto } from './dto/requests/quote-request-request.dto';
+import { QuoteRequestRequestDto } from './dto/quote-request-request.dto';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
+import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
 
 @Controller('quotes-requests')
 export class QuoteRequestsController {
@@ -35,10 +35,10 @@ export class QuoteRequestsController {
   @ResponseMessage('Quotes request created successfully')
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiOkResponse({
-    description: 'Quote request sent successfully',
-    type: QuoteRequestRequestDto,
-  })
+  @ApiOkWrappedResponse(
+    QuoteRequestRequestDto,
+    'Quote request sent successfully',
+  )
   @ApiBody({ type: QuoteRequestRequestDto })
   @ApiBearerAuth('bearer')
   requestQuote(

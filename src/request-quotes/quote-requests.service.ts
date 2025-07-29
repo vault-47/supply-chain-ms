@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { db } from 'src/database/connect';
 import { quote_requests } from 'src/database/schema';
-import { QuoteRequestRequestDto } from './dto/requests/quote-request-request.dto';
+import { QuoteRequestRequestDto } from './dto/quote-request-request.dto';
 
 @Injectable()
 export class QuoteRequestsService {

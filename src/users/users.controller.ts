@@ -10,157 +10,107 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiExtraModels,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiUnauthorizedResponse,
-  getSchemaPath,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/shared/enums/role.enum';
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
-import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
-import { UserResponseDto } from './dto/response/user-response.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
-import { BaseResponseDto } from 'src/shared/dto/base-response.dto';
-import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
+import {
+  ApiOkWrappedPaginatedResponse,
+  ApiOkWrappedResponse,
+} from 'src/shared/decorator/swagger-response.decorator';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
+import { UserParamDto } from './dto/user-param-dto';
+import { UserQueryDto } from './dto/user-query-dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiExtraModels(PaginatedResponseDto, UserResponseDto)
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @Get()
   @ApiOperation({
     summary: `Returns list of users. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
-  @ApiOkResponse({
-    description: 'Paginated users',
-    schema: {
-      allOf: [
-        {
-          $ref: getSchemaPath(PaginatedResponseDto),
-        },
-        {
-          properties: {
-            status: {
-              type: 'boolean',
-            },
-            message: {
-              type: 'string',
-            },
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(UserResponseDto) },
-            },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedPaginatedResponse(UserResponseDto, 'Paginated users')
   @ResponseMessage('Users list')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
-  @ApiQuery({ name: 'role', required: false, type: String, enum: Role })
+  @ApiQuery({ name: 'role', required: false, type: typeof Role, enum: Role })
   @ApiQuery({
-    name: 'status',
+    name: 'accountStatus',
     required: false,
-    type: String,
+    type: typeof AccountStatus,
     enum: AccountStatus,
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async getUsers(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-    @Query('role') role: Role,
-    @Query('status') status: AccountStatus,
-  ) {
-    return this.usersService.getAllUsers({ page, pageSize, role, status });
+  async getUsers(@Query() queries: UserQueryDto) {
+    return this.usersService.getAllUsers({
+      page: queries.page,
+      pageSize: queries.pageSize,
+      role: queries.role,
+      status: queries.accountStatus,
+    });
   }
 
-  @Get('/:id')
+  @Get('/:uid')
   @UseGuards(AuthGuard)
   @ApiOperation({
     summary: `Returns specific user. Accessible by any logged in user`,
   })
   @ResponseMessage('User information fetched')
-  @ApiOkWrappedResponse(UserResponseDto)
+  @ApiOkWrappedResponse(UserResponseDto, 'Get user account')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async getUser(@Param('id') id: string) {
-    return await this.usersService.getUser(id);
+  async getUser(@Param() params: UserParamDto) {
+    return await this.usersService.getUser(params.uid);
   }
 
-  @ApiExtraModels(BaseResponseDto, UserResponseDto)
-  @Post('/:id/suspend')
+  @Post('/:uid/suspend')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @ApiOperation({
     summary: `Suspend user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
-  @ApiOkResponse({
-    description: 'Suspend user account',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(BaseResponseDto) },
-        {
-          properties: {
-            data: { $ref: getSchemaPath(UserResponseDto) },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedResponse(UserResponseDto, 'Suspend user account')
   @ResponseMessage('User has been suspended')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async suspendUser(@Param('id') id: string) {
-    const user_data = await this.usersService.getUser(id);
+  async suspendUser(@Param() params: UserParamDto) {
+    const user_data = await this.usersService.getUser(params.uid);
     if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
-    return this.usersService.suspendUserAccount(id);
+    return this.usersService.suspendUserAccount(params.uid);
   }
 
-  @ApiExtraModels(BaseResponseDto, UserResponseDto)
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
-  @Post('/:id/activate')
+  @Post('/:uid/activate')
   @ApiOperation({
     summary: `Activate user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
   })
-  @ApiOkResponse({
-    description: 'Activate user account',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(BaseResponseDto) },
-        {
-          properties: {
-            data: { $ref: getSchemaPath(UserResponseDto) },
-          },
-        },
-      ],
-    },
-  })
+  @ApiOkWrappedResponse(UserResponseDto, 'Activate user account')
   @ResponseMessage('User has been activated')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBearerAuth('bearer')
-  async activateUser(@Param('id') id: string) {
-    const user_data = await this.usersService.getUser(id);
+  async activateUser(@Param() params: UserParamDto) {
+    const user_data = await this.usersService.getUser(params.uid);
     if (user_data.role === Role.SUPER_ADMIN) {
       throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
     }
-    return this.usersService.activateUserAccount(id);
+    return this.usersService.activateUserAccount(params.uid);
   }
 }

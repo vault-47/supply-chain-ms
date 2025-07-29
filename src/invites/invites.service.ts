@@ -7,12 +7,12 @@ import { count, desc, eq } from 'drizzle-orm';
 import { db } from 'src/database/connect';
 import { invites } from 'src/database/schema';
 import { Role } from 'src/shared/enums/role.enum';
-import { InviteUserRequestDto } from './dto/requests/invite-user-request.dto';
+import { InviteUserRequestDto } from './dto/invite-user-request.dto';
 import { MailService } from 'src/mail/mail.service';
 import generateRandomToken from 'src/shared/utils/generate-code';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
-import { InvitationResponseDto } from './dto/response/invitation-response.dto';
+import { InvitationResponseDto } from './dto/invitation-response.dto';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
