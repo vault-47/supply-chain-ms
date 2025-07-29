@@ -8,6 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Match } from 'src/shared/decorator/match.decorator';
+import { AccountType } from 'src/shared/enums/account-type.enum';
 import { Role } from 'src/shared/enums/role.enum';
 
 export class RegistrationRequestDto {
@@ -40,12 +41,4 @@ export class RegistrationRequestDto {
   @IsNotEmpty()
   @ApiProperty({ type: String, description: 'last_name' })
   last_name: string;
-
-  @IsEnum(Role)
-  @ApiProperty({
-    type: String,
-    description: 'role',
-    default: Role.SUPER_ADMIN,
-  })
-  role: Role;
 }

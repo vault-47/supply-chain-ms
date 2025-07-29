@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AccountStatus } from 'src/shared/enums/account-status.enum';
 
 export class ProfileResponseDto {
   @ApiProperty({
@@ -19,12 +18,6 @@ export class ProfileResponseDto {
     example: 'last_name',
   })
   last_name: string;
-
-  @ApiProperty({
-    required: false,
-    example: AccountStatus.ACTIVE,
-  })
-  account_status: AccountStatus;
 
   @ApiProperty({
     required: false,

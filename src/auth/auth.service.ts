@@ -17,6 +17,7 @@ import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
+import { AccountType } from 'src/shared/enums/account-type.enum';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
         );
       }
 
-      if (user_data?.profile?.account_status === AccountStatus.SUSPENDED) {
+      if (user_data?.account_status === AccountStatus.SUSPENDED) {
         throw new UnauthorizedException(
           'Account has been suspended. Contact administrator for assistance',
         );
@@ -80,18 +81,17 @@ export class AuthService {
   async createSuperAdminAccount(
     payload: RegistrationRequestDto,
   ): Promise<UserResponseDto> {
-    if (payload.role === Role.SUPER_ADMIN) {
-      const [super_admin] = await db
-        .select()
-        .from(users)
-        .where(eq(users.role, Role.SUPER_ADMIN));
+    const [super_admin] = await db
+      .select()
+      .from(users)
+      .where(eq(users.role, Role.SUPER_ADMIN));
 
-      if (super_admin) {
-        throw new ConflictException(
-          'Cannot register another super admin. Super admin already exists',
-        );
-      }
+    if (super_admin) {
+      throw new ConflictException(
+        'Cannot register another super admin. Super admin already exists',
+      );
     }
+
     const hashedPassword = await this.generateHashedPassword(payload.password);
 
     const [new_user] = await db
@@ -99,7 +99,9 @@ export class AuthService {
       .values({
         email: payload.email,
         password: hashedPassword,
-        role: payload.role,
+        role: Role.SUPER_ADMIN,
+        account_type: AccountType.ADMIN,
+        account_status: AccountStatus.ACTIVE,
       })
       .returning();
 
@@ -107,7 +109,6 @@ export class AuthService {
       user_id: new_user.id,
       first_name: payload.first_name,
       last_name: payload.last_name,
-      account_status: AccountStatus.ACTIVE,
     });
     await db.delete(invites).where(eq(invites.email, payload.email));
     const user = await this.usersService.getUser(new_user.id);

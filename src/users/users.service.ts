@@ -14,6 +14,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { AcceptInviteRequestDto } from 'src/invites/dto/accept-invite-request.dto';
+import { AccountType } from 'src/shared/enums/account-type.enum';
 
 const { user_id, ...profile_data_rest } = getTableColumns(profile_info); // exclude user_id
 const { password, ...user_data_rest } = getTableColumns(users); // exclude password
@@ -49,7 +50,7 @@ export class UsersService {
   }): Promise<PaginatedResponseDto<UserResponseDto>> {
     const whereRole = role != undefined ? eq(users.role, role) : undefined;
     const whereStatus =
-      status != undefined ? eq(profile_info.account_status, status) : undefined;
+      status != undefined ? eq(users.account_status, status) : undefined;
 
     const data = await db
       .select({
@@ -126,13 +127,20 @@ export class UsersService {
       const result = await hash(payload.password, salt);
       const [new_user] = await db
         .insert(users)
-        .values({ email: payload.email, password: result, role: payload.role })
+        .values({
+          email: payload.email,
+          password: result,
+          role: payload.role,
+          account_status: AccountStatus.ACTIVE,
+          account_type: [Role.ADMIN, Role.SUPER_ADMIN].includes(payload.role)
+            ? AccountType.ADMIN
+            : AccountType.CUSTOMER,
+        })
         .returning();
       await db.insert(profile_info).values({
         user_id: new_user.id,
         first_name: payload.first_name,
         last_name: payload.last_name,
-        account_status: AccountStatus.ACTIVE,
       });
       const profile = await this.getUser(new_user.id);
       await db.delete(invites).where(eq(invites.email, payload.email));
@@ -146,7 +154,7 @@ export class UsersService {
 
   async suspendUserAccount(id: string): Promise<UserResponseDto> {
     await db
-      .update(profile_info)
+      .update(users)
       .set({ account_status: AccountStatus.SUSPENDED })
       .where(eq(profile_info.user_id, id));
 
@@ -156,7 +164,7 @@ export class UsersService {
 
   async activateUserAccount(id: string): Promise<any> {
     await db
-      .update(profile_info)
+      .update(users)
       .set({ account_status: AccountStatus.ACTIVE })
       .where(eq(profile_info.user_id, id));
     const user = await this.getUser(id);
