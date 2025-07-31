@@ -21,6 +21,7 @@ A full-stack Supply Chain Management application built to support logistics oper
 ## Database architecture
 PostgreSQL is the database of choice. See link below for detailed diagram  
 Link here - [https://drawsql.app/teams/team-ize/diagrams/supply-chain-ms]
+![DB architecture/Diagram](./docs/db-diagram.png "Db diagram")
 
 ## API Documentation 
 This project uses OpenAPI for documentation. See link below
