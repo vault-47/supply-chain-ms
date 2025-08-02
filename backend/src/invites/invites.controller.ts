@@ -41,10 +41,10 @@ export class InvitesController {
   ) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.PLATFORM_ADMIN, Role.PLATFORM_STAFF)
   @Post()
   @ApiOperation({
-    summary: `Admins send invite to ${Role.ADMIN}, ${Role.SHIPPER} and ${Role.VENDOR}`,
+    summary: `Admins send invite to ${Role.PLATFORM_ADMIN}, ${Role.PLATFORM_STAFF} and ${Role.PLATFORM_ADMIN}`,
   })
   @ApiOkWrappedResponse(InviteUserResponseDto, 'User invite sent successfully')
   @ResponseMessage('Invitation has been sent to admin')
@@ -83,10 +83,10 @@ export class InvitesController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.PLATFORM_ADMIN, Role.PLATFORM_STAFF)
   @Get()
   @ApiOperation({
-    summary: `Returns list of invites. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
+    summary: `Returns list of invites. Accessible only by ${Role.PLATFORM_ADMIN} and ${Role.PLATFORM_STAFF}`,
   })
   @ResponseMessage('List of invites')
   @ApiOkWrappedPaginatedResponse(InvitationResponseDto, 'Invitation list')
@@ -96,7 +96,12 @@ export class InvitesController {
     name: 'role',
     required: false,
     type: String,
-    enum: [Role.ADMIN, Role.VENDOR, Role.SHIPPER, Role.DISPATCHER],
+    enum: [
+      Role.PLATFORM_ADMIN,
+      Role.VENDOR_ADMIN,
+      Role.SHIPPER_ADMIN,
+      Role.VENDOR_DRIVER,
+    ],
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })

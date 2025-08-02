@@ -6,7 +6,7 @@ export class InviteUserResponseDto {
   email: string;
 
   @ApiProperty({
-    example: Role.ADMIN,
+    example: Role.PLATFORM_STAFF,
   })
   role: Role;
 }

@@ -13,7 +13,7 @@ export const workspace_members = pgTable('workspace_members', {
   invited_by: uuid('invited_by').references(() => users.id, {
     onDelete: 'cascade',
   }),
-  joined_at: timestamp('joined_at', { withTimezone: true })
+  joined_at: timestamp('joined_at', { withTimezone: false })
     .defaultNow()
     .notNull(),
 });

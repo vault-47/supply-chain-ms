@@ -33,7 +33,7 @@ export class InvitesService {
       );
     }
 
-    if ([Role.SUPER_ADMIN].includes(inviteUserRequest.role)) {
+    if ([Role.PLATFORM_ADMIN].includes(inviteUserRequest.role)) {
       throw new ForbiddenException(
         `Invitation cannot be sent to user with ${inviteUserRequest.role} role`,
       );
@@ -58,13 +58,22 @@ export class InvitesService {
         .where(eq(invites.email, inviteUserRequest.email));
     }
 
-    if ([Role.VENDOR, Role.SHIPPER].includes(inviteUserRequest.role)) {
+    if (
+      [Role.VENDOR_ADMIN, Role.SHIPPER_ADMIN].includes(inviteUserRequest.role)
+    ) {
       await this.mailService.sendEmail({
         to: inviteUserRequest.email,
         subject: 'Customer invitation',
         html: `<p>Hello there, you have been invited to join Supplychain MS. Click the link below to proceed with onboarding your business<a href='http://localhost:3000/onbaording/customer?code=${otp_code}'>Click me</a></p>`,
       });
-    } else if (inviteUserRequest.role === Role.ADMIN) {
+    } else if (
+      [
+        Role.PLATFORM_STAFF,
+        Role.SHIPPER_STAFF,
+        Role.VENDOR_DRIVER,
+        Role.VENDOR_OPERATOR,
+      ].includes(inviteUserRequest.role)
+    ) {
       await this.mailService.sendEmail({
         to: inviteUserRequest.email,
         subject: 'Admin invitation',

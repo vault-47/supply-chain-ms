@@ -17,7 +17,7 @@ export const quotes = pgTable('quotes', {
   estimated_delivery_days: text('estimated_delivery_days').notNull(),
   valid_until: text('valid_until').notNull(),
   status: text({ enum: enumToPgEnum(QuoteStatus) }).default(QuoteStatus.ACTIVE),
-  created_at: timestamp('created_at', { withTimezone: true })
+  created_at: timestamp('created_at', { withTimezone: false })
     .defaultNow()
     .notNull(),
 });

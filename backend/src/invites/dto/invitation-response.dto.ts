@@ -17,7 +17,7 @@ export class InvitationResponseDto {
 
   @IsEnum(Role)
   @ApiProperty({
-    example: Role.ADMIN,
+    example: Role.PLATFORM_STAFF,
   })
   role: Role;
 

@@ -8,7 +8,7 @@ export const profile_info = pgTable('profile_info', {
   }),
   first_name: varchar('first_name', { length: 255 }).notNull(),
   last_name: varchar('last_name', { length: 255 }).notNull(),
-  created_at: timestamp('created_at', { withTimezone: true })
+  created_at: timestamp('created_at', { withTimezone: false })
     .defaultNow()
     .notNull(),
 });

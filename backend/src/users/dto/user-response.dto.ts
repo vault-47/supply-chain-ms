@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProfileResponseDto } from 'src/profile/dto/profile-response-dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
-import { AccountType } from 'src/shared/enums/account-type.enum';
 import { Role } from 'src/shared/enums/role.enum';
 
 export class UserResponseDto {
@@ -22,13 +21,7 @@ export class UserResponseDto {
 
   @ApiProperty({
     required: false,
-    example: AccountType.ADMIN,
-  })
-  account_type: AccountType;
-
-  @ApiProperty({
-    required: false,
-    example: Role.SHIPPER,
+    example: Role.SHIPPER_ADMIN,
   })
   role: Role;
 

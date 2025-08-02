@@ -1,30 +1,128 @@
 import 'dotenv/config';
 
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { LoginRequestDto } from './dto/login-request.dto';
-import { invites, profile_info, users } from 'src/database/schema';
+import { profile_info, users, verifications } from 'src/database/schema';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { db } from 'src/database/connect';
 import { RegistrationRequestDto } from './dto/registration-request.dto';
-import { eq } from 'drizzle-orm';
+import { and, eq, gt } from 'drizzle-orm';
 import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
-import { AccountType } from 'src/shared/enums/account-type.enum';
+import { MailService } from 'src/mail/mail.service';
+import generateRandomToken from 'src/shared/utils/generate-code';
+import { VerificationType } from 'src/shared/enums/verification-type';
+import { VerifyAccountRequestDto } from './dto/verify-account-request.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
+    private mailService: MailService,
   ) {}
+  // USER REGISTRATION
+  async register(payload: RegistrationRequestDto): Promise<UserResponseDto> {
+    if (payload.role === Role.PLATFORM_ADMIN) {
+      const [platform_admin] = await db
+        .select()
+        .from(users)
+        .where(eq(users.role, Role.PLATFORM_ADMIN));
+      if (platform_admin) {
+        throw new ConflictException(
+          'Cannot register another platform admin. Platform admin already exists',
+        );
+      }
+    }
+
+    // check if user exists
+    const findUser = await this.usersService.getUserByEmail(payload.email);
+    if (findUser) {
+      throw new ConflictException('User account already exist');
+    }
+
+    const hashedPassword = await this.generateHashedPassword(payload.password);
+    const [new_user] = await db
+      .insert(users)
+      .values({
+        email: payload.email,
+        password: hashedPassword,
+        role: payload.role,
+        account_status: AccountStatus.PENDING_VERIFICATION,
+      })
+      .returning();
+
+    await db.insert(profile_info).values({
+      user_id: new_user.id,
+      first_name: payload.first_name,
+      last_name: payload.last_name,
+    });
+
+    const verification_code = generateRandomToken();
+    // save verificaiton code
+    await db.insert(verifications).values({
+      type: VerificationType.REGISTRATION,
+      target: payload.email,
+      code: verification_code,
+      expires_at: new Date(Date.now() + 15 * 60 * 1000), // 15 min from now
+    });
+    // send verification
+    await this.mailService.sendEmail({
+      to: payload.email,
+      subject: 'Verify account',
+      html: `<p>Please verify your account. Use the following code: ${verification_code}</p>`,
+    });
+
+    const user = await this.usersService.getUser(new_user.id);
+    return user;
+  }
+
+  //  VERIFY ACCOUNT
+  async verifyAccount(
+    payload: VerifyAccountRequestDto,
+  ): Promise<UserResponseDto> {
+    const now = new Date();
+    const [verification] = await db
+      .select()
+      .from(verifications)
+      .where(
+        and(
+          eq(verifications.type, VerificationType.REGISTRATION),
+          eq(verifications.target, payload.email),
+          eq(verifications.code, payload.code),
+          gt(verifications.expires_at, now),
+        ),
+      );
+    if (!verification) {
+      throw new BadRequestException('Incorrect code or code is expired');
+    }
+    // update user account status
+    await db
+      .update(users)
+      .set({ account_status: AccountStatus.ACTIVE })
+      .where(eq(users.email, payload.email));
+    // delete verification code
+    await db
+      .delete(verifications)
+      .where(
+        and(
+          eq(verifications.type, VerificationType.REGISTRATION),
+          eq(verifications.target, payload.email),
+          eq(verifications.code, payload.code),
+        ),
+      );
+    return this.usersService.getUserByEmail(payload.email);
+  }
+
   async authenticateUser(payload: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.usersService.findUserByEmail(payload.email);
     if (!user) {
@@ -76,42 +174,5 @@ export class AuthService {
     const salt = await genSalt(10);
     const result = await hash(password, salt);
     return result;
-  }
-
-  async createSuperAdminAccount(
-    payload: RegistrationRequestDto,
-  ): Promise<UserResponseDto> {
-    const [super_admin] = await db
-      .select()
-      .from(users)
-      .where(eq(users.role, Role.SUPER_ADMIN));
-
-    if (super_admin) {
-      throw new ConflictException(
-        'Cannot register another super admin. Super admin already exists',
-      );
-    }
-
-    const hashedPassword = await this.generateHashedPassword(payload.password);
-
-    const [new_user] = await db
-      .insert(users)
-      .values({
-        email: payload.email,
-        password: hashedPassword,
-        role: Role.SUPER_ADMIN,
-        account_type: AccountType.ADMIN,
-        account_status: AccountStatus.ACTIVE,
-      })
-      .returning();
-
-    await db.insert(profile_info).values({
-      user_id: new_user.id,
-      first_name: payload.first_name,
-      last_name: payload.last_name,
-    });
-    await db.delete(invites).where(eq(invites.email, payload.email));
-    const user = await this.usersService.getUser(new_user.id);
-    return user;
   }
 }

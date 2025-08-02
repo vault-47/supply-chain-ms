@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
@@ -8,7 +8,6 @@ import {
   MinLength,
 } from 'class-validator';
 import { Match } from 'src/shared/decorator/match.decorator';
-import { AccountType } from 'src/shared/enums/account-type.enum';
 import { Role } from 'src/shared/enums/role.enum';
 
 export class RegistrationRequestDto {
@@ -41,4 +40,13 @@ export class RegistrationRequestDto {
   @IsNotEmpty()
   @ApiProperty({ type: String, description: 'last_name' })
   last_name: string;
+
+  @IsEnum(Role)
+  @IsNotEmpty()
+  @ApiProperty({
+    enum: [Role.PLATFORM_ADMIN, Role.SHIPPER_ADMIN, Role.VENDOR_ADMIN],
+    description:
+      'Role must be one of PLATFORM_ADMIN, SHIPPER_ADMIN, or VENDOR_ADMIN',
+  })
+  role: Role.PLATFORM_ADMIN | Role.SHIPPER_ADMIN | Role.VENDOR_ADMIN;
 }

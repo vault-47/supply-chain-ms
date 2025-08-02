@@ -22,7 +22,7 @@ export const quote_requests = pgTable('quote_requests', {
   status: text({ enum: enumToPgEnum(QuoteRequestStatus) })
     .default(QuoteRequestStatus.PENDING)
     .notNull(),
-  created_at: timestamp('created_at', { withTimezone: true })
+  created_at: timestamp('created_at', { withTimezone: false })
     .defaultNow()
     .notNull(),
 });

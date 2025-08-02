@@ -8,7 +8,6 @@ import { InvitesModule } from './invites/invites.module';
 import { ProfileModule } from './profile/profile.module';
 import { QuotesModule } from './quotes/quotes.module';
 import { QuoteRequestsModule } from './request-quotes/quote-requests.module';
-import { WorkspacesModule } from './workspaces/workspaces.module';
 
 @Module({
   imports: [
@@ -33,7 +32,6 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
     MailModule,
     QuotesModule,
     QuoteRequestsModule,
-    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [],

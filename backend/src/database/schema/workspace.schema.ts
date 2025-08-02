@@ -7,7 +7,7 @@ export const workspaces = pgTable('workspace', {
   owner_user_id: uuid('owner_user_id').references(() => users.id, {
     onDelete: 'cascade',
   }),
-  created_at: timestamp('created_at', { withTimezone: true })
+  created_at: timestamp('created_at', { withTimezone: false })
     .defaultNow()
     .notNull(),
 });
