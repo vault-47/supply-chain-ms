@@ -52,10 +52,9 @@ This section outlines how users authenticate on the platform, including signup, 
 
 ### Platform Admin registration & onboarding  flow
 
-#### 📌 Step 1: First-Time Platform Admin Registration
+#### 📌 Step 1: Admin Registration
 - Only one `platform_admin` is allowed.
-- Registration happens via a protected route: `/admin/registration`
-- A verification email is sent after submission.
+- A verification email is sent after registration.
 
 #### 📧 Step 2: Verify Email
 - The admin verifies their email to activate the account.
@@ -79,22 +78,14 @@ This section outlines how users authenticate on the platform, including signup, 
 - The user is sent a verification email 
 - The user verifies their email to active the account
 
-#### 🔐 Step 2: User Login
-- Users visit the login page and provide the necessary credentials
+#### 👥 Step 2: Organization Creation
+- User creates organization
 
-#### 👥 Step 3: Role & Context Selection
-- If the user has **only one role** and **one organization**, they are redirected directly to the relevant dashboard.
-- If the user has **multiple roles or companies**, they are shown a **role selection screen**:
-  - Example:  
-    Welcome back!  
-    Choose how you'd like to use the platform:
-    - 🚛 Vendor Admin (LogiCo Ltd)
-    - 📦 Shipper Admin (GadgetX)
-    - 👨‍🔧 Driver (Fleet Services)
-
-####  👥 Step 4: Invite organisation members
+####  👥 Step 3: Invite organisation members
 - The user can invite other users to the organisation by email with roles like
 
+#### 🔐 Step 4: User Login
+- Users visit the login page and provide the necessary credentials
 ---
 
 ## 🧭 User Flow (Quote to Delivery)

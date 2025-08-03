@@ -21,7 +21,7 @@ export class QuotesController {
   constructor() {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.VENDOR)
+  @Roles(Role.VENDOR_ADMIN)
   @Post()
   @ApiOperation({ summary: 'Create quote 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -32,7 +32,7 @@ export class QuotesController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER)
+  @Roles(Role.VENDOR_ADMIN)
   @Post('/:id/accept')
   @ApiOperation({ summary: 'Accept quote 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -43,7 +43,7 @@ export class QuotesController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER)
+  @Roles(Role.VENDOR_ADMIN)
   @Post('/:id/reject')
   @ApiOperation({ summary: 'Reject quote 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -54,7 +54,7 @@ export class QuotesController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER, Role.VENDOR)
+  @Roles(Role.VENDOR_ADMIN, Role.SHIPPER_ADMIN)
   @Get()
   @ApiOperation({ summary: 'Fetch quotes 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })

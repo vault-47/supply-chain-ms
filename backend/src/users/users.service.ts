@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  NotImplementedException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { and, count, desc, eq, getTableColumns } from 'drizzle-orm';
@@ -14,7 +15,6 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { AcceptInviteRequestDto } from 'src/invites/dto/accept-invite-request.dto';
-import { AccountType } from 'src/shared/enums/account-type.enum';
 
 const { user_id, ...profile_data_rest } = getTableColumns(profile_info); // exclude user_id
 const { password, ...user_data_rest } = getTableColumns(users); // exclude password
@@ -33,8 +33,20 @@ export class UsersService {
       .leftJoin(profile_info, eq(users.id, profile_info.user_id))
       .where(eq(users.id, user_id))
       .then((rows) => rows[0]);
-    if (result) return result;
-    throw new NotFoundException();
+    return result;
+  }
+
+  async getUserByEmail(email: string): Promise<UserResponseDto> {
+    const result = await db
+      .select({
+        ...user_data_rest,
+        profile: profile_data_rest,
+      })
+      .from(users)
+      .leftJoin(profile_info, eq(users.id, profile_info.user_id))
+      .where(eq(users.email, email))
+      .then((rows) => rows[0]);
+    return result;
   }
 
   async getAllUsers({
@@ -103,53 +115,51 @@ export class UsersService {
     invite_code: string,
     payload: AcceptInviteRequestDto,
   ): Promise<UserResponseDto> {
+    throw new NotImplementedException();
     // validate otp for admins, vendors and shippers
-    const [invite] = await db
-      .select()
-      .from(invites)
-      .where(
-        and(
-          eq(invites.code, invite_code),
-          eq(invites.email, payload.email),
-          eq(invites.role, payload.role),
-        ),
-      );
-
-    if (!invite) {
-      throw new UnauthorizedException(
-        'Incorrect invitation request. Contact administrator for assistance.',
-      );
-    }
-
-    const user = await this.findUserByEmail(payload.email);
-    if (!user) {
-      const salt = await genSalt(10);
-      const result = await hash(payload.password, salt);
-      const [new_user] = await db
-        .insert(users)
-        .values({
-          email: payload.email,
-          password: result,
-          role: payload.role,
-          account_status: AccountStatus.ACTIVE,
-          account_type: [Role.ADMIN, Role.SUPER_ADMIN].includes(payload.role)
-            ? AccountType.ADMIN
-            : AccountType.CUSTOMER,
-        })
-        .returning();
-      await db.insert(profile_info).values({
-        user_id: new_user.id,
-        first_name: payload.first_name,
-        last_name: payload.last_name,
-      });
-      const profile = await this.getUser(new_user.id);
-      await db.delete(invites).where(eq(invites.email, payload.email));
-      return profile;
-    } else {
-      throw new ConflictException(
-        'User account with email already exists. Use another email',
-      );
-    }
+    // const [invite] = await db
+    //   .select()
+    //   .from(invites)
+    //   .where(
+    //     and(
+    //       eq(invites.code, invite_code),
+    //       eq(invites.email, payload.email),
+    //       eq(invites.role, payload.role),
+    //     ),
+    //   );
+    //
+    // if (!invite) {
+    //   throw new UnauthorizedException(
+    //     'Incorrect invitation request. Contact administrator for assistance.',
+    //   );
+    // }
+    //
+    // const user = await this.findUserByEmail(payload.email);
+    // if (!user) {
+    //   const salt = await genSalt(10);
+    //   const result = await hash(payload.password, salt);
+    //   const [new_user] = await db
+    //     .insert(users)
+    //     .values({
+    //       email: payload.email,
+    //       password: result,
+    //       role: payload.role,
+    //       account_status: AccountStatus.ACTIVE,
+    //     })
+    //     .returning();
+    //   await db.insert(profile_info).values({
+    //     user_id: new_user.id,
+    //     first_name: payload.first_name,
+    //     last_name: payload.last_name,
+    //   });
+    //   const profile = await this.getUser(new_user.id);
+    //   await db.delete(invites).where(eq(invites.email, payload.email));
+    //   return profile;
+    // } else {
+    //   throw new ConflictException(
+    //     'User account with email already exists. Use another email',
+    //   );
+    // }
   }
 
   async suspendUserAccount(id: string): Promise<UserResponseDto> {

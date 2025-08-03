@@ -1,14 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum } from 'class-validator';
-import { RegistrationRequestDto } from 'src/auth/dto/registration-request.dto';
-import { Role } from 'src/shared/enums/role.enum';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
+import { Match } from 'src/shared/decorator/match.decorator';
 
-export class AcceptInviteRequestDto extends RegistrationRequestDto {
-  @IsEnum(Role)
-  @ApiProperty({
-    type: String,
-    description: 'role',
-    default: Role.ADMIN,
+export class AcceptInviteRequestDto {
+  @IsEmail()
+  @IsString()
+  @MinLength(4)
+  @ApiProperty({ type: String, description: 'email' })
+  email: string;
+
+  @IsString()
+  @MinLength(6)
+  @Match('code')
+  @ApiProperty({ type: String, description: 'Verification code' })
+  code: string;
+
+  @IsString()
+  @MinLength(4)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'password too weak',
   })
-  role = Role.ADMIN;
+  @ApiProperty({ type: String, description: 'password' })
+  password: string;
+
+  @IsString()
+  @MinLength(4)
+  @Match('password')
+  @ApiProperty({ type: String, description: 'Repeat password' })
+  repeat_password: string;
 }

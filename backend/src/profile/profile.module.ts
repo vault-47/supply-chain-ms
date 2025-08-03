@@ -6,10 +6,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ProfileController } from './profile.controller';
 import { ProfileService } from './profile.service';
 import { AuthService } from 'src/auth/auth.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   controllers: [ProfileController],
-  providers: [ProfileService, AuthService],
+  providers: [ProfileService, AuthService, MailService],
   imports: [
     UsersModule,
     JwtModule.register({

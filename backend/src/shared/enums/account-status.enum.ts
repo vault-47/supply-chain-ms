@@ -1,4 +1,5 @@
 export enum AccountStatus {
   ACTIVE = 'ACTIVE',
   SUSPENDED = 'SUSPENDED',
+  PENDING_VERIFICATION = 'PENDING_VERIFICATION',
 }

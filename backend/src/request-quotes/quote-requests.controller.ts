@@ -29,7 +29,7 @@ export class QuoteRequestsController {
   constructor(private readonly requestQuoteService: QuoteRequestsService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER)
+  @Roles(Role.SHIPPER_ADMIN)
   @Post()
   @ApiOperation({ summary: 'Request quote 🚧' })
   @ResponseMessage('Quotes request created successfully')
@@ -50,7 +50,7 @@ export class QuoteRequestsController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER, Role.VENDOR)
+  @Roles(Role.SHIPPER_ADMIN, Role.VENDOR_ADMIN)
   @Get()
   @ApiOperation({ summary: 'List requested quotes 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -61,7 +61,7 @@ export class QuoteRequestsController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER, Role.VENDOR)
+  @Roles(Role.SHIPPER_ADMIN, Role.VENDOR_ADMIN)
   @Get('/:id')
   @ApiOperation({
     summary:

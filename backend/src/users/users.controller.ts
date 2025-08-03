@@ -34,10 +34,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.PLATFORM_STAFF, Role.PLATFORM_ADMIN)
   @Get()
   @ApiOperation({
-    summary: `Returns list of users. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
+    summary: `Returns list of users. Accessible only by ${Role.PLATFORM_ADMIN} and ${Role.PLATFORM_STAFF}`,
   })
   @ApiOkWrappedPaginatedResponse(UserResponseDto, 'Paginated users')
   @ResponseMessage('Users list')
@@ -78,9 +78,9 @@ export class UsersController {
 
   @Post('/:id/suspend')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.PLATFORM_ADMIN, Role.PLATFORM_STAFF)
   @ApiOperation({
-    summary: `Suspend user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
+    summary: `Suspend user account. Accessible only by ${Role.PLATFORM_ADMIN} and ${Role.PLATFORM_STAFF}`,
   })
   @ApiOkWrappedResponse(UserResponseDto, 'Suspend user account')
   @ResponseMessage('User has been suspended')
@@ -89,17 +89,19 @@ export class UsersController {
   @ApiBearerAuth('bearer')
   async suspendUser(@Param() params: UserParamDto) {
     const user_data = await this.usersService.getUser(params.id);
-    if (user_data.role === Role.SUPER_ADMIN) {
-      throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
+    if (user_data.role === Role.PLATFORM_ADMIN) {
+      throw new ForbiddenException(
+        `Cannot modify ${Role.PLATFORM_ADMIN} account`,
+      );
     }
     return this.usersService.suspendUserAccount(params.id);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.PLATFORM_ADMIN, Role.PLATFORM_STAFF)
   @Post('/:id/activate')
   @ApiOperation({
-    summary: `Activate user account. Accessible only by ${Role.SUPER_ADMIN} and ${Role.ADMIN}`,
+    summary: `Activate user account. Accessible only by ${Role.PLATFORM_ADMIN} and ${Role.PLATFORM_STAFF}`,
   })
   @ApiOkWrappedResponse(UserResponseDto, 'Activate user account')
   @ResponseMessage('User has been activated')
@@ -108,8 +110,10 @@ export class UsersController {
   @ApiBearerAuth('bearer')
   async activateUser(@Param() params: UserParamDto) {
     const user_data = await this.usersService.getUser(params.id);
-    if (user_data.role === Role.SUPER_ADMIN) {
-      throw new ForbiddenException(`Cannot modify ${Role.SUPER_ADMIN} account`);
+    if (user_data.role === Role.PLATFORM_ADMIN) {
+      throw new ForbiddenException(
+        `Cannot modify ${Role.PLATFORM_ADMIN} account`,
+      );
     }
     return this.usersService.activateUserAccount(params.id);
   }

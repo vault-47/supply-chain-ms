@@ -7,7 +7,7 @@ export const invites = pgTable('invites', {
   email: varchar('email', { length: 255 }).unique().notNull(),
   code: text('code').notNull(),
   role: text({ enum: enumToPgEnum(Role) }).notNull(),
-  created_at: timestamp('created_at', { withTimezone: true })
+  created_at: timestamp('created_at', { withTimezone: false })
     .defaultNow()
     .notNull(),
 });

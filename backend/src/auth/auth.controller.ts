@@ -3,11 +3,11 @@ import { AuthService } from './auth.service';
 import { ApiBadRequestResponse, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { LoginRequestDto } from './dto/login-request.dto';
 import { RegistrationRequestDto } from './dto/registration-request.dto';
-import { Role } from 'src/shared/enums/role.enum';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
+import { VerifyAccountRequestDto } from './dto/verify-account-request.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,12 +24,22 @@ export class AuthController {
   }
 
   @Post('register')
-  @ApiOperation({ summary: `${Role.SUPER_ADMIN} registration` })
+  @ApiOperation({ summary: 'User registration' })
   @ResponseMessage('Registration successful')
-  @ApiOkWrappedResponse(UserResponseDto, 'Register super admin')
+  @ApiOkWrappedResponse(UserResponseDto, 'Register user')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: RegistrationRequestDto })
   async register(@Body() registrationRequest: RegistrationRequestDto) {
-    return this.authService.createSuperAdminAccount(registrationRequest);
+    return this.authService.register(registrationRequest);
+  }
+
+  @Post('register/verify')
+  @ApiOperation({ summary: 'Veriy account after registration' })
+  @ResponseMessage('Verification successful')
+  @ApiOkWrappedResponse(UserResponseDto, 'Verify user')
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiBody({ type: VerifyAccountRequestDto })
+  async verifyAccount(@Body() verifyAccountRequest: VerifyAccountRequestDto) {
+    return this.authService.verifyAccount(verifyAccountRequest);
   }
 }
