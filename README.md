@@ -11,33 +11,27 @@ The platform supports multiple account types and granular roles, enabling flexib
  Businesses or individuals who need goods transported.
 
 #### Roles:
-- shipper_admin: Full access to the shipper company dashboard. Can manage team members, request quotes, view shipments, and handle billing.
-- shipper_staff: Limited access. Can request quotes and view shipment status, but may not manage billing or team permissions.
+- shipper: Full access to the shipper company dashboard. Can manage team members, request quotes, view shipments, and handle billing.
 
 ### 2. Vendors (Logistics Companies)
  Companies that own or manage fleets and fulfill delivery requests.
  #### Roles:
-- vendor_admin: Full access to the vendor dashboard. Can respond to quote requests, manage pricing, vehicles, drivers, and view payouts.
-- vendor_operator: Operational staff who can assign drivers, view shipment bookings, and update delivery statuses.
-- vendor_driver: Delivery personnel who are assigned shipments and report delivery progress (via mobile or web).
+- vendor: Full access to the vendor dashboard. Can respond to quote requests, manage pricing, vehicles, drivers, and view payouts.
+- driver: Delivery personnel who are assigned shipments and report delivery progress (via mobile or web).
 🔐 Each vendor account can have multiple users with different roles under the same organization.
 
 ### 3. Platform Admins
 Internal users who maintain the platform infrastructure.
 #### Roles:
 - platform_admin: Superuser with access to all accounts, configurations, audits, pricing policies, and system-wide actions.
-- platform_staff: Broad, non-admin access to view and manage platform data
-- support_staff: Read-only or limited-edit roles for customer support teams.
 
 ### 🔐 Role-Based Access Highlights
 
 | Role              | Request Quotes | Respond to Quotes | Manage Drivers | Book Shipments | Admin Access        |
 |-------------------|----------------|-------------------|----------------|----------------|---------------------|
-| `shipper_admin`   | ✅             | ❌                | ❌             | ✅             | ✅                  |
-| `shipper_staff`   | ✅             | ❌                | ❌             | ✅             | ❌                  |
-| `vendor_admin`    | ❌             | ✅                | ✅             | ❌             | ✅                  |
-| `vendor_operator` | ❌             | ✅                | ✅             | ❌             | ❌                  |
-| `vendor_driver`   | ❌             | ❌                | ❌             | ❌             | 🚚 Driver-only      |
+| `shipper`   | ✅             | ❌                | ❌             | ✅             | ✅                  |
+| `vendor`    | ❌             | ✅                | ✅             | ❌             | ✅                  |
+| `driver`   | ❌             | ❌                | ❌             | ❌             | 🚚 Driver-only      |
 | `platform_admin`  | ✅             | ✅                | ✅             | ✅             | 🔥 Super Admin      |
 
 
@@ -60,31 +54,18 @@ This section outlines how users authenticate on the platform, including signup, 
 - The admin verifies their email to activate the account.
 - Gains access to the platform admin dashboard.
 
-#### 👥 Step 3: Invite Platform Staff
-- The platform admin can invite other admins by email with roles like:
-- `support_agent`
-- `ops_manager`
-- `finance_admin`
-
-#### ✅ Step 4: Staff Accept Invitation
-- Invited users complete signup via a secure link.
-- They log in with scoped access based on their role.
-
 ### Customer
 
 #### 📝 Step 1: User Signup
 - Users visit the `/signup` page and enter:
-- Optionally, the user selects their intended **primary role** (e.g., `shipper_admin`, `vendor_admin`).
+- Optionally, the user selects their intended **primary role** (e.g., `shipper`, `vendor`).
 - The user is sent a verification email 
 - The user verifies their email to active the account
 
 #### 👥 Step 2: Organization Creation
 - User creates organization
 
-####  👥 Step 3: Invite organisation members
-- The user can invite other users to the organisation by email with roles like
-
-#### 🔐 Step 4: User Login
+#### 🔐 Step 3: User Login
 - Users visit the login page and provide the necessary credentials
 ---
 
