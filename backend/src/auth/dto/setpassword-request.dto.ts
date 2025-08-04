@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 import { Match } from 'src/shared/decorator/match.decorator';
 
-export class AcceptInviteRequestDto {
+export class SetPasswordRequestDto {
   @IsEmail()
   @IsString()
   @MinLength(4)

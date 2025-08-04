@@ -8,10 +8,14 @@ import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { ResponseMessage } from 'src/shared/decorator/response-message.decorator';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
 import { VerifyAccountRequestDto } from './dto/verify-account-request.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Post('login')
   @ApiOperation({ summary: 'Grant access to all users' })
@@ -40,6 +44,6 @@ export class AuthController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: VerifyAccountRequestDto })
   async verifyAccount(@Body() verifyAccountRequest: VerifyAccountRequestDto) {
-    return this.authService.verifyAccount(verifyAccountRequest);
+    return this.userService.verifyAccount(verifyAccountRequest);
   }
 }

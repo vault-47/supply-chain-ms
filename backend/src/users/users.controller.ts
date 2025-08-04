@@ -13,6 +13,7 @@ import {
   ApiOperation,
   ApiQuery,
   ApiUnauthorizedResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -33,11 +34,31 @@ import { UserQueryDto } from './dto/user-query-dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('/:id')
+  @UseGuards(AuthGuard)
+  @ApiOperation({
+    summary: `Returns specific user information`,
+  })
+  @ResponseMessage('User information fetched')
+  @ApiOkWrappedResponse(UserResponseDto, 'Get user account')
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiUnauthorizedResponse({ description: 'Unathorized' })
+  @ApiBearerAuth('bearer')
+  async getUser(@Param() params: UserParamDto) {
+    return await this.usersService.getUser(params.id);
+  }
+}
+
+@Controller('/admin/users')
+@ApiTags('Admin users')
+export class AdminUsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.PLATFORM_STAFF, Role.PLATFORM_ADMIN)
+  @Roles(Role.PLATFORM_ADMIN)
   @Get()
   @ApiOperation({
-    summary: `Returns list of users. Accessible only by ${Role.PLATFORM_ADMIN} and ${Role.PLATFORM_STAFF}`,
+    summary: `Returns list of users. Accessible only by ${Role.PLATFORM_ADMIN}`,
   })
   @ApiOkWrappedPaginatedResponse(UserResponseDto, 'Paginated users')
   @ResponseMessage('Users list')
@@ -62,25 +83,11 @@ export class UsersController {
     });
   }
 
-  @Get('/:id')
-  @UseGuards(AuthGuard)
-  @ApiOperation({
-    summary: `Returns specific user. Accessible by any logged in user`,
-  })
-  @ResponseMessage('User information fetched')
-  @ApiOkWrappedResponse(UserResponseDto, 'Get user account')
-  @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ApiBearerAuth('bearer')
-  async getUser(@Param() params: UserParamDto) {
-    return await this.usersService.getUser(params.id);
-  }
-
   @Post('/:id/suspend')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.PLATFORM_ADMIN, Role.PLATFORM_STAFF)
+  @Roles(Role.PLATFORM_ADMIN)
   @ApiOperation({
-    summary: `Suspend user account. Accessible only by ${Role.PLATFORM_ADMIN} and ${Role.PLATFORM_STAFF}`,
+    summary: `Suspend user account. Accessible only by ${Role.PLATFORM_ADMIN}`,
   })
   @ApiOkWrappedResponse(UserResponseDto, 'Suspend user account')
   @ResponseMessage('User has been suspended')
@@ -98,10 +105,10 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.PLATFORM_ADMIN, Role.PLATFORM_STAFF)
+  @Roles(Role.PLATFORM_ADMIN)
   @Post('/:id/activate')
   @ApiOperation({
-    summary: `Activate user account. Accessible only by ${Role.PLATFORM_ADMIN} and ${Role.PLATFORM_STAFF}`,
+    summary: `Activate user account. Accessible only by ${Role.PLATFORM_ADMIN}`,
   })
   @ApiOkWrappedResponse(UserResponseDto, 'Activate user account')
   @ResponseMessage('User has been activated')

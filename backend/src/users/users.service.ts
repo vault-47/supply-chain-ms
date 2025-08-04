@@ -1,20 +1,14 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  NotImplementedException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { and, count, desc, eq, getTableColumns } from 'drizzle-orm';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { and, count, desc, eq, getTableColumns, gt } from 'drizzle-orm';
 import { db } from 'src/database/connect';
-import { invites, profile_info, users } from 'src/database/schema';
-import { genSalt, hash } from 'bcrypt-ts';
+import { profile_info, users, verifications } from 'src/database/schema';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
-import { AcceptInviteRequestDto } from 'src/invites/dto/accept-invite-request.dto';
+import { VerifyAccountRequestDto } from 'src/auth/dto/verify-account-request.dto';
+import { VerificationType } from 'src/shared/enums/verification-type';
 
 const { user_id, ...profile_data_rest } = getTableColumns(profile_info); // exclude user_id
 const { password, ...user_data_rest } = getTableColumns(users); // exclude password
@@ -111,57 +105,6 @@ export class UsersService {
     return result[0];
   }
 
-  async createUserAccount(
-    invite_code: string,
-    payload: AcceptInviteRequestDto,
-  ): Promise<UserResponseDto> {
-    throw new NotImplementedException();
-    // validate otp for admins, vendors and shippers
-    // const [invite] = await db
-    //   .select()
-    //   .from(invites)
-    //   .where(
-    //     and(
-    //       eq(invites.code, invite_code),
-    //       eq(invites.email, payload.email),
-    //       eq(invites.role, payload.role),
-    //     ),
-    //   );
-    //
-    // if (!invite) {
-    //   throw new UnauthorizedException(
-    //     'Incorrect invitation request. Contact administrator for assistance.',
-    //   );
-    // }
-    //
-    // const user = await this.findUserByEmail(payload.email);
-    // if (!user) {
-    //   const salt = await genSalt(10);
-    //   const result = await hash(payload.password, salt);
-    //   const [new_user] = await db
-    //     .insert(users)
-    //     .values({
-    //       email: payload.email,
-    //       password: result,
-    //       role: payload.role,
-    //       account_status: AccountStatus.ACTIVE,
-    //     })
-    //     .returning();
-    //   await db.insert(profile_info).values({
-    //     user_id: new_user.id,
-    //     first_name: payload.first_name,
-    //     last_name: payload.last_name,
-    //   });
-    //   const profile = await this.getUser(new_user.id);
-    //   await db.delete(invites).where(eq(invites.email, payload.email));
-    //   return profile;
-    // } else {
-    //   throw new ConflictException(
-    //     'User account with email already exists. Use another email',
-    //   );
-    // }
-  }
-
   async suspendUserAccount(id: string): Promise<UserResponseDto> {
     await db
       .update(users)
@@ -179,5 +122,42 @@ export class UsersService {
       .where(eq(profile_info.user_id, id));
     const user = await this.getUser(id);
     return user;
+  }
+
+  //  VERIFY ACCOUNT
+  async verifyAccount(
+    payload: VerifyAccountRequestDto,
+  ): Promise<UserResponseDto> {
+    const now = new Date();
+    const [verification] = await db
+      .select()
+      .from(verifications)
+      .where(
+        and(
+          eq(verifications.type, VerificationType.REGISTRATION),
+          eq(verifications.target, payload.email),
+          eq(verifications.code, payload.code),
+          gt(verifications.expires_at, now),
+        ),
+      );
+    if (!verification) {
+      throw new BadRequestException('Incorrect code or code is expired');
+    }
+    // update user account status
+    await db
+      .update(users)
+      .set({ account_status: AccountStatus.ACTIVE })
+      .where(eq(users.email, payload.email));
+    // delete verification code
+    await db
+      .delete(verifications)
+      .where(
+        and(
+          eq(verifications.type, VerificationType.REGISTRATION),
+          eq(verifications.target, payload.email),
+          eq(verifications.code, payload.code),
+        ),
+      );
+    return this.getUserByEmail(payload.email);
   }
 }

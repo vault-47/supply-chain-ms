@@ -21,7 +21,7 @@ export class UserResponseDto {
 
   @ApiProperty({
     required: false,
-    example: Role.SHIPPER_ADMIN,
+    example: Role.SHIPPER,
   })
   role: Role;
 
