@@ -29,7 +29,7 @@ export class QuoteRequestsController {
   constructor(private readonly requestQuoteService: QuoteRequestsService) {}
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER_ADMIN)
+  @Roles(Role.SHIPPER)
   @Post()
   @ApiOperation({ summary: 'Request quote 🚧' })
   @ResponseMessage('Quotes request created successfully')
@@ -50,7 +50,7 @@ export class QuoteRequestsController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER_ADMIN, Role.VENDOR_ADMIN)
+  @Roles(Role.SHIPPER, Role.VENDOR)
   @Get()
   @ApiOperation({ summary: 'List requested quotes 🚧' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
@@ -61,7 +61,20 @@ export class QuoteRequestsController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER_ADMIN, Role.VENDOR_ADMIN)
+  @Roles(Role.SHIPPER, Role.VENDOR)
+  @Post('/:id/respond')
+  @ApiOperation({
+    summary: 'Respond to a quote request. This creates a quote 🚧',
+  })
+  @ApiUnauthorizedResponse({ description: 'Unathorized' })
+  @ResponseMessage('Respond to request')
+  @ApiBearerAuth('bearer')
+  respondQuoteRequest() {
+    throw new NotImplementedException();
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.SHIPPER, Role.VENDOR)
   @Get('/:id')
   @ApiOperation({
     summary:

@@ -1,4 +1,4 @@
-import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
@@ -44,9 +44,8 @@ export class RegistrationRequestDto {
   @IsEnum(Role)
   @IsNotEmpty()
   @ApiProperty({
-    enum: [Role.PLATFORM_ADMIN, Role.SHIPPER_ADMIN, Role.VENDOR_ADMIN],
-    description:
-      'Role must be one of PLATFORM_ADMIN, SHIPPER_ADMIN, or VENDOR_ADMIN',
+    enum: [Role.PLATFORM_ADMIN, Role.SHIPPER, Role.VENDOR],
+    description: 'Role must be one of PLATFORM_ADMIN',
   })
-  role: Role.PLATFORM_ADMIN | Role.SHIPPER_ADMIN | Role.VENDOR_ADMIN;
+  role: Role.PLATFORM_ADMIN | Role.SHIPPER | Role.VENDOR;
 }

@@ -1,7 +1,6 @@
 import 'dotenv/config';
 
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -12,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { db } from 'src/database/connect';
 import { RegistrationRequestDto } from './dto/registration-request.dto';
-import { and, eq, gt } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/login-response.dto';
@@ -21,7 +20,7 @@ import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { MailService } from 'src/mail/mail.service';
 import generateRandomToken from 'src/shared/utils/generate-code';
 import { VerificationType } from 'src/shared/enums/verification-type';
-import { VerifyAccountRequestDto } from './dto/verify-account-request.dto';
+import { SetPasswordRequestDto } from './dto/setpassword-request.dto';
 
 @Injectable()
 export class AuthService {
@@ -86,43 +85,6 @@ export class AuthService {
     return user;
   }
 
-  //  VERIFY ACCOUNT
-  async verifyAccount(
-    payload: VerifyAccountRequestDto,
-  ): Promise<UserResponseDto> {
-    const now = new Date();
-    const [verification] = await db
-      .select()
-      .from(verifications)
-      .where(
-        and(
-          eq(verifications.type, VerificationType.REGISTRATION),
-          eq(verifications.target, payload.email),
-          eq(verifications.code, payload.code),
-          gt(verifications.expires_at, now),
-        ),
-      );
-    if (!verification) {
-      throw new BadRequestException('Incorrect code or code is expired');
-    }
-    // update user account status
-    await db
-      .update(users)
-      .set({ account_status: AccountStatus.ACTIVE })
-      .where(eq(users.email, payload.email));
-    // delete verification code
-    await db
-      .delete(verifications)
-      .where(
-        and(
-          eq(verifications.type, VerificationType.REGISTRATION),
-          eq(verifications.target, payload.email),
-          eq(verifications.code, payload.code),
-        ),
-      );
-    return this.usersService.getUserByEmail(payload.email);
-  }
-
   async authenticateUser(payload: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.usersService.findUserByEmail(payload.email);
     if (!user) {
@@ -174,5 +136,18 @@ export class AuthService {
     const salt = await genSalt(10);
     const result = await hash(password, salt);
     return result;
+  }
+
+  // set password
+  async setPassword(payload: SetPasswordRequestDto): Promise<boolean> {
+    const salt = await genSalt(10);
+    const result = await hash(payload.password, salt);
+    await db
+      .update(users)
+      .set({
+        password: result,
+      })
+      .where(eq(users.email, payload.email));
+    return true;
   }
 }
