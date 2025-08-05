@@ -9,6 +9,8 @@ export const users = pgTable('users', {
   password: varchar('password', { length: 255 }).notNull(),
   role: text({ enum: enumToPgEnum(Role) }).notNull(),
   account_status: text({ enum: enumToPgEnum(AccountStatus) }).notNull(),
+  first_name: varchar('first_name', { length: 255 }).notNull(),
+  last_name: varchar('last_name', { length: 255 }).notNull(),
   created_at: timestamp('created_at', { withTimezone: false })
     .defaultNow()
     .notNull(),

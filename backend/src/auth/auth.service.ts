@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { LoginRequestDto } from './dto/login-request.dto';
-import { profile_info, users, verifications } from 'src/database/schema';
+import { users } from 'src/database/schema';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { db } from 'src/database/connect';
@@ -17,9 +17,6 @@ import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
-import { MailService } from 'src/mail/mail.service';
-import generateRandomToken from 'src/shared/utils/generate-code';
-import { VerificationType } from 'src/shared/enums/verification-type';
 import { SetPasswordRequestDto } from './dto/setpassword-request.dto';
 
 @Injectable()
@@ -27,7 +24,6 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
-    private mailService: MailService,
   ) {}
   // USER REGISTRATION
   async register(payload: RegistrationRequestDto): Promise<UserResponseDto> {
@@ -57,29 +53,10 @@ export class AuthService {
         password: hashedPassword,
         role: payload.role,
         account_status: AccountStatus.PENDING_VERIFICATION,
+        first_name: payload.first_name,
+        last_name: payload.last_name,
       })
       .returning();
-
-    await db.insert(profile_info).values({
-      user_id: new_user.id,
-      first_name: payload.first_name,
-      last_name: payload.last_name,
-    });
-
-    const verification_code = generateRandomToken();
-    // save verificaiton code
-    await db.insert(verifications).values({
-      type: VerificationType.REGISTRATION,
-      target: payload.email,
-      code: verification_code,
-      expires_at: new Date(Date.now() + 15 * 60 * 1000), // 15 min from now
-    });
-    // send verification
-    await this.mailService.sendEmail({
-      to: payload.email,
-      subject: 'Verify account',
-      html: `<p>Please verify your account. Use the following code: ${verification_code}</p>`,
-    });
 
     const user = await this.usersService.getUser(new_user.id);
     return user;
