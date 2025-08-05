@@ -18,7 +18,6 @@ The platform supports multiple account types and granular roles, enabling flexib
  #### Roles:
 - vendor: Full access to the vendor dashboard. Can respond to quote requests, manage pricing, vehicles, drivers, and view payouts.
 - driver: Delivery personnel who are assigned shipments and report delivery progress (via mobile or web).
-🔐 Each vendor account can have multiple users with different roles under the same organization.
 
 ### 3. Platform Admins
 Internal users who maintain the platform infrastructure.
@@ -62,10 +61,7 @@ This section outlines how users authenticate on the platform, including signup, 
 - The user is sent a verification email 
 - The user verifies their email to active the account
 
-#### 👥 Step 2: Organization Creation
-- User creates organization
-
-#### 🔐 Step 3: User Login
+#### 🔐 Step 2: User Login
 - Users visit the login page and provide the necessary credentials
 ---
 

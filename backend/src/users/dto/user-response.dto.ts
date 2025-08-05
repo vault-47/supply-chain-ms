@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ProfileResponseDto } from 'src/profile/dto/profile-response-dto';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
 import { Role } from 'src/shared/enums/role.enum';
 
@@ -30,7 +29,4 @@ export class UserResponseDto {
     example: '2025-06-05 06:55:28.677072+01',
   })
   created_at: Date | null;
-
-  @ApiProperty({ type: ProfileResponseDto })
-  profile: ProfileResponseDto | null;
 }

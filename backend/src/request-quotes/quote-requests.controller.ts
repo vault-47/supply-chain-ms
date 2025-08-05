@@ -23,6 +23,7 @@ import { QuoteRequestsService } from './quote-requests.service';
 import { QuoteRequestRequestDto } from './dto/quote-request-request.dto';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
 import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
+import { QuoteRequestResponseDto } from './dto/quote-request-response.dto';
 
 @Controller('quotes-requests')
 export class QuoteRequestsController {
@@ -31,12 +32,12 @@ export class QuoteRequestsController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.SHIPPER)
   @Post()
-  @ApiOperation({ summary: 'Request quote 🚧' })
+  @ApiOperation({ summary: 'Request a quote' })
   @ResponseMessage('Quotes request created successfully')
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiOkWrappedResponse(
-    QuoteRequestRequestDto,
+    QuoteRequestResponseDto,
     'Quote request sent successfully',
   )
   @ApiBody({ type: QuoteRequestRequestDto })
@@ -46,7 +47,7 @@ export class QuoteRequestsController {
     @Body() requestQuote: QuoteRequestRequestDto,
   ) {
     const data = request?.user;
-    return this.requestQuoteService.create(data.id, requestQuote);
+    return this.requestQuoteService.requestQuote(data.id, requestQuote);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
