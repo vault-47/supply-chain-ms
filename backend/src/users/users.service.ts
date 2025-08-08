@@ -1,5 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { and, count, desc, eq, getTableColumns, gt } from 'drizzle-orm';
+import { Injectable } from '@nestjs/common';
+import { and, count, desc, eq, getTableColumns } from 'drizzle-orm';
 import { db } from 'src/database/connect';
 import { users } from 'src/database/schema';
 import { PaginationService } from 'src/pagination/pagination.service';
@@ -7,8 +7,6 @@ import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { AccountStatus } from 'src/shared/enums/account-status.enum';
-import { VerifyAccountRequestDto } from 'src/auth/dto/verify-account-request.dto';
-import { VerificationType } from 'src/shared/enums/verification-type';
 
 const { password, ...user_data_rest } = getTableColumns(users); // exclude password
 
