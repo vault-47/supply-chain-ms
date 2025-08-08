@@ -74,7 +74,7 @@ export class QuoteRequestsController {
   })
   @ApiQuery({
     name: 'search',
-    required: true,
+    required: false,
     type: String,
     default: undefined,
   })
