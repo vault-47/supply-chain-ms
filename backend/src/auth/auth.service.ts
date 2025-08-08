@@ -52,7 +52,7 @@ export class AuthService {
         email: payload.email,
         password: hashedPassword,
         role: payload.role,
-        account_status: AccountStatus.PENDING_VERIFICATION,
+        account_status: AccountStatus.ACTIVE,
         first_name: payload.first_name,
         last_name: payload.last_name,
       })

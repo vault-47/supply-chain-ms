@@ -4,6 +4,7 @@ import {
   Get,
   NotImplementedException,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
+  ApiQuery,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -22,8 +24,13 @@ import { Role } from 'src/shared/enums/role.enum';
 import { QuoteRequestsService } from './quote-requests.service';
 import { QuoteRequestRequestDto } from './dto/quote-request-request.dto';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
-import { ApiOkWrappedResponse } from 'src/shared/decorator/swagger-response.decorator';
+import {
+  ApiOkWrappedPaginatedResponse,
+  ApiOkWrappedResponse,
+} from 'src/shared/decorator/swagger-response.decorator';
 import { QuoteRequestResponseDto } from './dto/quote-request-response.dto';
+import { RequestQuoteQueryDto } from './dto/quote-request-query.dto';
+import { QuoteRequestUrgencyType } from './enums/quote-request-urgency-type.enum';
 
 @Controller('quotes-requests')
 export class QuoteRequestsController {
@@ -53,12 +60,30 @@ export class QuoteRequestsController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.SHIPPER, Role.VENDOR)
   @Get()
-  @ApiOperation({ summary: 'List requested quotes 🚧' })
+  @ApiOperation({ summary: 'List requested quotes' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
+  @ApiOkWrappedPaginatedResponse(QuoteRequestRequestDto, 'quote requests list')
   @ResponseMessage('List of requests')
+  @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
+  @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
+  @ApiQuery({
+    name: 'urgency',
+    required: false,
+    type: typeof QuoteRequestUrgencyType,
+    enum: QuoteRequestUrgencyType,
+  })
   @ApiBearerAuth('bearer')
-  listRequestedQuotes() {
-    throw new NotImplementedException();
+  async listRequestedQuotes(
+    @Request() request: AuthenticatedRequest,
+    @Query() queries: RequestQuoteQueryDto,
+  ) {
+    const data = request?.user;
+    return this.requestQuoteService.listRequestedQuotes({
+      user_id: data.id,
+      page: queries.page,
+      pageSize: queries.pageSize,
+      urgency: queries.urgency,
+    });
   }
 
   @UseGuards(AuthGuard, RolesGuard)
