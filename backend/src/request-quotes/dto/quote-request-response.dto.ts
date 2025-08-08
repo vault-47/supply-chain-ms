@@ -27,6 +27,10 @@ export class QuoteRequestResponseDto {
   vendor_id: string | null;
 
   @IsString()
+  @ApiProperty({ type: String, description: 'qr_num' })
+  qr_num: string | null;
+
+  @IsString()
   @ApiProperty({ type: String, description: 'origin_address' })
   origin_address: string | null;
 

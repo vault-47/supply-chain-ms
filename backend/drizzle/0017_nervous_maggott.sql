@@ -1,0 +1,1 @@
+ALTER TABLE "quote_requests" ADD COLUMN "qr_num" varchar NOT NULL;

@@ -1,4 +1,11 @@
-import { pgTable, text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  text,
+  integer,
+  timestamp,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { users } from './user.schema';
 import { enumToPgEnum } from './utils';
 import { QuoteRequestUrgencyType } from 'src/request-quotes/enums/quote-request-urgency-type.enum';
@@ -6,6 +13,7 @@ import { QuoteRequestStatus } from 'src/request-quotes/enums/quote-request-statu
 
 export const quote_requests = pgTable('quote_requests', {
   id: uuid().defaultRandom().primaryKey(),
+  qr_num: varchar('qr_num').notNull(),
   user_id: uuid('user_id').references(() => users.id, {
     onDelete: 'cascade',
   }),

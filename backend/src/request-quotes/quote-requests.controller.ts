@@ -62,7 +62,7 @@ export class QuoteRequestsController {
   @Get()
   @ApiOperation({ summary: 'List requested quotes' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ApiOkWrappedPaginatedResponse(QuoteRequestRequestDto, 'quote requests list')
+  @ApiOkWrappedPaginatedResponse(QuoteRequestResponseDto, 'quote requests list')
   @ResponseMessage('List of requests')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
@@ -71,6 +71,12 @@ export class QuoteRequestsController {
     required: false,
     type: typeof QuoteRequestUrgencyType,
     enum: QuoteRequestUrgencyType,
+  })
+  @ApiQuery({
+    name: 'search',
+    required: true,
+    type: String,
+    default: undefined,
   })
   @ApiBearerAuth('bearer')
   async listRequestedQuotes(
@@ -83,6 +89,7 @@ export class QuoteRequestsController {
       page: queries.page,
       pageSize: queries.pageSize,
       urgency: queries.urgency,
+      search: queries.search,
     });
   }
 

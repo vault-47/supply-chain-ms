@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { QuoteRequestUrgencyType } from '../enums/quote-request-urgency-type.enum';
 
 export class RequestQuoteQueryDto {
@@ -27,4 +27,9 @@ export class RequestQuoteQueryDto {
   @IsEnum(QuoteRequestUrgencyType)
   @ApiProperty({ type: String, required: false, description: 'urgency' })
   urgency?: QuoteRequestUrgencyType;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ type: String, required: false, description: 'search' })
+  search?: QuoteRequestUrgencyType;
 }
