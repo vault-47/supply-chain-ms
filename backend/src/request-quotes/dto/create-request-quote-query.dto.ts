@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { QuoteRequestUrgencyType } from '../enums/quote-request-urgency-type.enum';
 
-export class RequestQuoteQueryDto {
+export class CreateRequestQuoteQueryDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

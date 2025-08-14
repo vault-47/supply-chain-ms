@@ -9,6 +9,12 @@ export class UserResponseDto {
   })
   id: string | null;
 
+  @ApiProperty({ required: false, example: 'Firstname' })
+  first_name: string | null;
+
+  @ApiProperty({ required: false, example: 'Lastname' })
+  last_name: string | null;
+
   @ApiProperty({ required: false, example: 'user@mail.com' })
   email: string | null;
 

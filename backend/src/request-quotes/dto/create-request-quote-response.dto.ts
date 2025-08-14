@@ -9,13 +9,22 @@ import {
 } from 'class-validator';
 import { QuoteRequestStatus } from '../enums/quote-request-status.enum';
 import { QuoteRequestUrgencyType } from '../enums/quote-request-urgency-type.enum';
-import { UserResponseDto } from 'src/users/dto/user-response.dto';
 
-export class QuoteRequestResponseDto {
+export class CreateRequestQuoteResponseDto {
   @IsString()
   @IsUUID()
   @ApiProperty({ type: String, description: 'id' })
   id: string;
+
+  @IsString()
+  @IsUUID()
+  @ApiProperty({ type: String, description: 'user_id' })
+  user_id: string | null;
+
+  @IsString()
+  @IsUUID()
+  @ApiProperty({ type: String, description: 'vendor_id' })
+  vendor_id: string | null;
 
   @IsString()
   @ApiProperty({ type: String, description: 'qr_num' })
@@ -65,12 +74,4 @@ export class QuoteRequestResponseDto {
     example: '2025-06-05 06:55:28.677072+01',
   })
   created_at: Date | null;
-
-  @IsString()
-  @ApiProperty({ type: UserResponseDto, description: 'user' })
-  user: UserResponseDto | null;
-
-  @IsString()
-  @ApiProperty({ type: UserResponseDto, description: 'vendor' })
-  vendor: UserResponseDto | null;
 }

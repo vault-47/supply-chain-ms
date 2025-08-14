@@ -1,10 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsUUID, Min } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsNumber,
+  IsString,
+  Min,
+} from 'class-validator';
 import { QuoteRequestUrgencyType } from 'src/request-quotes/enums/quote-request-urgency-type.enum';
 
-export class QuoteRequestRequestDto {
-  @IsString()
-  @IsUUID()
+export class CreateRequestQuoteRequestDto {
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsString({ each: true })
   @ApiProperty({ type: String, description: 'vendor_id' })
   vendor_id: string;
 
