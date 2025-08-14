@@ -3,8 +3,10 @@ import {
   Controller,
   Get,
   NotImplementedException,
+  Param,
   Post,
   Query,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiQuery,
   ApiUnauthorizedResponse,
@@ -22,15 +25,16 @@ import { ResponseMessage } from 'src/shared/decorator/response-message.decorator
 import { Roles } from 'src/shared/decorator/role.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { QuoteRequestsService } from './quote-requests.service';
-import { QuoteRequestRequestDto } from './dto/quote-request-request.dto';
+import { CreateRequestQuoteRequestDto } from './dto/create-request-quote-request.dto';
 import { AuthenticatedRequest } from 'src/shared/interfaces/authenticated-request.interface';
 import {
   ApiOkWrappedPaginatedResponse,
   ApiOkWrappedResponse,
 } from 'src/shared/decorator/swagger-response.decorator';
 import { QuoteRequestResponseDto } from './dto/quote-request-response.dto';
-import { RequestQuoteQueryDto } from './dto/quote-request-query.dto';
+import { CreateRequestQuoteQueryDto } from './dto/create-request-quote-query.dto';
 import { QuoteRequestUrgencyType } from './enums/quote-request-urgency-type.enum';
+import { RequestQuoteParamDto } from './dto/request-quote-param-dto';
 
 @Controller('quotes-requests')
 export class QuoteRequestsController {
@@ -47,11 +51,11 @@ export class QuoteRequestsController {
     QuoteRequestResponseDto,
     'Quote request sent successfully',
   )
-  @ApiBody({ type: QuoteRequestRequestDto })
+  @ApiBody({ type: CreateRequestQuoteRequestDto })
   @ApiBearerAuth('bearer')
   requestQuote(
     @Request() request: AuthenticatedRequest,
-    @Body() requestQuote: QuoteRequestRequestDto,
+    @Body() requestQuote: CreateRequestQuoteRequestDto,
   ) {
     const data = request?.user;
     return this.requestQuoteService.requestQuote(data.id, requestQuote);
@@ -62,7 +66,7 @@ export class QuoteRequestsController {
   @Get()
   @ApiOperation({ summary: 'List requested quotes' })
   @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ApiOkWrappedPaginatedResponse(QuoteRequestRequestDto, 'quote requests list')
+  @ApiOkWrappedPaginatedResponse(QuoteRequestResponseDto, 'quote requests list')
   @ResponseMessage('List of requests')
   @ApiQuery({ name: 'page', required: false, type: Number, default: 1 })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, default: 10 })
@@ -72,10 +76,16 @@ export class QuoteRequestsController {
     type: typeof QuoteRequestUrgencyType,
     enum: QuoteRequestUrgencyType,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    default: undefined,
+  })
   @ApiBearerAuth('bearer')
   async listRequestedQuotes(
     @Request() request: AuthenticatedRequest,
-    @Query() queries: RequestQuoteQueryDto,
+    @Query() queries: CreateRequestQuoteQueryDto,
   ) {
     const data = request?.user;
     return this.requestQuoteService.listRequestedQuotes({
@@ -83,7 +93,28 @@ export class QuoteRequestsController {
       page: queries.page,
       pageSize: queries.pageSize,
       urgency: queries.urgency,
+      search: queries.search,
     });
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.SHIPPER, Role.VENDOR)
+  @Get('/:id')
+  @ApiOkWrappedResponse(QuoteRequestResponseDto, 'quote request detail')
+  @ApiOperation({
+    summary:
+      'Details of requested quote, should also return corresponding quotes',
+  })
+  @ApiUnauthorizedResponse({ description: 'Unathorized' })
+  @ApiNotFoundResponse({ description: 'Quote request not found' })
+  @ResponseMessage('Quote request details')
+  @ApiBearerAuth('bearer')
+  requestQuoteDetail(
+    @Request() request: AuthenticatedRequest,
+    @Param() params: RequestQuoteParamDto,
+  ) {
+    const data = request?.user;
+    return this.requestQuoteService.requestedQuoteDetail(data.id, params.id);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
@@ -96,20 +127,6 @@ export class QuoteRequestsController {
   @ResponseMessage('Respond to request')
   @ApiBearerAuth('bearer')
   respondQuoteRequest() {
-    throw new NotImplementedException();
-  }
-
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.SHIPPER, Role.VENDOR)
-  @Get('/:id')
-  @ApiOperation({
-    summary:
-      'Details of requested quote, should also return corresponding quotes 🚧',
-  })
-  @ApiUnauthorizedResponse({ description: 'Unathorized' })
-  @ResponseMessage('List of requests')
-  @ApiBearerAuth('bearer')
-  requestQuoteDetail() {
     throw new NotImplementedException();
   }
 }
