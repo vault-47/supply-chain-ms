@@ -22,15 +22,19 @@ const state = reactive<Schema>({
 
 async function onSubmit({ data }: FormSubmitEvent<Schema>) {
   try {
-    await login.mutateAsync(data);
+    const res = await login.mutateAsync(data);
+    toast.add({
+      title: res.message,
+      description: "Redirecting you to the dashboard...",
+      icon: "i-lucide-circle-check",
+    });
   } catch (error) {
     toast.add({
-      title: error.response.data.message,
+      title: error.data.message,
       description: "Try again",
       icon: "i-lucide-info",
       color: "error",
     });
-    console.log(error);
   }
 }
 </script>
