@@ -1,3 +1,9 @@
 <template>
-  <h1 class="text-3xl font-medium">Hello</h1>
+  <div>
+    <h1>Welcome to the homepage</h1>
+    <AppAlert>
+      This is an auto-imported component
+    </AppAlert>
+  </div>
 </template>
+

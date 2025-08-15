@@ -14,8 +14,8 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ summary: 'Grant access to all users' })
-  @ResponseMessage('Login successfull')
-  @ApiOkWrappedResponse(LoginResponseDto, 'Login successful')
+  @ResponseMessage('Welcome back')
+  @ApiOkWrappedResponse(LoginResponseDto, 'Welcome back')
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiBody({ type: LoginRequestDto })
   async login(@Body() loginRequest: LoginRequestDto) {
