@@ -13,7 +13,6 @@
     "generate-api-client": "bash ./scripts/generate-api-client.sh"
   },
   "dependencies": {
-    "@nuxt/eslint": "1.8.0",
     "@nuxt/image": "1.11.0",
     "@nuxt/scripts": "0.11.10",
     "@nuxt/ui": "3.3.2",
