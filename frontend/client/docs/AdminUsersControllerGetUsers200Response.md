@@ -1,11 +1,11 @@
-# InvitesControllerInvites200Response
+# AdminUsersControllerGetUsers200Response
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**data** | [**Array&lt;InvitationResponseDto&gt;**](InvitationResponseDto.md) |  | [default to undefined]
+**data** | [**Array&lt;UserResponseDto&gt;**](UserResponseDto.md) |  | [default to undefined]
 **meta** | [**PaginationMetaDto**](PaginationMetaDto.md) |  | [default to undefined]
 **status** | **boolean** |  | [optional] [default to undefined]
 **message** | **string** |  | [optional] [default to undefined]
@@ -13,9 +13,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { InvitesControllerInvites200Response } from './api';
+import { AdminUsersControllerGetUsers200Response } from './api';
 
-const instance: InvitesControllerInvites200Response = {
+const instance: AdminUsersControllerGetUsers200Response = {
     data,
     meta,
     status,

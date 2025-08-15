@@ -42,6 +42,62 @@ import {
 /**
  *
  * @export
+ * @interface AdminUsersControllerGetUsers200Response
+ */
+export interface AdminUsersControllerGetUsers200Response {
+  /**
+   *
+   * @type {Array<UserResponseDto>}
+   * @memberof AdminUsersControllerGetUsers200Response
+   */
+  data: Array<UserResponseDto>;
+  /**
+   *
+   * @type {PaginationMetaDto}
+   * @memberof AdminUsersControllerGetUsers200Response
+   */
+  meta: PaginationMetaDto;
+  /**
+   *
+   * @type {boolean}
+   * @memberof AdminUsersControllerGetUsers200Response
+   */
+  status?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof AdminUsersControllerGetUsers200Response
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface AuthControllerLogin200Response
+ */
+export interface AuthControllerLogin200Response {
+  /**
+   *
+   * @type {LoginResponseDto}
+   * @memberof AuthControllerLogin200Response
+   */
+  data?: LoginResponseDto;
+  /**
+   *
+   * @type {string}
+   * @memberof AuthControllerLogin200Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof AuthControllerLogin200Response
+   */
+  status?: boolean;
+}
+/**
+ *
+ * @export
  * @interface AuthControllerRegister200Response
  */
 export interface AuthControllerRegister200Response {
@@ -92,83 +148,57 @@ export interface BaseResponseDto {
 /**
  *
  * @export
- * @interface InvitationResponseDto
+ * @interface CreateRequestQuoteRequestDto
  */
-export interface InvitationResponseDto {
+export interface CreateRequestQuoteRequestDto {
   /**
-   *
+   * vendor_id
    * @type {string}
-   * @memberof InvitationResponseDto
+   * @memberof CreateRequestQuoteRequestDto
    */
-  uid: string;
+  vendor_id: string;
   /**
-   *
+   * origin_address
    * @type {string}
-   * @memberof InvitationResponseDto
+   * @memberof CreateRequestQuoteRequestDto
    */
-  email: string;
+  origin_address: string;
   /**
-   *
+   * destination_address
    * @type {string}
-   * @memberof InvitationResponseDto
+   * @memberof CreateRequestQuoteRequestDto
    */
-  role: string;
+  destination_address: string;
   /**
-   *
+   * distance_km
+   * @type {number}
+   * @memberof CreateRequestQuoteRequestDto
+   */
+  distance_km: number;
+  /**
+   * weight_kg
+   * @type {number}
+   * @memberof CreateRequestQuoteRequestDto
+   */
+  weight_kg: number;
+  /**
+   * goods_type
    * @type {string}
-   * @memberof InvitationResponseDto
+   * @memberof CreateRequestQuoteRequestDto
    */
-  created_at: string;
-}
-/**
- *
- * @export
- * @interface InviteUserRequestDto
- */
-export interface InviteUserRequestDto {
+  goods_type: string;
   /**
-   * email
+   * additional_note
    * @type {string}
-   * @memberof InviteUserRequestDto
+   * @memberof CreateRequestQuoteRequestDto
    */
-  email: string;
+  additional_note: string;
   /**
-   * role
+   * urgency
    * @type {string}
-   * @memberof InviteUserRequestDto
+   * @memberof CreateRequestQuoteRequestDto
    */
-  role: string;
-}
-/**
- *
- * @export
- * @interface InvitesControllerInvites200Response
- */
-export interface InvitesControllerInvites200Response {
-  /**
-   *
-   * @type {Array<InvitationResponseDto>}
-   * @memberof InvitesControllerInvites200Response
-   */
-  data: Array<InvitationResponseDto>;
-  /**
-   *
-   * @type {PaginationMetaDto}
-   * @memberof InvitesControllerInvites200Response
-   */
-  meta: PaginationMetaDto;
-  /**
-   *
-   * @type {boolean}
-   * @memberof InvitesControllerInvites200Response
-   */
-  status?: boolean;
-  /**
-   *
-   * @type {string}
-   * @memberof InvitesControllerInvites200Response
-   */
-  message?: string;
+  urgency: string;
 }
 /**
  *
@@ -201,31 +231,6 @@ export interface LoginResponseDto {
    * @memberof LoginResponseDto
    */
   access_token?: string;
-}
-/**
- *
- * @export
- * @interface LoginResponseWrapperDto
- */
-export interface LoginResponseWrapperDto {
-  /**
-   *
-   * @type {LoginResponseDto}
-   * @memberof LoginResponseWrapperDto
-   */
-  data?: LoginResponseDto;
-  /**
-   *
-   * @type {string}
-   * @memberof LoginResponseWrapperDto
-   */
-  message?: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof LoginResponseWrapperDto
-   */
-  status?: boolean;
 }
 /**
  *
@@ -286,6 +291,147 @@ export interface PaginationMetaDto {
 /**
  *
  * @export
+ * @interface QuoteRequestResponseDto
+ */
+export interface QuoteRequestResponseDto {
+  /**
+   * id
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  id: string;
+  /**
+   * qr_num
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  qr_num: string;
+  /**
+   * origin_address
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  origin_address: string;
+  /**
+   * destination_address
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  destination_address: string;
+  /**
+   * distance_km
+   * @type {number}
+   * @memberof QuoteRequestResponseDto
+   */
+  distance_km: number;
+  /**
+   * weight_kg
+   * @type {number}
+   * @memberof QuoteRequestResponseDto
+   */
+  weight_kg: number;
+  /**
+   * goods_type
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  goods_type: string;
+  /**
+   * additional_note
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  additional_note: string;
+  /**
+   * urgency
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  urgency: string;
+  /**
+   * status
+   * @type {string}
+   * @memberof QuoteRequestResponseDto
+   */
+  status: string;
+  /**
+   *
+   * @type {object}
+   * @memberof QuoteRequestResponseDto
+   */
+  created_at?: object;
+  /**
+   * user
+   * @type {UserResponseDto}
+   * @memberof QuoteRequestResponseDto
+   */
+  user: UserResponseDto;
+  /**
+   * vendor
+   * @type {UserResponseDto}
+   * @memberof QuoteRequestResponseDto
+   */
+  vendor: UserResponseDto;
+}
+/**
+ *
+ * @export
+ * @interface QuoteRequestsControllerListRequestedQuotes200Response
+ */
+export interface QuoteRequestsControllerListRequestedQuotes200Response {
+  /**
+   *
+   * @type {Array<QuoteRequestResponseDto>}
+   * @memberof QuoteRequestsControllerListRequestedQuotes200Response
+   */
+  data: Array<QuoteRequestResponseDto>;
+  /**
+   *
+   * @type {PaginationMetaDto}
+   * @memberof QuoteRequestsControllerListRequestedQuotes200Response
+   */
+  meta: PaginationMetaDto;
+  /**
+   *
+   * @type {boolean}
+   * @memberof QuoteRequestsControllerListRequestedQuotes200Response
+   */
+  status?: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof QuoteRequestsControllerListRequestedQuotes200Response
+   */
+  message?: string;
+}
+/**
+ *
+ * @export
+ * @interface QuoteRequestsControllerRequestQuote200Response
+ */
+export interface QuoteRequestsControllerRequestQuote200Response {
+  /**
+   *
+   * @type {QuoteRequestResponseDto}
+   * @memberof QuoteRequestsControllerRequestQuote200Response
+   */
+  data?: QuoteRequestResponseDto;
+  /**
+   *
+   * @type {string}
+   * @memberof QuoteRequestsControllerRequestQuote200Response
+   */
+  message?: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof QuoteRequestsControllerRequestQuote200Response
+   */
+  status?: boolean;
+}
+/**
+ *
+ * @export
  * @interface RegistrationRequestDto
  */
 export interface RegistrationRequestDto {
@@ -320,154 +466,22 @@ export interface RegistrationRequestDto {
    */
   last_name: string;
   /**
-   * role
+   * Role must be one of PLATFORM_ADMIN
    * @type {string}
    * @memberof RegistrationRequestDto
    */
-  role: string;
+  role: RegistrationRequestDtoRoleEnum;
 }
-/**
- *
- * @export
- * @interface RequestQuoteRequestDto
- */
-export interface RequestQuoteRequestDto {
-  /**
-   * vendor_uid
-   * @type {string}
-   * @memberof RequestQuoteRequestDto
-   */
-  vendor_uid: string;
-  /**
-   * origin_address
-   * @type {string}
-   * @memberof RequestQuoteRequestDto
-   */
-  origin_address: string;
-  /**
-   * destination_address
-   * @type {string}
-   * @memberof RequestQuoteRequestDto
-   */
-  destination_address: string;
-  /**
-   * distance_km
-   * @type {number}
-   * @memberof RequestQuoteRequestDto
-   */
-  distance_km: number;
-  /**
-   * weight_kg
-   * @type {number}
-   * @memberof RequestQuoteRequestDto
-   */
-  weight_kg: number;
-  /**
-   * goods_type
-   * @type {string}
-   * @memberof RequestQuoteRequestDto
-   */
-  goods_type: string;
-  /**
-   * additional_note
-   * @type {string}
-   * @memberof RequestQuoteRequestDto
-   */
-  additional_note: string;
-  /**
-   * urgency
-   * @type {string}
-   * @memberof RequestQuoteRequestDto
-   */
-  urgency: string;
-}
-/**
- *
- * @export
- * @interface SendInvitationResponseDto
- */
-export interface SendInvitationResponseDto {
-  /**
-   *
-   * @type {string}
-   * @memberof SendInvitationResponseDto
-   */
-  email: string;
-  /**
-   *
-   * @type {string}
-   * @memberof SendInvitationResponseDto
-   */
-  role: string;
-}
-/**
- *
- * @export
- * @interface SendInvitationResponseWrapperDto
- */
-export interface SendInvitationResponseWrapperDto {
-  /**
-   *
-   * @type {SendInvitationResponseDto}
-   * @memberof SendInvitationResponseWrapperDto
-   */
-  data?: SendInvitationResponseDto;
-  /**
-   *
-   * @type {string}
-   * @memberof SendInvitationResponseWrapperDto
-   */
-  message?: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof SendInvitationResponseWrapperDto
-   */
-  status?: boolean;
-}
-/**
- *
- * @export
- * @interface UserAcceptInviteRequestDto
- */
-export interface UserAcceptInviteRequestDto {
-  /**
-   * email
-   * @type {string}
-   * @memberof UserAcceptInviteRequestDto
-   */
-  email: string;
-  /**
-   * password
-   * @type {string}
-   * @memberof UserAcceptInviteRequestDto
-   */
-  password: string;
-  /**
-   * Repeat password
-   * @type {string}
-   * @memberof UserAcceptInviteRequestDto
-   */
-  repeat_password: string;
-  /**
-   * first_name
-   * @type {string}
-   * @memberof UserAcceptInviteRequestDto
-   */
-  first_name: string;
-  /**
-   * last_name
-   * @type {string}
-   * @memberof UserAcceptInviteRequestDto
-   */
-  last_name: string;
-  /**
-   * role
-   * @type {string}
-   * @memberof UserAcceptInviteRequestDto
-   */
-  role: string;
-}
+
+export const RegistrationRequestDtoRoleEnum = {
+  PlatformAdmin: "PLATFORM_ADMIN",
+  Shipper: "SHIPPER",
+  Vendor: "VENDOR",
+} as const;
+
+export type RegistrationRequestDtoRoleEnum =
+  (typeof RegistrationRequestDtoRoleEnum)[keyof typeof RegistrationRequestDtoRoleEnum];
+
 /**
  *
  * @export
@@ -479,19 +493,19 @@ export interface UserResponseDto {
    * @type {object}
    * @memberof UserResponseDto
    */
-  uid?: object;
+  id?: object;
   /**
    *
-   * @type {string}
+   * @type {object}
    * @memberof UserResponseDto
    */
-  first_name?: string;
+  first_name?: object;
   /**
    *
-   * @type {string}
+   * @type {object}
    * @memberof UserResponseDto
    */
-  last_name?: string;
+  last_name?: object;
   /**
    *
    * @type {object}
@@ -503,13 +517,13 @@ export interface UserResponseDto {
    * @type {string}
    * @memberof UserResponseDto
    */
-  role?: string;
+  account_status?: string;
   /**
    *
    * @type {string}
    * @memberof UserResponseDto
    */
-  account_status?: string;
+  role?: string;
   /**
    *
    * @type {object}
@@ -517,105 +531,294 @@ export interface UserResponseDto {
    */
   created_at?: object;
 }
-/**
- *
- * @export
- * @interface UsersControllerGetUsers200Response
- */
-export interface UsersControllerGetUsers200Response {
-  /**
-   *
-   * @type {Array<UserResponseDto>}
-   * @memberof UsersControllerGetUsers200Response
-   */
-  data: Array<UserResponseDto>;
-  /**
-   *
-   * @type {PaginationMetaDto}
-   * @memberof UsersControllerGetUsers200Response
-   */
-  meta: PaginationMetaDto;
-  /**
-   *
-   * @type {boolean}
-   * @memberof UsersControllerGetUsers200Response
-   */
-  status?: boolean;
-  /**
-   *
-   * @type {string}
-   * @memberof UsersControllerGetUsers200Response
-   */
-  message?: string;
-}
 
 /**
- * AppApi - axios parameter creator
+ * AdminUsersApi - axios parameter creator
  * @export
  */
-export const AppApiAxiosParamCreator = (configuration?: Configuration) => ({
-  /**
-   *
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  appControllerGetHello: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-});
-
-/**
- * AppApi - functional programming interface
- * @export
- */
-export const AppApiFp = (configuration?: Configuration) => {
-  const localVarAxiosParamCreator = AppApiAxiosParamCreator(configuration);
+export const AdminUsersApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
   return {
     /**
      *
+     * @summary Activate user account. Accessible only by PLATFORM_ADMIN
+     * @param {string} id id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async appControllerGetHello(
+    adminUsersControllerActivateUser: async (
+      id: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("adminUsersControllerActivateUser", "id", id);
+      const localVarPath = `/api/admin/users/{id}/activate`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Returns list of users. Accessible only by PLATFORM_ADMIN
+     * @param {number} [page] page
+     * @param {number} [pageSize] pageSize
+     * @param {AdminUsersControllerGetUsersRoleEnum} [role] role
+     * @param {AdminUsersControllerGetUsersAccountStatusEnum} [accountStatus] accountStatus
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUsersControllerGetUsers: async (
+      page?: number,
+      pageSize?: number,
+      role?: AdminUsersControllerGetUsersRoleEnum,
+      accountStatus?: AdminUsersControllerGetUsersAccountStatusEnum,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/admin/users`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (page !== undefined) {
+        localVarQueryParameter["page"] = page;
+      }
+
+      if (pageSize !== undefined) {
+        localVarQueryParameter["pageSize"] = pageSize;
+      }
+
+      if (role !== undefined) {
+        localVarQueryParameter["role"] = role;
+      }
+
+      if (accountStatus !== undefined) {
+        localVarQueryParameter["accountStatus"] = accountStatus;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Suspend user account. Accessible only by PLATFORM_ADMIN
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUsersControllerSuspendUser: async (
+      id: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("adminUsersControllerSuspendUser", "id", id);
+      const localVarPath = `/api/admin/users/{id}/suspend`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * AdminUsersApi - functional programming interface
+ * @export
+ */
+export const AdminUsersApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator =
+    AdminUsersApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Activate user account. Accessible only by PLATFORM_ADMIN
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminUsersControllerActivateUser(
+      id: string,
       options?: RawAxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<AuthControllerRegister200Response>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.appControllerGetHello(options);
+        await localVarAxiosParamCreator.adminUsersControllerActivateUser(
+          id,
+          options,
+        );
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
-        operationServerMap["AppApi.appControllerGetHello"]?.[
+        operationServerMap["AdminUsersApi.adminUsersControllerActivateUser"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Returns list of users. Accessible only by PLATFORM_ADMIN
+     * @param {number} [page] page
+     * @param {number} [pageSize] pageSize
+     * @param {AdminUsersControllerGetUsersRoleEnum} [role] role
+     * @param {AdminUsersControllerGetUsersAccountStatusEnum} [accountStatus] accountStatus
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminUsersControllerGetUsers(
+      page?: number,
+      pageSize?: number,
+      role?: AdminUsersControllerGetUsersRoleEnum,
+      accountStatus?: AdminUsersControllerGetUsersAccountStatusEnum,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<AdminUsersControllerGetUsers200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminUsersControllerGetUsers(
+          page,
+          pageSize,
+          role,
+          accountStatus,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["AdminUsersApi.adminUsersControllerGetUsers"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Suspend user account. Accessible only by PLATFORM_ADMIN
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async adminUsersControllerSuspendUser(
+      id: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<AuthControllerRegister200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.adminUsersControllerSuspendUser(
+          id,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["AdminUsersApi.adminUsersControllerSuspendUser"]?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -630,169 +833,294 @@ export const AppApiFp = (configuration?: Configuration) => {
 };
 
 /**
- * AppApi - factory interface
+ * AdminUsersApi - factory interface
  * @export
  */
-export const AppApiFactory = (
+export const AdminUsersApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance,
-) => {
-  const localVarFp = AppApiFp(configuration);
+) {
+  const localVarFp = AdminUsersApiFp(configuration);
   return {
     /**
      *
+     * @summary Activate user account. Accessible only by PLATFORM_ADMIN
+     * @param {string} id id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    appControllerGetHello(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+    adminUsersControllerActivateUser(
+      id: string,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<AuthControllerRegister200Response> {
       return localVarFp
-        .appControllerGetHello(options)
+        .adminUsersControllerActivateUser(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Returns list of users. Accessible only by PLATFORM_ADMIN
+     * @param {number} [page] page
+     * @param {number} [pageSize] pageSize
+     * @param {AdminUsersControllerGetUsersRoleEnum} [role] role
+     * @param {AdminUsersControllerGetUsersAccountStatusEnum} [accountStatus] accountStatus
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUsersControllerGetUsers(
+      page?: number,
+      pageSize?: number,
+      role?: AdminUsersControllerGetUsersRoleEnum,
+      accountStatus?: AdminUsersControllerGetUsersAccountStatusEnum,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<AdminUsersControllerGetUsers200Response> {
+      return localVarFp
+        .adminUsersControllerGetUsers(
+          page,
+          pageSize,
+          role,
+          accountStatus,
+          options,
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Suspend user account. Accessible only by PLATFORM_ADMIN
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    adminUsersControllerSuspendUser(
+      id: string,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<AuthControllerRegister200Response> {
+      return localVarFp
+        .adminUsersControllerSuspendUser(id, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * AppApi - object-oriented interface
+ * AdminUsersApi - object-oriented interface
  * @export
- * @class AppApi
+ * @class AdminUsersApi
  * @extends {BaseAPI}
  */
-export class AppApi extends BaseAPI {
+export class AdminUsersApi extends BaseAPI {
   /**
    *
+   * @summary Activate user account. Accessible only by PLATFORM_ADMIN
+   * @param {string} id id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof AppApi
+   * @memberof AdminUsersApi
    */
-  public appControllerGetHello(options?: RawAxiosRequestConfig) {
-    return AppApiFp(this.configuration)
-      .appControllerGetHello(options)
+  public adminUsersControllerActivateUser(
+    id: string,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return AdminUsersApiFp(this.configuration)
+      .adminUsersControllerActivateUser(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Returns list of users. Accessible only by PLATFORM_ADMIN
+   * @param {number} [page] page
+   * @param {number} [pageSize] pageSize
+   * @param {AdminUsersControllerGetUsersRoleEnum} [role] role
+   * @param {AdminUsersControllerGetUsersAccountStatusEnum} [accountStatus] accountStatus
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminUsersApi
+   */
+  public adminUsersControllerGetUsers(
+    page?: number,
+    pageSize?: number,
+    role?: AdminUsersControllerGetUsersRoleEnum,
+    accountStatus?: AdminUsersControllerGetUsersAccountStatusEnum,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return AdminUsersApiFp(this.configuration)
+      .adminUsersControllerGetUsers(
+        page,
+        pageSize,
+        role,
+        accountStatus,
+        options,
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Suspend user account. Accessible only by PLATFORM_ADMIN
+   * @param {string} id id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AdminUsersApi
+   */
+  public adminUsersControllerSuspendUser(
+    id: string,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return AdminUsersApiFp(this.configuration)
+      .adminUsersControllerSuspendUser(id, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
 
 /**
+ * @export
+ */
+export const AdminUsersControllerGetUsersRoleEnum = {
+  PlatformAdmin: "PLATFORM_ADMIN",
+  Shipper: "SHIPPER",
+  Vendor: "VENDOR",
+  Driver: "DRIVER",
+} as const;
+export type AdminUsersControllerGetUsersRoleEnum =
+  (typeof AdminUsersControllerGetUsersRoleEnum)[keyof typeof AdminUsersControllerGetUsersRoleEnum];
+/**
+ * @export
+ */
+export const AdminUsersControllerGetUsersAccountStatusEnum = {
+  Active: "ACTIVE",
+  Suspended: "SUSPENDED",
+  PendingVerification: "PENDING_VERIFICATION",
+  Invited: "INVITED",
+} as const;
+export type AdminUsersControllerGetUsersAccountStatusEnum =
+  (typeof AdminUsersControllerGetUsersAccountStatusEnum)[keyof typeof AdminUsersControllerGetUsersAccountStatusEnum];
+
+/**
  * AuthApi - axios parameter creator
  * @export
  */
-export const AuthApiAxiosParamCreator = (configuration?: Configuration) => ({
-  /**
-   *
-   * @summary Grant access to all users
-   * @param {LoginRequestDto} loginRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  authControllerLogin: async (
-    loginRequestDto: LoginRequestDto,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'loginRequestDto' is not null or undefined
-    assertParamExists(
-      "authControllerLogin",
-      "loginRequestDto",
-      loginRequestDto,
-    );
-    const localVarPath = `/api/auth/login`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+export const AuthApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Grant access to all users
+     * @param {LoginRequestDto} loginRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    authControllerLogin: async (
+      loginRequestDto: LoginRequestDto,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'loginRequestDto' is not null or undefined
+      assertParamExists(
+        "authControllerLogin",
+        "loginRequestDto",
+        loginRequestDto,
+      );
+      const localVarPath = `/api/auth/login`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    localVarHeaderParameter["Content-Type"] = "application/json";
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-    localVarRequestOptions.data = serializeDataIfNeeded(
-      loginRequestDto,
-      localVarRequestOptions,
-      configuration,
-    );
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        loginRequestDto,
+        localVarRequestOptions,
+        configuration,
+      );
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary SUPER_ADMIN registration
-   * @param {RegistrationRequestDto} registrationRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  authControllerRegister: async (
-    registrationRequestDto: RegistrationRequestDto,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'registrationRequestDto' is not null or undefined
-    assertParamExists(
-      "authControllerRegister",
-      "registrationRequestDto",
-      registrationRequestDto,
-    );
-    const localVarPath = `/api/auth/register`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary User registration
+     * @param {RegistrationRequestDto} registrationRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    authControllerRegister: async (
+      registrationRequestDto: RegistrationRequestDto,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'registrationRequestDto' is not null or undefined
+      assertParamExists(
+        "authControllerRegister",
+        "registrationRequestDto",
+        registrationRequestDto,
+      );
+      const localVarPath = `/api/auth/register`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    localVarHeaderParameter["Content-Type"] = "application/json";
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-    localVarRequestOptions.data = serializeDataIfNeeded(
-      registrationRequestDto,
-      localVarRequestOptions,
-      configuration,
-    );
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        registrationRequestDto,
+        localVarRequestOptions,
+        configuration,
+      );
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-});
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
 
 /**
  * AuthApi - functional programming interface
  * @export
  */
-export const AuthApiFp = (configuration?: Configuration) => {
+export const AuthApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration);
   return {
     /**
@@ -809,7 +1137,7 @@ export const AuthApiFp = (configuration?: Configuration) => {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<LoginResponseWrapperDto>
+      ) => AxiosPromise<AuthControllerLogin200Response>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.authControllerLogin(
@@ -831,7 +1159,7 @@ export const AuthApiFp = (configuration?: Configuration) => {
     },
     /**
      *
-     * @summary SUPER_ADMIN registration
+     * @summary User registration
      * @param {RegistrationRequestDto} registrationRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -870,11 +1198,11 @@ export const AuthApiFp = (configuration?: Configuration) => {
  * AuthApi - factory interface
  * @export
  */
-export const AuthApiFactory = (
+export const AuthApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance,
-) => {
+) {
   const localVarFp = AuthApiFp(configuration);
   return {
     /**
@@ -887,14 +1215,14 @@ export const AuthApiFactory = (
     authControllerLogin(
       loginRequestDto: LoginRequestDto,
       options?: RawAxiosRequestConfig,
-    ): AxiosPromise<LoginResponseWrapperDto> {
+    ): AxiosPromise<AuthControllerLogin200Response> {
       return localVarFp
         .authControllerLogin(loginRequestDto, options)
         .then((request) => request(axios, basePath));
     },
     /**
      *
-     * @summary SUPER_ADMIN registration
+     * @summary User registration
      * @param {RegistrationRequestDto} registrationRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -936,7 +1264,7 @@ export class AuthApi extends BaseAPI {
 
   /**
    *
-   * @summary SUPER_ADMIN registration
+   * @summary User registration
    * @param {RegistrationRequestDto} registrationRequestDto
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -953,522 +1281,64 @@ export class AuthApi extends BaseAPI {
 }
 
 /**
- * InvitesApi - axios parameter creator
- * @export
- */
-export const InvitesApiAxiosParamCreator = (configuration?: Configuration) => ({
-  /**
-   *
-   * @summary User i.e admins, shippers and vendors complete onboarding
-   * @param {string} inviteCode invite code
-   * @param {UserAcceptInviteRequestDto} userAcceptInviteRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  invitesControllerAcceptInvite: async (
-    inviteCode: string,
-    userAcceptInviteRequestDto: UserAcceptInviteRequestDto,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'inviteCode' is not null or undefined
-    assertParamExists(
-      "invitesControllerAcceptInvite",
-      "inviteCode",
-      inviteCode,
-    );
-    // verify required parameter 'userAcceptInviteRequestDto' is not null or undefined
-    assertParamExists(
-      "invitesControllerAcceptInvite",
-      "userAcceptInviteRequestDto",
-      userAcceptInviteRequestDto,
-    );
-    const localVarPath = `/api/invites/{invite_code}/accept`.replace(
-      `{${"invite_code"}}`,
-      encodeURIComponent(String(inviteCode)),
-    );
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    localVarHeaderParameter["Content-Type"] = "application/json";
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-    localVarRequestOptions.data = serializeDataIfNeeded(
-      userAcceptInviteRequestDto,
-      localVarRequestOptions,
-      configuration,
-    );
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Admins send invite to ADMIN, SHIPPER and VENDOR
-   * @param {InviteUserRequestDto} inviteUserRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  invitesControllerInvite: async (
-    inviteUserRequestDto: InviteUserRequestDto,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'inviteUserRequestDto' is not null or undefined
-    assertParamExists(
-      "invitesControllerInvite",
-      "inviteUserRequestDto",
-      inviteUserRequestDto,
-    );
-    const localVarPath = `/api/invites`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    localVarHeaderParameter["Content-Type"] = "application/json";
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-    localVarRequestOptions.data = serializeDataIfNeeded(
-      inviteUserRequestDto,
-      localVarRequestOptions,
-      configuration,
-    );
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Returns list of invites. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {number} [page]
-   * @param {number} [pageSize]
-   * @param {InvitesControllerInvitesRoleEnum} [role]
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  invitesControllerInvites: async (
-    page?: number,
-    pageSize?: number,
-    role?: InvitesControllerInvitesRoleEnum,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/invites`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    if (page !== undefined) {
-      localVarQueryParameter["page"] = page;
-    }
-
-    if (pageSize !== undefined) {
-      localVarQueryParameter["pageSize"] = pageSize;
-    }
-
-    if (role !== undefined) {
-      localVarQueryParameter["role"] = role;
-    }
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-});
-
-/**
- * InvitesApi - functional programming interface
- * @export
- */
-export const InvitesApiFp = (configuration?: Configuration) => {
-  const localVarAxiosParamCreator = InvitesApiAxiosParamCreator(configuration);
-  return {
-    /**
-     *
-     * @summary User i.e admins, shippers and vendors complete onboarding
-     * @param {string} inviteCode invite code
-     * @param {UserAcceptInviteRequestDto} userAcceptInviteRequestDto
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async invitesControllerAcceptInvite(
-      inviteCode: string,
-      userAcceptInviteRequestDto: UserAcceptInviteRequestDto,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<AuthControllerRegister200Response>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.invitesControllerAcceptInvite(
-          inviteCode,
-          userAcceptInviteRequestDto,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["InvitesApi.invitesControllerAcceptInvite"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary Admins send invite to ADMIN, SHIPPER and VENDOR
-     * @param {InviteUserRequestDto} inviteUserRequestDto
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async invitesControllerInvite(
-      inviteUserRequestDto: InviteUserRequestDto,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<SendInvitationResponseWrapperDto>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.invitesControllerInvite(
-          inviteUserRequestDto,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["InvitesApi.invitesControllerInvite"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary Returns list of invites. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {number} [page]
-     * @param {number} [pageSize]
-     * @param {InvitesControllerInvitesRoleEnum} [role]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async invitesControllerInvites(
-      page?: number,
-      pageSize?: number,
-      role?: InvitesControllerInvitesRoleEnum,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<InvitesControllerInvites200Response>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.invitesControllerInvites(
-          page,
-          pageSize,
-          role,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["InvitesApi.invitesControllerInvites"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
-};
-
-/**
- * InvitesApi - factory interface
- * @export
- */
-export const InvitesApiFactory = (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance,
-) => {
-  const localVarFp = InvitesApiFp(configuration);
-  return {
-    /**
-     *
-     * @summary User i.e admins, shippers and vendors complete onboarding
-     * @param {string} inviteCode invite code
-     * @param {UserAcceptInviteRequestDto} userAcceptInviteRequestDto
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    invitesControllerAcceptInvite(
-      inviteCode: string,
-      userAcceptInviteRequestDto: UserAcceptInviteRequestDto,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<AuthControllerRegister200Response> {
-      return localVarFp
-        .invitesControllerAcceptInvite(
-          inviteCode,
-          userAcceptInviteRequestDto,
-          options,
-        )
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Admins send invite to ADMIN, SHIPPER and VENDOR
-     * @param {InviteUserRequestDto} inviteUserRequestDto
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    invitesControllerInvite(
-      inviteUserRequestDto: InviteUserRequestDto,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<SendInvitationResponseWrapperDto> {
-      return localVarFp
-        .invitesControllerInvite(inviteUserRequestDto, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Returns list of invites. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {number} [page]
-     * @param {number} [pageSize]
-     * @param {InvitesControllerInvitesRoleEnum} [role]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    invitesControllerInvites(
-      page?: number,
-      pageSize?: number,
-      role?: InvitesControllerInvitesRoleEnum,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<InvitesControllerInvites200Response> {
-      return localVarFp
-        .invitesControllerInvites(page, pageSize, role, options)
-        .then((request) => request(axios, basePath));
-    },
-  };
-};
-
-/**
- * InvitesApi - object-oriented interface
- * @export
- * @class InvitesApi
- * @extends {BaseAPI}
- */
-export class InvitesApi extends BaseAPI {
-  /**
-   *
-   * @summary User i.e admins, shippers and vendors complete onboarding
-   * @param {string} inviteCode invite code
-   * @param {UserAcceptInviteRequestDto} userAcceptInviteRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof InvitesApi
-   */
-  public invitesControllerAcceptInvite(
-    inviteCode: string,
-    userAcceptInviteRequestDto: UserAcceptInviteRequestDto,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return InvitesApiFp(this.configuration)
-      .invitesControllerAcceptInvite(
-        inviteCode,
-        userAcceptInviteRequestDto,
-        options,
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Admins send invite to ADMIN, SHIPPER and VENDOR
-   * @param {InviteUserRequestDto} inviteUserRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof InvitesApi
-   */
-  public invitesControllerInvite(
-    inviteUserRequestDto: InviteUserRequestDto,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return InvitesApiFp(this.configuration)
-      .invitesControllerInvite(inviteUserRequestDto, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Returns list of invites. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {number} [page]
-   * @param {number} [pageSize]
-   * @param {InvitesControllerInvitesRoleEnum} [role]
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof InvitesApi
-   */
-  public invitesControllerInvites(
-    page?: number,
-    pageSize?: number,
-    role?: InvitesControllerInvitesRoleEnum,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return InvitesApiFp(this.configuration)
-      .invitesControllerInvites(page, pageSize, role, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-}
-
-/**
- * @export
- */
-export const InvitesControllerInvitesRoleEnum = {
-  Admin: "ADMIN",
-  Vendor: "VENDOR",
-  Shipper: "SHIPPER",
-  Dispatcher: "DISPATCHER",
-} as const;
-export type InvitesControllerInvitesRoleEnum =
-  (typeof InvitesControllerInvitesRoleEnum)[keyof typeof InvitesControllerInvitesRoleEnum];
-
-/**
  * ProfileApi - axios parameter creator
  * @export
  */
-export const ProfileApiAxiosParamCreator = (configuration?: Configuration) => ({
-  /**
-   *
-   * @summary Current user profile
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  profileControllerProfile: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/profile`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+export const ProfileApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Current user profile
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    profileControllerProfile: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/profile`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-});
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
 
 /**
  * ProfileApi - functional programming interface
  * @export
  */
-export const ProfileApiFp = (configuration?: Configuration) => {
+export const ProfileApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ProfileApiAxiosParamCreator(configuration);
   return {
     /**
@@ -1507,11 +1377,11 @@ export const ProfileApiFp = (configuration?: Configuration) => {
  * ProfileApi - factory interface
  * @export
  */
-export const ProfileApiFactory = (
+export const ProfileApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance,
-) => {
+) {
   const localVarFp = ProfileApiFp(configuration);
   return {
     /**
@@ -1552,237 +1422,763 @@ export class ProfileApi extends BaseAPI {
 }
 
 /**
+ * QuoteRequestsApi - axios parameter creator
+ * @export
+ */
+export const QuoteRequestsApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary List requested quotes
+     * @param {number} [page] page
+     * @param {number} [pageSize] pageSize
+     * @param {QuoteRequestsControllerListRequestedQuotesUrgencyEnum} [urgency] urgency
+     * @param {string} [search] search
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerListRequestedQuotes: async (
+      page?: number,
+      pageSize?: number,
+      urgency?: QuoteRequestsControllerListRequestedQuotesUrgencyEnum,
+      search?: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/quotes-requests`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      if (page !== undefined) {
+        localVarQueryParameter["page"] = page;
+      }
+
+      if (pageSize !== undefined) {
+        localVarQueryParameter["pageSize"] = pageSize;
+      }
+
+      if (urgency !== undefined) {
+        localVarQueryParameter["urgency"] = urgency;
+      }
+
+      if (search !== undefined) {
+        localVarQueryParameter["search"] = search;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Request a quote
+     * @param {CreateRequestQuoteRequestDto} createRequestQuoteRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerRequestQuote: async (
+      createRequestQuoteRequestDto: CreateRequestQuoteRequestDto,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'createRequestQuoteRequestDto' is not null or undefined
+      assertParamExists(
+        "quoteRequestsControllerRequestQuote",
+        "createRequestQuoteRequestDto",
+        createRequestQuoteRequestDto,
+      );
+      const localVarPath = `/api/quotes-requests`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        createRequestQuoteRequestDto,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Details of requested quote, should also return corresponding quotes
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerRequestQuoteDetail: async (
+      id: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("quoteRequestsControllerRequestQuoteDetail", "id", id);
+      const localVarPath = `/api/quotes-requests/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Respond to a quote request. This creates a quote 🚧
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerRespondQuoteRequest: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/quotes-requests/{id}/respond`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * QuoteRequestsApi - functional programming interface
+ * @export
+ */
+export const QuoteRequestsApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator =
+    QuoteRequestsApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary List requested quotes
+     * @param {number} [page] page
+     * @param {number} [pageSize] pageSize
+     * @param {QuoteRequestsControllerListRequestedQuotesUrgencyEnum} [urgency] urgency
+     * @param {string} [search] search
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async quoteRequestsControllerListRequestedQuotes(
+      page?: number,
+      pageSize?: number,
+      urgency?: QuoteRequestsControllerListRequestedQuotesUrgencyEnum,
+      search?: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<QuoteRequestsControllerListRequestedQuotes200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.quoteRequestsControllerListRequestedQuotes(
+          page,
+          pageSize,
+          urgency,
+          search,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap[
+          "QuoteRequestsApi.quoteRequestsControllerListRequestedQuotes"
+        ]?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Request a quote
+     * @param {CreateRequestQuoteRequestDto} createRequestQuoteRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async quoteRequestsControllerRequestQuote(
+      createRequestQuoteRequestDto: CreateRequestQuoteRequestDto,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<QuoteRequestsControllerRequestQuote200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.quoteRequestsControllerRequestQuote(
+          createRequestQuoteRequestDto,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap[
+          "QuoteRequestsApi.quoteRequestsControllerRequestQuote"
+        ]?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Details of requested quote, should also return corresponding quotes
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async quoteRequestsControllerRequestQuoteDetail(
+      id: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<QuoteRequestsControllerRequestQuote200Response>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.quoteRequestsControllerRequestQuoteDetail(
+          id,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap[
+          "QuoteRequestsApi.quoteRequestsControllerRequestQuoteDetail"
+        ]?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Respond to a quote request. This creates a quote 🚧
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async quoteRequestsControllerRespondQuoteRequest(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.quoteRequestsControllerRespondQuoteRequest(
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap[
+          "QuoteRequestsApi.quoteRequestsControllerRespondQuoteRequest"
+        ]?.[localVarOperationServerIndex]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * QuoteRequestsApi - factory interface
+ * @export
+ */
+export const QuoteRequestsApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = QuoteRequestsApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary List requested quotes
+     * @param {number} [page] page
+     * @param {number} [pageSize] pageSize
+     * @param {QuoteRequestsControllerListRequestedQuotesUrgencyEnum} [urgency] urgency
+     * @param {string} [search] search
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerListRequestedQuotes(
+      page?: number,
+      pageSize?: number,
+      urgency?: QuoteRequestsControllerListRequestedQuotesUrgencyEnum,
+      search?: string,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<QuoteRequestsControllerListRequestedQuotes200Response> {
+      return localVarFp
+        .quoteRequestsControllerListRequestedQuotes(
+          page,
+          pageSize,
+          urgency,
+          search,
+          options,
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Request a quote
+     * @param {CreateRequestQuoteRequestDto} createRequestQuoteRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerRequestQuote(
+      createRequestQuoteRequestDto: CreateRequestQuoteRequestDto,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<QuoteRequestsControllerRequestQuote200Response> {
+      return localVarFp
+        .quoteRequestsControllerRequestQuote(
+          createRequestQuoteRequestDto,
+          options,
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Details of requested quote, should also return corresponding quotes
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerRequestQuoteDetail(
+      id: string,
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<QuoteRequestsControllerRequestQuote200Response> {
+      return localVarFp
+        .quoteRequestsControllerRequestQuoteDetail(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Respond to a quote request. This creates a quote 🚧
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quoteRequestsControllerRespondQuoteRequest(
+      options?: RawAxiosRequestConfig,
+    ): AxiosPromise<void> {
+      return localVarFp
+        .quoteRequestsControllerRespondQuoteRequest(options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * QuoteRequestsApi - object-oriented interface
+ * @export
+ * @class QuoteRequestsApi
+ * @extends {BaseAPI}
+ */
+export class QuoteRequestsApi extends BaseAPI {
+  /**
+   *
+   * @summary List requested quotes
+   * @param {number} [page] page
+   * @param {number} [pageSize] pageSize
+   * @param {QuoteRequestsControllerListRequestedQuotesUrgencyEnum} [urgency] urgency
+   * @param {string} [search] search
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof QuoteRequestsApi
+   */
+  public quoteRequestsControllerListRequestedQuotes(
+    page?: number,
+    pageSize?: number,
+    urgency?: QuoteRequestsControllerListRequestedQuotesUrgencyEnum,
+    search?: string,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return QuoteRequestsApiFp(this.configuration)
+      .quoteRequestsControllerListRequestedQuotes(
+        page,
+        pageSize,
+        urgency,
+        search,
+        options,
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Request a quote
+   * @param {CreateRequestQuoteRequestDto} createRequestQuoteRequestDto
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof QuoteRequestsApi
+   */
+  public quoteRequestsControllerRequestQuote(
+    createRequestQuoteRequestDto: CreateRequestQuoteRequestDto,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return QuoteRequestsApiFp(this.configuration)
+      .quoteRequestsControllerRequestQuote(
+        createRequestQuoteRequestDto,
+        options,
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Details of requested quote, should also return corresponding quotes
+   * @param {string} id id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof QuoteRequestsApi
+   */
+  public quoteRequestsControllerRequestQuoteDetail(
+    id: string,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return QuoteRequestsApiFp(this.configuration)
+      .quoteRequestsControllerRequestQuoteDetail(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Respond to a quote request. This creates a quote 🚧
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof QuoteRequestsApi
+   */
+  public quoteRequestsControllerRespondQuoteRequest(
+    options?: RawAxiosRequestConfig,
+  ) {
+    return QuoteRequestsApiFp(this.configuration)
+      .quoteRequestsControllerRespondQuoteRequest(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * @export
+ */
+export const QuoteRequestsControllerListRequestedQuotesUrgencyEnum = {
+  Standard: "STANDARD",
+  Express: "EXPRESS",
+} as const;
+export type QuoteRequestsControllerListRequestedQuotesUrgencyEnum =
+  (typeof QuoteRequestsControllerListRequestedQuotesUrgencyEnum)[keyof typeof QuoteRequestsControllerListRequestedQuotesUrgencyEnum];
+
+/**
  * QuotesApi - axios parameter creator
  * @export
  */
-export const QuotesApiAxiosParamCreator = (configuration?: Configuration) => ({
-  /**
-   *
-   * @summary Accept quote 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  quotesControllerAcceptQuote: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/quotes/{id}/accept`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+export const QuotesApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Accept quote. 🚧
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quotesControllerAcceptQuote: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/quotes/{id}/accept`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Create quote 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  quotesControllerCreateQuote: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/quotes`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Fetch quote details 🚧
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quotesControllerGetQuote: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/quotes/{id}`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Fetch quote details 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  quotesControllerGetQuote: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/quotes/{id}`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Fetch quotes 🚧
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quotesControllerGetQuotes: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/quotes`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Fetch quotes 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  quotesControllerGetQuotes: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/quotes`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Reject quote 🚧
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    quotesControllerRejectQuote: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/quotes/{id}/reject`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Reject quote 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  quotesControllerRejectQuote: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/quotes/{id}/reject`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-});
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
 
 /**
  * QuotesApi - functional programming interface
  * @export
  */
-export const QuotesApiFp = (configuration?: Configuration) => {
+export const QuotesApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = QuotesApiAxiosParamCreator(configuration);
   return {
     /**
      *
-     * @summary Accept quote 🚧
+     * @summary Accept quote. 🚧
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1796,32 +2192,6 @@ export const QuotesApiFp = (configuration?: Configuration) => {
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
         operationServerMap["QuotesApi.quotesControllerAcceptQuote"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary Create quote 🚧
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async quotesControllerCreateQuote(
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.quotesControllerCreateQuote(options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["QuotesApi.quotesControllerCreateQuote"]?.[
           localVarOperationServerIndex
         ]?.url;
       return (axios, basePath) =>
@@ -1917,16 +2287,16 @@ export const QuotesApiFp = (configuration?: Configuration) => {
  * QuotesApi - factory interface
  * @export
  */
-export const QuotesApiFactory = (
+export const QuotesApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance,
-) => {
+) {
   const localVarFp = QuotesApiFp(configuration);
   return {
     /**
      *
-     * @summary Accept quote 🚧
+     * @summary Accept quote. 🚧
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1935,19 +2305,6 @@ export const QuotesApiFactory = (
     ): AxiosPromise<void> {
       return localVarFp
         .quotesControllerAcceptQuote(options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Create quote 🚧
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    quotesControllerCreateQuote(
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<void> {
-      return localVarFp
-        .quotesControllerCreateQuote(options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -2001,7 +2358,7 @@ export const QuotesApiFactory = (
 export class QuotesApi extends BaseAPI {
   /**
    *
-   * @summary Accept quote 🚧
+   * @summary Accept quote. 🚧
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof QuotesApi
@@ -2009,19 +2366,6 @@ export class QuotesApi extends BaseAPI {
   public quotesControllerAcceptQuote(options?: RawAxiosRequestConfig) {
     return QuotesApiFp(this.configuration)
       .quotesControllerAcceptQuote(options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Create quote 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof QuotesApi
-   */
-  public quotesControllerCreateQuote(options?: RawAxiosRequestConfig) {
-    return QuotesApiFp(this.configuration)
-      .quotesControllerCreateQuote(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -2066,638 +2410,77 @@ export class QuotesApi extends BaseAPI {
 }
 
 /**
- * RequestQuotesApi - axios parameter creator
- * @export
- */
-export const RequestQuotesApiAxiosParamCreator = (
-  configuration?: Configuration,
-) => ({
-  /**
-   *
-   * @summary List requested quotes 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  requestQuotesControllerListRequestedQuotes: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/request-quotes`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Request quote 🚧
-   * @param {RequestQuoteRequestDto} requestQuoteRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  requestQuotesControllerRequestQuote: async (
-    requestQuoteRequestDto: RequestQuoteRequestDto,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'requestQuoteRequestDto' is not null or undefined
-    assertParamExists(
-      "requestQuotesControllerRequestQuote",
-      "requestQuoteRequestDto",
-      requestQuoteRequestDto,
-    );
-    const localVarPath = `/api/request-quotes`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    localVarHeaderParameter["Content-Type"] = "application/json";
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-    localVarRequestOptions.data = serializeDataIfNeeded(
-      requestQuoteRequestDto,
-      localVarRequestOptions,
-      configuration,
-    );
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Details of requested quote, should also return corresponding quotes 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  requestQuotesControllerRequestQuoteDetail: async (
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/request-quotes/{id}`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-});
-
-/**
- * RequestQuotesApi - functional programming interface
- * @export
- */
-export const RequestQuotesApiFp = (configuration?: Configuration) => {
-  const localVarAxiosParamCreator =
-    RequestQuotesApiAxiosParamCreator(configuration);
-  return {
-    /**
-     *
-     * @summary List requested quotes 🚧
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async requestQuotesControllerListRequestedQuotes(
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.requestQuotesControllerListRequestedQuotes(
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap[
-          "RequestQuotesApi.requestQuotesControllerListRequestedQuotes"
-        ]?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary Request quote 🚧
-     * @param {RequestQuoteRequestDto} requestQuoteRequestDto
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async requestQuotesControllerRequestQuote(
-      requestQuoteRequestDto: RequestQuoteRequestDto,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<RequestQuoteRequestDto>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.requestQuotesControllerRequestQuote(
-          requestQuoteRequestDto,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap[
-          "RequestQuotesApi.requestQuotesControllerRequestQuote"
-        ]?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary Details of requested quote, should also return corresponding quotes 🚧
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async requestQuotesControllerRequestQuoteDetail(
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.requestQuotesControllerRequestQuoteDetail(
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap[
-          "RequestQuotesApi.requestQuotesControllerRequestQuoteDetail"
-        ]?.[localVarOperationServerIndex]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-  };
-};
-
-/**
- * RequestQuotesApi - factory interface
- * @export
- */
-export const RequestQuotesApiFactory = (
-  configuration?: Configuration,
-  basePath?: string,
-  axios?: AxiosInstance,
-) => {
-  const localVarFp = RequestQuotesApiFp(configuration);
-  return {
-    /**
-     *
-     * @summary List requested quotes 🚧
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    requestQuotesControllerListRequestedQuotes(
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<void> {
-      return localVarFp
-        .requestQuotesControllerListRequestedQuotes(options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Request quote 🚧
-     * @param {RequestQuoteRequestDto} requestQuoteRequestDto
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    requestQuotesControllerRequestQuote(
-      requestQuoteRequestDto: RequestQuoteRequestDto,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<RequestQuoteRequestDto> {
-      return localVarFp
-        .requestQuotesControllerRequestQuote(requestQuoteRequestDto, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Details of requested quote, should also return corresponding quotes 🚧
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    requestQuotesControllerRequestQuoteDetail(
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<void> {
-      return localVarFp
-        .requestQuotesControllerRequestQuoteDetail(options)
-        .then((request) => request(axios, basePath));
-    },
-  };
-};
-
-/**
- * RequestQuotesApi - object-oriented interface
- * @export
- * @class RequestQuotesApi
- * @extends {BaseAPI}
- */
-export class RequestQuotesApi extends BaseAPI {
-  /**
-   *
-   * @summary List requested quotes 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof RequestQuotesApi
-   */
-  public requestQuotesControllerListRequestedQuotes(
-    options?: RawAxiosRequestConfig,
-  ) {
-    return RequestQuotesApiFp(this.configuration)
-      .requestQuotesControllerListRequestedQuotes(options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Request quote 🚧
-   * @param {RequestQuoteRequestDto} requestQuoteRequestDto
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof RequestQuotesApi
-   */
-  public requestQuotesControllerRequestQuote(
-    requestQuoteRequestDto: RequestQuoteRequestDto,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return RequestQuotesApiFp(this.configuration)
-      .requestQuotesControllerRequestQuote(requestQuoteRequestDto, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Details of requested quote, should also return corresponding quotes 🚧
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof RequestQuotesApi
-   */
-  public requestQuotesControllerRequestQuoteDetail(
-    options?: RawAxiosRequestConfig,
-  ) {
-    return RequestQuotesApiFp(this.configuration)
-      .requestQuotesControllerRequestQuoteDetail(options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-}
-
-/**
  * UsersApi - axios parameter creator
  * @export
  */
-export const UsersApiAxiosParamCreator = (configuration?: Configuration) => ({
-  /**
-   *
-   * @summary Activate user account. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {string} id
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  usersControllerActivateUser: async (
-    id: string,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'id' is not null or undefined
-    assertParamExists("usersControllerActivateUser", "id", id);
-    const localVarPath = `/api/users/{id}/activate`.replace(
-      `{${"id"}}`,
-      encodeURIComponent(String(id)),
-    );
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
+export const UsersApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Returns specific user information
+     * @param {string} id id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    usersControllerGetUser: async (
+      id: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists("usersControllerGetUser", "id", id);
+      const localVarPath = `/api/users/{id}`.replace(
+        `{${"id"}}`,
+        encodeURIComponent(String(id)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
 
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
 
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
+      // authentication bearer required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
 
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Returns specific user. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {string} id
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  usersControllerGetUser: async (
-    id: string,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'id' is not null or undefined
-    assertParamExists("usersControllerGetUser", "id", id);
-    const localVarPath = `/api/users/{id}`.replace(
-      `{${"id"}}`,
-      encodeURIComponent(String(id)),
-    );
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Returns list of users. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {number} [page]
-   * @param {number} [pageSize]
-   * @param {UsersControllerGetUsersRoleEnum} [role]
-   * @param {UsersControllerGetUsersStatusEnum} [status]
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  usersControllerGetUsers: async (
-    page?: number,
-    pageSize?: number,
-    role?: UsersControllerGetUsersRoleEnum,
-    status?: UsersControllerGetUsersStatusEnum,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    const localVarPath = `/api/users`;
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "GET",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    if (page !== undefined) {
-      localVarQueryParameter["page"] = page;
-    }
-
-    if (pageSize !== undefined) {
-      localVarQueryParameter["pageSize"] = pageSize;
-    }
-
-    if (role !== undefined) {
-      localVarQueryParameter["role"] = role;
-    }
-
-    if (status !== undefined) {
-      localVarQueryParameter["status"] = status;
-    }
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-  /**
-   *
-   * @summary Suspend user account. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {string} id
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  usersControllerSuspendUser: async (
-    id: string,
-    options: RawAxiosRequestConfig = {},
-  ): Promise<RequestArgs> => {
-    // verify required parameter 'id' is not null or undefined
-    assertParamExists("usersControllerSuspendUser", "id", id);
-    const localVarPath = `/api/users/{id}/suspend`.replace(
-      `{${"id"}}`,
-      encodeURIComponent(String(id)),
-    );
-    // use dummy base URL string because the URL constructor only accepts absolute URLs.
-    const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-    let baseOptions;
-    if (configuration) {
-      baseOptions = configuration.baseOptions;
-    }
-
-    const localVarRequestOptions = {
-      method: "POST",
-      ...baseOptions,
-      ...options,
-    };
-    const localVarHeaderParameter = {} as any;
-    const localVarQueryParameter = {} as any;
-
-    // authentication bearer required
-    // http bearer authentication required
-    await setBearerAuthToObject(localVarHeaderParameter, configuration);
-
-    setSearchParams(localVarUrlObj, localVarQueryParameter);
-    const headersFromBaseOptions =
-      baseOptions && baseOptions.headers ? baseOptions.headers : {};
-    localVarRequestOptions.headers = {
-      ...localVarHeaderParameter,
-      ...headersFromBaseOptions,
-      ...options.headers,
-    };
-
-    return {
-      url: toPathString(localVarUrlObj),
-      options: localVarRequestOptions,
-    };
-  },
-});
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
 
 /**
  * UsersApi - functional programming interface
  * @export
  */
-export const UsersApiFp = (configuration?: Configuration) => {
+export const UsersApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration);
   return {
     /**
      *
-     * @summary Activate user account. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {string} id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async usersControllerActivateUser(
-      id: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<AuthControllerRegister200Response>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerActivateUser(
-          id,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["UsersApi.usersControllerActivateUser"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary Returns specific user. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {string} id
+     * @summary Returns specific user information
+     * @param {string} id id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -2725,80 +2508,6 @@ export const UsersApiFp = (configuration?: Configuration) => {
           configuration,
         )(axios, localVarOperationServerBasePath || basePath);
     },
-    /**
-     *
-     * @summary Returns list of users. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {number} [page]
-     * @param {number} [pageSize]
-     * @param {UsersControllerGetUsersRoleEnum} [role]
-     * @param {UsersControllerGetUsersStatusEnum} [status]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async usersControllerGetUsers(
-      page?: number,
-      pageSize?: number,
-      role?: UsersControllerGetUsersRoleEnum,
-      status?: UsersControllerGetUsersStatusEnum,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<UsersControllerGetUsers200Response>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerGetUsers(
-          page,
-          pageSize,
-          role,
-          status,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["UsersApi.usersControllerGetUsers"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
-    /**
-     *
-     * @summary Suspend user account. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {string} id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async usersControllerSuspendUser(
-      id: string,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<AuthControllerRegister200Response>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.usersControllerSuspendUser(id, options);
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["UsersApi.usersControllerSuspendUser"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
   };
 };
 
@@ -2806,32 +2515,17 @@ export const UsersApiFp = (configuration?: Configuration) => {
  * UsersApi - factory interface
  * @export
  */
-export const UsersApiFactory = (
+export const UsersApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance,
-) => {
+) {
   const localVarFp = UsersApiFp(configuration);
   return {
     /**
      *
-     * @summary Activate user account. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {string} id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    usersControllerActivateUser(
-      id: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<AuthControllerRegister200Response> {
-      return localVarFp
-        .usersControllerActivateUser(id, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Returns specific user. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {string} id
+     * @summary Returns specific user information
+     * @param {string} id id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -2841,42 +2535,6 @@ export const UsersApiFactory = (
     ): AxiosPromise<AuthControllerRegister200Response> {
       return localVarFp
         .usersControllerGetUser(id, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Returns list of users. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {number} [page]
-     * @param {number} [pageSize]
-     * @param {UsersControllerGetUsersRoleEnum} [role]
-     * @param {UsersControllerGetUsersStatusEnum} [status]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    usersControllerGetUsers(
-      page?: number,
-      pageSize?: number,
-      role?: UsersControllerGetUsersRoleEnum,
-      status?: UsersControllerGetUsersStatusEnum,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<UsersControllerGetUsers200Response> {
-      return localVarFp
-        .usersControllerGetUsers(page, pageSize, role, status, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Suspend user account. Accessible only by SUPER_ADMIN and ADMIN
-     * @param {string} id
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    usersControllerSuspendUser(
-      id: string,
-      options?: RawAxiosRequestConfig,
-    ): AxiosPromise<AuthControllerRegister200Response> {
-      return localVarFp
-        .usersControllerSuspendUser(id, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -2891,25 +2549,8 @@ export const UsersApiFactory = (
 export class UsersApi extends BaseAPI {
   /**
    *
-   * @summary Activate user account. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {string} id
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UsersApi
-   */
-  public usersControllerActivateUser(
-    id: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return UsersApiFp(this.configuration)
-      .usersControllerActivateUser(id, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Returns specific user. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {string} id
+   * @summary Returns specific user information
+   * @param {string} id id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
@@ -2919,66 +2560,4 @@ export class UsersApi extends BaseAPI {
       .usersControllerGetUser(id, options)
       .then((request) => request(this.axios, this.basePath));
   }
-
-  /**
-   *
-   * @summary Returns list of users. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {number} [page]
-   * @param {number} [pageSize]
-   * @param {UsersControllerGetUsersRoleEnum} [role]
-   * @param {UsersControllerGetUsersStatusEnum} [status]
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UsersApi
-   */
-  public usersControllerGetUsers(
-    page?: number,
-    pageSize?: number,
-    role?: UsersControllerGetUsersRoleEnum,
-    status?: UsersControllerGetUsersStatusEnum,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return UsersApiFp(this.configuration)
-      .usersControllerGetUsers(page, pageSize, role, status, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Suspend user account. Accessible only by SUPER_ADMIN and ADMIN
-   * @param {string} id
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UsersApi
-   */
-  public usersControllerSuspendUser(
-    id: string,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return UsersApiFp(this.configuration)
-      .usersControllerSuspendUser(id, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
 }
-
-/**
- * @export
- */
-export const UsersControllerGetUsersRoleEnum = {
-  SuperAdmin: "SUPER_ADMIN",
-  Admin: "ADMIN",
-  Shipper: "SHIPPER",
-  Vendor: "VENDOR",
-  Dispatcher: "DISPATCHER",
-} as const;
-export type UsersControllerGetUsersRoleEnum =
-  (typeof UsersControllerGetUsersRoleEnum)[keyof typeof UsersControllerGetUsersRoleEnum];
-/**
- * @export
- */
-export const UsersControllerGetUsersStatusEnum = {
-  Active: "ACTIVE",
-  Suspended: "SUSPENDED",
-} as const;
-export type UsersControllerGetUsersStatusEnum =
-  (typeof UsersControllerGetUsersStatusEnum)[keyof typeof UsersControllerGetUsersStatusEnum];

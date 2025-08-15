@@ -1,4 +1,4 @@
-# LoginResponseWrapperDto
+# AuthControllerLogin200Response
 
 
 ## Properties
@@ -12,9 +12,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { LoginResponseWrapperDto } from './api';
+import { AuthControllerLogin200Response } from './api';
 
-const instance: LoginResponseWrapperDto = {
+const instance: AuthControllerLogin200Response = {
     data,
     message,
     status,

@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **repeat_password** | **string** | Repeat password | [default to undefined]
 **first_name** | **string** | first_name | [default to undefined]
 **last_name** | **string** | last_name | [default to undefined]
-**role** | **string** | role | [default to 'SUPER_ADMIN']
+**role** | **string** | Role must be one of PLATFORM_ADMIN | [default to undefined]
 
 ## Example
 

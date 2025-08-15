@@ -1,20 +1,20 @@
-# SendInvitationResponseWrapperDto
+# QuoteRequestsControllerRequestQuote200Response
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**data** | [**SendInvitationResponseDto**](SendInvitationResponseDto.md) |  | [optional] [default to undefined]
+**data** | [**QuoteRequestResponseDto**](QuoteRequestResponseDto.md) |  | [optional] [default to undefined]
 **message** | **string** |  | [optional] [default to undefined]
 **status** | **boolean** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { SendInvitationResponseWrapperDto } from './api';
+import { QuoteRequestsControllerRequestQuote200Response } from './api';
 
-const instance: SendInvitationResponseWrapperDto = {
+const instance: QuoteRequestsControllerRequestQuote200Response = {
     data,
     message,
     status,

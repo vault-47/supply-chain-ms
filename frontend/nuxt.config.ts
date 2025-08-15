@@ -1,22 +1,25 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-import tailwindcss from "@tailwindcss/vite";
-
 export default defineNuxtConfig({
-  compatibilityDate: "2025-05-15",
-  ui: { colorMode: false },
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@nuxt/icon", "@nuxt/image", "@nuxt/scripts", "@nuxt/ui"],
+
+  modules: ["@nuxt/eslint", "@nuxt/image", "@nuxt/scripts", "@nuxt/ui"],
   css: ["~/assets/css/main.css"],
-  vite: {
-    plugins: [tailwindcss()],
-    build: {
-      sourcemap: false,
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false,
     },
+  ],
+  ui: {
+    colorMode: false,
   },
-  runtimeConfig: {
-    public: {
-      baseURL: process.env.API_BASE_URL,
-    },
+  imports: {
+    dirs: [
+      "~/composables",
+      "~/composables/*/index.{ts,js,mjs,mts}",
+      "~/composables/**",
+    ],
   },
 });

@@ -5,10 +5,10 @@ All URIs are relative to *http://localhost*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**authControllerLogin**](#authcontrollerlogin) | **POST** /api/auth/login | Grant access to all users|
-|[**authControllerRegister**](#authcontrollerregister) | **POST** /api/auth/register | SUPER_ADMIN registration|
+|[**authControllerRegister**](#authcontrollerregister) | **POST** /api/auth/register | User registration|
 
 # **authControllerLogin**
-> LoginResponseWrapperDto authControllerLogin(loginRequestDto)
+> AuthControllerLogin200Response authControllerLogin(loginRequestDto)
 
 
 ### Example
@@ -39,7 +39,7 @@ const { status, data } = await apiInstance.authControllerLogin(
 
 ### Return type
 
-**LoginResponseWrapperDto**
+**AuthControllerLogin200Response**
 
 ### Authorization
 
@@ -106,7 +106,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**200** |  |  -  |
+|**200** | Register user |  -  |
 |**400** | Bad request |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

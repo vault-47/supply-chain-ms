@@ -1,11 +1,11 @@
-# RequestQuoteRequestDto
+# CreateRequestQuoteRequestDto
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**vendor_uid** | **string** | vendor_uid | [default to undefined]
+**vendor_id** | **string** | vendor_id | [default to undefined]
 **origin_address** | **string** | origin_address | [default to undefined]
 **destination_address** | **string** | destination_address | [default to undefined]
 **distance_km** | **number** | distance_km | [default to undefined]
@@ -17,10 +17,10 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { RequestQuoteRequestDto } from './api';
+import { CreateRequestQuoteRequestDto } from './api';
 
-const instance: RequestQuoteRequestDto = {
-    vendor_uid,
+const instance: CreateRequestQuoteRequestDto = {
+    vendor_id,
     origin_address,
     destination_address,
     distance_km,

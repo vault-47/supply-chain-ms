@@ -1,11 +1,11 @@
-# UsersControllerGetUsers200Response
+# QuoteRequestsControllerListRequestedQuotes200Response
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**data** | [**Array&lt;UserResponseDto&gt;**](UserResponseDto.md) |  | [default to undefined]
+**data** | [**Array&lt;QuoteRequestResponseDto&gt;**](QuoteRequestResponseDto.md) |  | [default to undefined]
 **meta** | [**PaginationMetaDto**](PaginationMetaDto.md) |  | [default to undefined]
 **status** | **boolean** |  | [optional] [default to undefined]
 **message** | **string** |  | [optional] [default to undefined]
@@ -13,9 +13,9 @@ Name | Type | Description | Notes
 ## Example
 
 ```typescript
-import { UsersControllerGetUsers200Response } from './api';
+import { QuoteRequestsControllerListRequestedQuotes200Response } from './api';
 
-const instance: UsersControllerGetUsers200Response = {
+const instance: QuoteRequestsControllerListRequestedQuotes200Response = {
     data,
     meta,
     status,

@@ -5,12 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**uid** | **object** |  | [optional] [default to undefined]
-**first_name** | **string** |  | [optional] [default to undefined]
-**last_name** | **string** |  | [optional] [default to undefined]
+**id** | **object** |  | [optional] [default to undefined]
+**first_name** | **object** |  | [optional] [default to undefined]
+**last_name** | **object** |  | [optional] [default to undefined]
 **email** | **object** |  | [optional] [default to undefined]
-**role** | **string** |  | [optional] [default to undefined]
 **account_status** | **string** |  | [optional] [default to undefined]
+**role** | **string** |  | [optional] [default to undefined]
 **created_at** | **object** |  | [optional] [default to undefined]
 
 ## Example
@@ -19,12 +19,12 @@ Name | Type | Description | Notes
 import { UserResponseDto } from './api';
 
 const instance: UserResponseDto = {
-    uid,
+    id,
     first_name,
     last_name,
     email,
-    role,
     account_status,
+    role,
     created_at,
 };
 ```
