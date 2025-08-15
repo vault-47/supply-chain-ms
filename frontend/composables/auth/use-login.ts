@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/vue-query";
-import myClient from "~/my-client";
 import { authControllerLogin } from "~/client/sdk.gen";
 import type { LoginRequestDto } from "~/client/types.gen";
+import { useApiClient } from "~/composables/api/use-api-client";
 
 export const useLogin = () => {
   const mutation = useMutation({
@@ -9,7 +9,7 @@ export const useLogin = () => {
     mutationFn: async (payload: LoginRequestDto) =>
       await authControllerLogin({
         composable: "$fetch",
-        client: myClient,
+        client: useApiClient(),
         body: payload,
       }),
     onSuccess: (response) => {
