@@ -9,6 +9,7 @@ useHead({
 
 const login = await useLogin();
 const toast = useToast();
+const router = useRouter();
 
 const schema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -33,6 +34,7 @@ async function onSubmit({ data }: FormSubmitEvent<Schema>) {
       description: "Redirecting you to the dashboard...",
       icon: "i-lucide-circle-check",
     });
+    router.push("/overview");
   } catch (error) {
     toast.add({
       title: error.data.message,
