@@ -4,7 +4,12 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
-  modules: ["@nuxt/image", "@nuxt/scripts", "@nuxt/ui"],
+  modules: [
+    "@nuxt/image",
+    "@nuxt/scripts",
+    "@nuxt/ui",
+    "@pinia/nuxt",
+  ],
   css: ["~/assets/css/main.css"],
   components: [
     {
@@ -21,5 +26,10 @@ export default defineNuxtConfig({
       "~/composables/*/index.{ts,js,mjs,mts}",
       "~/composables/**",
     ],
+  },
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+    },
   },
 });

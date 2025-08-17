@@ -5,7 +5,7 @@ export default defineConfig({
   output: {
     format: "biome",
     lint: "biome",
-    path: "client",
+    path: "app/client",
   },
   plugins: [
     "@hey-api/schemas",
@@ -23,7 +23,7 @@ export default defineConfig({
     },
     {
       name: "@hey-api/client-nuxt",
-      runtimeConfigPath: "./hey-api.ts",
+      runtimeConfigPath: "./app/hey-api.ts",
     },
   ],
 });

@@ -3,7 +3,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { db } from 'src/database/connect';
 import { quote_requests, users } from 'src/database/schema';
@@ -13,12 +12,9 @@ import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { and, count, desc, eq, getTableColumns, like, or } from 'drizzle-orm';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { QuoteRequestUrgencyType } from './enums/quote-request-urgency-type.enum';
-import generateRandomToken from 'src/shared/utils/generate-code';
-import { Role } from 'src/shared/enums/role.enum';
+import { generateRandomId } from 'src/shared/utils/generate-code';
 import { alias } from 'drizzle-orm/pg-core';
 import { QuoteRequestResponseDto } from './dto/quote-request-response.dto';
-
-const { ...quote_requests_data_rest } = getTableColumns(quote_requests); // exclude password
 
 @Injectable()
 export class QuoteRequestsService {
@@ -28,17 +24,9 @@ export class QuoteRequestsService {
     user_id: string,
     payload: CreateRequestQuoteRequestDto,
   ): Promise<CreateRequestQuoteResponseDto> {
-    // check if vendor is an actual vendor
-    const [vendor] = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.id, payload.vendor_id), eq(users.role, Role.VENDOR)));
-    if (!vendor) {
-      throw new BadRequestException('Select an actual vendor');
-    }
     const [requested_quote] = await db
       .insert(quote_requests)
-      .values({ user_id, qr_num: 'QR-' + generateRandomToken(6), ...payload })
+      .values({ user_id, qr_num: 'QR-' + generateRandomId(), ...payload })
       .returning();
     return requested_quote;
   }
@@ -76,8 +64,8 @@ export class QuoteRequestsService {
       })
       .from(quote_requests)
       .where(eq(quote_requests.id, id))
-      .leftJoin(vendor, eq(vendor.id, quote_requests.user_id))
-      .leftJoin(user, eq(user.id, quote_requests.vendor_id));
+      .leftJoin(vendor, eq(vendor.id, quote_requests.vendor_id))
+      .leftJoin(user, eq(user.id, quote_requests.user_id));
     if (!requested_quote) {
       throw new NotFoundException('Quote request not found');
     }
@@ -96,7 +84,7 @@ export class QuoteRequestsService {
     pageSize?: number;
     urgency?: QuoteRequestUrgencyType | undefined;
     search?: string | undefined;
-  }): Promise<PaginatedResponseDto<CreateRequestQuoteResponseDto>> {
+  }): Promise<PaginatedResponseDto<QuoteRequestResponseDto>> {
     const whereUserId =
       user_id != undefined ? eq(quote_requests.user_id, user_id) : undefined;
     const whereVendorId =
@@ -106,12 +94,26 @@ export class QuoteRequestsService {
     const whereSearch =
       search != undefined ? like(quote_requests.qr_num, search) : undefined;
 
+    const user = alias(users, 'user');
+    const vendor = alias(users, 'vendor');
+
+    const { password, ...user_cols } = getTableColumns(user);
+    const { password: _, ...vendor_cols } = getTableColumns(vendor);
+    const {
+      user_id: user_idd,
+      vendor_id,
+      ...quote_request_data_rest
+    } = getTableColumns(quote_requests); // exclude password
     const data = await db
       .select({
-        ...quote_requests_data_rest,
+        ...quote_request_data_rest,
+        user: user_cols,
+        vendor: vendor_cols,
       })
       .from(quote_requests)
       .where(and(or(whereUserId, whereVendorId), whereUrgency, whereSearch))
+      .leftJoin(vendor, eq(vendor.id, quote_requests.vendor_id))
+      .leftJoin(user, eq(user.id, quote_requests.user_id))
       .orderBy(desc(quote_requests.created_at))
       .limit(pageSize)
       .offset(

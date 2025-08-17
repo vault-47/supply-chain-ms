@@ -1,6 +1,6 @@
 const button = {
   slots: {
-    base: ["font-bold rounded-md"],
+    base: ["font-bold rounded-md cursor-pointer"],
   },
 };
 

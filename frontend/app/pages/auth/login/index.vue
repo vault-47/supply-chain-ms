@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
+import { useHead } from "#imports";
+
+useHead({
+  title: "Supply chain MS | Log in",
+});
 
 const login = await useLogin();
 const toast = useToast();
+const router = useRouter();
 
 const schema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -28,6 +34,7 @@ async function onSubmit({ data }: FormSubmitEvent<Schema>) {
       description: "Redirecting you to the dashboard...",
       icon: "i-lucide-circle-check",
     });
+    router.push("/overview");
   } catch (error) {
     toast.add({
       title: error.data.message,
@@ -46,7 +53,6 @@ async function onSubmit({ data }: FormSubmitEvent<Schema>) {
       <UFormField label="Email address" name="email">
         <UInput
           name="email"
-          autocomplete="email"
           autofocus
           size="lg"
           v-model="state.email"
@@ -61,16 +67,9 @@ async function onSubmit({ data }: FormSubmitEvent<Schema>) {
           type="password"
           class="w-full"
           name="password"
-          autocomplete="current-password"
         />
       </UFormField>
-      <UButton
-        :loading="login.isLoading"
-        class="mt-2"
-        size="lg"
-        type="submit"
-        block
-      >
+      <UButton loading-auto class="mt-2" size="lg" type="submit" block>
         Log in
       </UButton>
     </UForm>
