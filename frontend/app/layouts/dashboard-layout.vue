@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem, DropdownMenuItem } from "@nuxt/ui";
+import { useProfileStore } from "~/stores/profile";
 
 const { data: profile, isFetching } = await useGetProfile();
 
@@ -15,49 +16,56 @@ const navItems = ref<NavigationMenuItem[]>([
       icon: "i-lucide-file-text",
       to: "/requests",
     },
-    // {
-    //   label: "Quotes",
-    //   icon: "i-lucide-banknote",
-    //   to: "/composables",
-    // },
-    // {
-    //   label: "Shipments",
-    //   icon: "i-lucide-package",
-    //   to: "/components",
-    // },
-    // {
-    //   label: "Bookings",
-    //   icon: "i-lucide-calendar",
-    //   to: "/components",
-    // },
-    // {
-    //   label: "Settings",
-    //   icon: "i-lucide-settings",
-    //   to: "/components",
-    // },
+    {
+      label: "Quotes",
+      icon: "i-lucide-banknote",
+      to: "/quotes",
+    },
+    {
+      label: "Shipments",
+      icon: "i-lucide-package",
+      to: "/shipments",
+    },
+    {
+      label: "Bookings",
+      icon: "i-lucide-calendar",
+      to: "/bookings",
+    },
+    {
+      label: "Settings",
+      icon: "i-lucide-settings",
+      to: "/settings",
+    },
   ],
 ]);
 </script>
 
 <template>
-  <div class="">
+  <div>
     <div class="bg-white border-b border-gray-200">
       <div
         class="container max-w-7xl px-3 mx-auto w-full justify-between flex items-center"
       >
-        <div class="flex items-center gap-5 max-w-3/4">
-          <b class="text-primary font-semibold text-md flex items-center gap-1">
-            <UIcon name="i-lucide-ship" class="size-5" />SCMS</b
-          >
-          <USeparator orientation="vertical" class="h-10" />
+        <b
+          class="text-primary font-semibold text-md min-w-1/5 flex items-center gap-1"
+        >
+          <UIcon name="i-lucide-ship" class="size-5" />SCMS</b
+        >
+        <div class="flex items-center gap-5 min-w-3/5">
           <UNavigationMenu
             color="primary"
             :items="navItems"
             class="justify-center"
+            :ui="{
+              list: 'space-x-2',
+              link: 'before:bg-transparent',
+            }"
           />
         </div>
-        <div class="flex items-center gap-4">
-          <UButton icon="i-lucide-send">Request a quote</UButton>
+        <div class="flex items-center justify-end gap-4 min-w-1/5">
+          <UButton v-if="profile?.role === 'SHIPPER'" icon="i-lucide-send"
+            >Request a quote</UButton
+          >
           <UAvatar
             v-if="profile"
             class="text-xs"
@@ -68,7 +76,10 @@ const navItems = ref<NavigationMenuItem[]>([
         </div>
       </div>
     </div>
-    <div class="mt-4 container max-w-7xl px-3 mx-auto">
+    <div class="container max-w-7xl px-3 mx-auto mt-4">
+      <h1 class="font-semibold text-xl">
+        <slot name="page-title">Page title</slot>
+      </h1>
       <slot />
     </div>
   </div>

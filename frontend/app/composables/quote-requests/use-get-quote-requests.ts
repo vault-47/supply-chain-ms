@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/vue-query";
-import { quoteRequestsControllerListRequestedQuotes } from "~/client/sdk.gen";
+import { quoteRequestsControllerListRequestedQuotes } from "~/client/index";
 import { useApiClient } from "~/composables/api/use-api-client";
 
 export const useGetQuoteRequests = async () => {
+  const { setMeta } = usePageMetaStore();
+
   const query = useQuery({
     queryKey: ["getQuoteRequests"],
     queryFn: async () => {
@@ -10,6 +12,7 @@ export const useGetQuoteRequests = async () => {
         composable: "$fetch",
         client: useApiClient(),
       });
+      setMeta(response.meta);
       return response.data;
     },
   });
