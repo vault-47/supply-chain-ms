@@ -129,16 +129,37 @@ const columns: TableColumn<QuoteRequestResponseDto>[] = [
       :data="quote_requests"
     >
       <template #expanded="{ row }">
-        <pre>{{ row.original }}</pre>
+        <div class="grid grid-cols-4 gap-10">
+          <LabelValue label="Origin">
+            <template #value>{{ row.original?.origin_address }}</template>
+          </LabelValue>
+          <LabelValue label="Destination">
+            <template #value>{{ row.original?.destination_address }}</template>
+          </LabelValue>
+          <LabelValue label="Additional note">
+            <template #value>{{
+              row.original?.additional_note || "-"
+            }}</template>
+          </LabelValue>
+        </div>
+        <USeparator v-if="profile.role === 'VENDOR'" class="my-3" />
+        <UButton
+          v-if="profile.role === 'VENDOR'"
+          variant="outline"
+          icon="i-lucide-message-square-quote"
+          >Respond to request</UButton
+        >
       </template>
     </UTable>
-    <UPagination
-      :max="2"
-      v-if="!isFetching"
-      size="sm"
-      v-model="page"
-      :page-count="Number(meta?.totalPages)"
-      :total="Number(meta?.totalItems)"
-    />
+    <div class="mt-5 flex justify-center">
+      <UPagination
+        :max="2"
+        v-if="!isFetching"
+        size="sm"
+        v-model="page"
+        :page-count="Number(meta?.totalPages)"
+        :total="Number(meta?.totalItems)"
+      />
+    </div>
   </NuxtLayout>
 </template>
