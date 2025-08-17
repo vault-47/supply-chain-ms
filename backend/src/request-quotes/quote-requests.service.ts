@@ -3,7 +3,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { db } from 'src/database/connect';
 import { quote_requests, users } from 'src/database/schema';
@@ -13,8 +12,7 @@ import { PaginatedResponseDto } from 'src/pagination/dto/pagination.dto';
 import { and, count, desc, eq, getTableColumns, like, or } from 'drizzle-orm';
 import { PaginationService } from 'src/pagination/pagination.service';
 import { QuoteRequestUrgencyType } from './enums/quote-request-urgency-type.enum';
-import generateRandomToken from 'src/shared/utils/generate-code';
-import { Role } from 'src/shared/enums/role.enum';
+import { generateRandomId } from 'src/shared/utils/generate-code';
 import { alias } from 'drizzle-orm/pg-core';
 import { QuoteRequestResponseDto } from './dto/quote-request-response.dto';
 
@@ -26,17 +24,9 @@ export class QuoteRequestsService {
     user_id: string,
     payload: CreateRequestQuoteRequestDto,
   ): Promise<CreateRequestQuoteResponseDto> {
-    // check if vendor is an actual vendor
-    const [vendor] = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.id, payload.vendor_id), eq(users.role, Role.VENDOR)));
-    if (!vendor) {
-      throw new BadRequestException('Select an actual vendor');
-    }
     const [requested_quote] = await db
       .insert(quote_requests)
-      .values({ user_id, qr_num: 'QR-' + generateRandomToken(6), ...payload })
+      .values({ user_id, qr_num: 'QR-' + generateRandomId(), ...payload })
       .returning();
     return requested_quote;
   }
