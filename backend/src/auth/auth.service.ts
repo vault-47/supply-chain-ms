@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -11,7 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { db } from 'src/database/connect';
 import { RegistrationRequestDto } from './dto/registration-request.dto';
-import { eq } from 'drizzle-orm';
+import { eq, like } from 'drizzle-orm';
 import { Role } from 'src/shared/enums/role.enum';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 import { LoginResponseDto } from './dto/login-response.dto';
@@ -45,12 +46,29 @@ export class AuthService {
       throw new ConflictException('User account already exist');
     }
 
+    // ensure business_name is parsed
+    if (payload.role !== Role.PLATFORM_ADMIN && !payload.business_name) {
+      throw new BadRequestException('Please include business name');
+    }
+
+    // check if business_name already exists
+    const [existing_business] = await db
+      .select()
+      .from(users)
+      .where(like(users.business_name, payload.business_name));
+    if (existing_business) {
+      throw new ConflictException(
+        'business with name already exists. Try another name',
+      );
+    }
+
     const hashedPassword = await this.generateHashedPassword(payload.password);
     const [new_user] = await db
       .insert(users)
       .values({
         email: payload.email,
         password: hashedPassword,
+        business_name: payload.business_name ?? '',
         role: payload.role,
         account_status: AccountStatus.ACTIVE,
         first_name: payload.first_name,

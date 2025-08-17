@@ -31,11 +31,6 @@ const navItems = ref<NavigationMenuItem[]>([
       icon: "i-lucide-calendar",
       to: "/bookings",
     },
-    {
-      label: "Settings",
-      icon: "i-lucide-settings",
-      to: "/settings",
-    },
   ],
 ]);
 </script>
@@ -46,11 +41,7 @@ const navItems = ref<NavigationMenuItem[]>([
       <div
         class="container max-w-7xl px-3 mx-auto w-full justify-between flex items-center"
       >
-        <b
-          class="text-primary font-semibold text-md min-w-1/5 flex items-center gap-1"
-        >
-          <UIcon name="i-lucide-ship" class="size-5" />SCMS</b
-        >
+        <Logo />
         <div class="flex items-center gap-5 min-w-3/5">
           <UNavigationMenu
             color="primary"

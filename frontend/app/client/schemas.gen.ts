@@ -49,6 +49,10 @@ export const UserResponseDtoSchema = {
       type: "object",
       example: "id-here",
     },
+    business_name: {
+      type: "object",
+      example: "businessname",
+    },
     first_name: {
       type: "object",
       example: "Firstname",
@@ -83,6 +87,10 @@ export const RegistrationRequestDtoSchema = {
       type: "string",
       description: "email",
     },
+    business_name: {
+      type: "string",
+      description: "business_name",
+    },
     password: {
       type: "string",
       description: "password",
@@ -107,6 +115,7 @@ export const RegistrationRequestDtoSchema = {
   },
   required: [
     "email",
+    "business_name",
     "password",
     "repeat_password",
     "first_name",

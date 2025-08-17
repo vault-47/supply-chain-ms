@@ -162,6 +162,13 @@
       "when": 1755430438820,
       "tag": "0022_overrated_tomorrow_man",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1755453188719,
+      "tag": "0023_acoustic_scorpion",
+      "breakpoints": true
     }
   ]
 }

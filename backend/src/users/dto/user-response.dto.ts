@@ -9,6 +9,9 @@ export class UserResponseDto {
   })
   id: string | null;
 
+  @ApiProperty({ required: false, example: 'businessname' })
+  business_name: string | null;
+
   @ApiProperty({ required: false, example: 'Firstname' })
   first_name: string | null;
 

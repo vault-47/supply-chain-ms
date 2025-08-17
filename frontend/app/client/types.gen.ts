@@ -27,6 +27,9 @@ export type UserResponseDto = {
   id?: {
     [key: string]: unknown;
   };
+  business_name?: {
+    [key: string]: unknown;
+  };
   first_name?: {
     [key: string]: unknown;
   };
@@ -48,6 +51,10 @@ export type RegistrationRequestDto = {
    * email
    */
   email: string;
+  /**
+   * business_name
+   */
+  business_name: string;
   /**
    * password
    */

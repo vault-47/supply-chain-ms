@@ -6,6 +6,7 @@ import { AccountStatus } from 'src/shared/enums/account-status.enum';
 export const users = pgTable('users', {
   id: uuid().defaultRandom().primaryKey(),
   email: varchar('email', { length: 255 }).unique().notNull(),
+  business_name: varchar('business_name', { length: 255 }),
   password: varchar('password', { length: 255 }).notNull(),
   role: varchar('role', { length: 255, enum: enumToPgEnum(Role) }).notNull(),
   account_status: varchar('account_status', {

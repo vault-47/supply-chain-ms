@@ -53,32 +53,14 @@ const columns: TableColumn<QuoteRequestResponseDto>[] = [
     accessorKey: "user",
     header: "Customer",
     cell: ({ row }) => {
-      return h("div", { class: "flex items-center gap-3" }, [
-        h(UAvatar, {
-          alt:
-            row.getValue("user").first_name +
-            " " +
-            row.getValue("user").last_name,
-          size: "sm",
-        }),
-        h("div", { class: "flex gap-1" }, [
-          h("span", { class: "" }, row.getValue("user").first_name),
-          h("span", { class: "" }, `${row.getValue("user").last_name}`),
-        ]),
-      ]);
+      return h("span", { class: "" }, row.getValue("user").business_name);
     },
   },
   {
     accessorKey: "vendor",
     header: "Vendor",
     cell: ({ row }) => {
-      return h(
-        "div",
-        { class: "font-medium" },
-        row.getValue("vendor").first_name +
-          " " +
-          row.getValue("vendor").last_name,
-      );
+      return h("span", { class: "" }, row.getValue("vendor").business_name);
     },
   },
   {
